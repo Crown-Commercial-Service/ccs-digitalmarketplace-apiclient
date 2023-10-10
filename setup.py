@@ -14,9 +14,9 @@ with open('dmapiclient/__init__.py', 'rb') as f:
         f.read().decode('utf-8')).group(1)))
 
 setup(
-    name='digitalmarketplace-apiclient',
+    name='ccs-digitalmarketplace-apiclient',
     version=version,
-    url='https://github.com/alphagov/digitalmarketplace-apiclient',
+    url='https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace-apiclient',
     license='MIT',
     author='GDS Developers',
     description='Digital Marketplace Data and Search API clients',
