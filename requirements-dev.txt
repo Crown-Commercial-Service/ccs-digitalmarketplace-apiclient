@@ -10,6 +10,8 @@ atomicwrites==1.4.0
     # via pytest
 attrs==20.3.0
     # via pytest
+ccs-digitalmarketplace-test-utils==4.0.2
+    # via -r requirements-dev.in
 certifi==2022.12.7
     # via requests
 charset-normalizer==2.1.1
@@ -22,8 +24,6 @@ coverage==4.5.3
     #   coveralls
     #   pytest-cov
 coveralls==1.8.1
-    # via -r requirements-dev.in
-digitalmarketplace-test-utils==2.8.2
     # via -r requirements-dev.in
 docopt==0.6.2
     # via coveralls
