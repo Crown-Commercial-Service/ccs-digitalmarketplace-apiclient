@@ -1,48 +1,48 @@
-# # Create a release using the version number from the Python package
-# #
-# # This workflow is designed to create a GitHub release whenever a pull request
-# # is merged to the main branch that updates the version number for this repo's
-# # Python package.
-# #
-# # The release is created with the tag and name of the version number.
-# #
-# # If there already exists a tag for the package version number the release
-# # should not be created.
+# Create a release using the version number from the Python package
+#
+# This workflow is designed to create a GitHub release whenever a pull request
+# is merged to the main branch that updates the version number for this repo's
+# Python package.
+#
+# The release is created with the tag and name of the version number.
+#
+# If there already exists a tag for the package version number the release
+# should not be created.
 
-# name: Create a GitHub release
+name: Create a GitHub release
 
-# on:
-#   push:
-#     branches:
-#       - main
+on:
+  push:
+    branches:
+      - main
 
-# jobs:
-#   release:
-#     runs-on: ubuntu-latest
-#     steps:
-#       - uses: actions/checkout@v3
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
 
-#       - uses: actions/setup-python@v4
-#         with:
-#           python-version: '3.9'
+      - uses: actions/setup-python@v4
+        with:
+          python-version: '3.9'
 
-#       - name: Get package version
-#         id: package_version
-#         run: echo "::set-output name=python::"$(python setup.py --version)
+      - name: Get package version
+        id: package_version
+        run: echo "::set-output name=python::"$(python setup.py --version)
 
-#       - name: Check if version tag already exists
-#         id: version_tag
-#         uses: mukunku/tag-exists-action@9298fbcc409758ba624a0ae16b83df86637cb8ce
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-#         with:
-#           tag: ${{ steps.package_version.outputs.python }}
+      - name: Check if version tag already exists
+        id: version_tag
+        uses: mukunku/tag-exists-action@9298fbcc409758ba624a0ae16b83df86637cb8ce
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag: ${{ steps.package_version.outputs.python }}
 
-#       - name: Create GitHub release
-#         if: ${{ steps.version_tag.outputs.exists == 'false' }}
-#         uses: ncipollo/release-action@v1
-#         env:
-#           GITHUB_TOKEN: ${{ secrets.DM_GITHUB_TOKEN }}
-#         with:
-#           tag: ${{ steps.package_version.outputs.python }}
-#           name: Release v${{ steps.package_version.outputs.python }}
+      - name: Create GitHub release
+        if: ${{ steps.version_tag.outputs.exists == 'false' }}
+        uses: ncipollo/release-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.DM_GITHUB_TOKEN }}
+        with:
+          tag: ${{ steps.package_version.outputs.python }}
+          name: Release v${{ steps.package_version.outputs.python }}

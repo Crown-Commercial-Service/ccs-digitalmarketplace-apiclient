@@ -2,7 +2,7 @@
 
 Records breaking changes from major version bumps
 
-## 1.0.0
+## 25.0.0
 
 Create the ccs-digitalmarketplace-apiclient from the original [digitalmarketplace-apiclient](https://github.com/Crown-Commercial-Service/digitalmarketplace-apiclient/pulls).
 
