@@ -28,7 +28,7 @@ jobs:
 
       - name: Get package version
         id: package_version
-        run: echo "::set-output name=python::"$(python setup.py --version)
+        run: echo "python=$(python setup.py --version)" >> $GITHUB_OUTPUT
 
       - name: Check if version tag already exists
         id: version_tag
@@ -41,8 +41,7 @@ jobs:
       - name: Create GitHub release
         if: ${{ steps.version_tag.outputs.exists == 'false' }}
         uses: ncipollo/release-action@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.DM_GITHUB_TOKEN }}
         with:
+          token: ${{ secrets.DM_GITHUB_TOKEN }}
           tag: ${{ steps.package_version.outputs.python }}
           name: Release v${{ steps.package_version.outputs.python }}
