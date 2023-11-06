@@ -47,9 +47,9 @@ mccabe==0.7.0
     # via flake8
 mock==5.1.0
     # via -r requirements-dev.in
-mypy==0.812
+mypy==1.6.1
     # via -r requirements-dev.in
-mypy-extensions==0.4.3
+mypy-extensions==1.0.0
     # via mypy
 packaging==20.9
     # via pytest
@@ -77,10 +77,10 @@ requests-mock==1.11.0
 six==1.15.0
     # via requests-mock
 tomli==2.0.1
-    # via pytest
-typed-ast==1.4.3
-    # via mypy
-typing-extensions==3.7.4.3
+    # via
+    #   mypy
+    #   pytest
+typing-extensions==4.8.0
     # via mypy
 urllib3==1.26.5
     # via requests
