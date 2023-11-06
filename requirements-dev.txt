@@ -65,7 +65,7 @@ pytest==7.4.3
     # via
     #   -r requirements-dev.in
     #   pytest-cov
-pytest-cov==2.7.1
+pytest-cov==2.10.1
     # via -r requirements-dev.in
 requests==2.31.0
     # via
