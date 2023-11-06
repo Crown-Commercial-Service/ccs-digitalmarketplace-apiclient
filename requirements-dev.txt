@@ -6,10 +6,6 @@
 #
 -e file:.
     # via -r requirements-dev.in
-atomicwrites==1.4.0
-    # via pytest
-attrs==20.3.0
-    # via pytest
 ccs-digitalmarketplace-test-utils==4.0.2
     # via -r requirements-dev.in
 certifi==2022.12.7
@@ -27,6 +23,8 @@ coveralls==1.8.1
     # via -r requirements-dev.in
 docopt==0.6.2
     # via coveralls
+exceptiongroup==1.1.3
+    # via pytest
 flake8==3.8.0
     # via -r requirements-dev.in
 flask==2.2.5
@@ -34,9 +32,9 @@ flask==2.2.5
 idna==2.10
     # via requests
 importlib-metadata==4.0.1
-    # via
-    #   flask
-    #   pytest
+    # via flask
+iniconfig==2.0.0
+    # via pytest
 itsdangerous==2.1.2
     # via flask
 jinja2==3.1.2
@@ -49,8 +47,6 @@ mccabe==0.6.1
     # via flake8
 mock==4.0.2
     # via -r requirements-dev.in
-more-itertools==8.7.0
-    # via pytest
 mypy==0.812
     # via -r requirements-dev.in
 mypy-extensions==0.4.3
@@ -59,15 +55,13 @@ packaging==20.9
     # via pytest
 pluggy==0.13.1
     # via pytest
-py==1.10.0
-    # via pytest
 pycodestyle==2.6.0
     # via flake8
 pyflakes==2.2.0
     # via flake8
 pyparsing==2.4.7
     # via packaging
-pytest==4.6.3
+pytest==7.4.3
     # via
     #   -r requirements-dev.in
     #   pytest-cov
@@ -76,22 +70,20 @@ pytest-cov==2.7.1
 requests==2.31.0
     # via
     #   coveralls
-    #   digitalmarketplace-apiclient
     #   requests-mock
+    #   sanitized-package
 requests-mock==1.7.0
     # via -r requirements-dev.in
 six==1.15.0
-    # via
-    #   pytest
-    #   requests-mock
+    # via requests-mock
+tomli==2.0.1
+    # via pytest
 typed-ast==1.4.3
     # via mypy
 typing-extensions==3.7.4.3
     # via mypy
 urllib3==1.26.5
     # via requests
-wcwidth==0.2.5
-    # via pytest
 werkzeug==2.2.3
     # via flask
 zipp==3.4.1
