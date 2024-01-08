@@ -11,4 +11,6 @@ pytest
 pytest-cov
 requests-mock
 
+types-requests
+
 ccs-digitalmarketplace-test-utils<5.0.0,>=4.0.2
