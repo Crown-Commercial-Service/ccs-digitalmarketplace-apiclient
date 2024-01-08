@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
 
 import warnings
-from typing import Dict
+from typing import Dict, Optional
 
 from .audit import AuditTypes
 from .base import BaseAPIClient, logger, make_iter_method
@@ -914,7 +914,7 @@ class DataAPIClient(BaseAPIClient):
     def find_briefs(
         self, user_id=None, status=None, framework=None, lot=None, page=None, human=None, with_users=None,
         with_clarification_questions=None, closed_on=None, withdrawn_on=None, cancelled_on=None, unsuccessful_on=None,
-        status_date_filters: Dict[str, str] = None,
+        status_date_filters: Optional[Dict[str, str]] = None,
     ):
         """
         The response will be paginated unless you provide user_id.
@@ -1006,7 +1006,7 @@ class DataAPIClient(BaseAPIClient):
         framework=None,
         awarded_at=None,
         *,
-        with_data: bool = None,
+        with_data: Optional[bool] = None,
     ):
         """
         The response will be paginated unless you provide supplier_id or brief_id.

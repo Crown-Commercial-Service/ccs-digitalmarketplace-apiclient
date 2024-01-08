@@ -4,7 +4,7 @@ import time
 from typing import Optional
 import requests
 from requests.adapters import HTTPAdapter
-from requests.packages.urllib3.util.retry import Retry
+from urllib3.util.retry import Retry
 from requests.exceptions import ReadTimeout
 from urllib3.exceptions import ReadTimeoutError
 from flask import has_request_context, request, current_app
