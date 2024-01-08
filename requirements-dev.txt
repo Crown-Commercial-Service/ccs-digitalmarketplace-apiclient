@@ -6,7 +6,7 @@
 #
 -e file:.
     # via -r requirements-dev.in
-ccs-digitalmarketplace-test-utils==4.0.2
+ccs-digitalmarketplace-test-utils==4.1.0
     # via -r requirements-dev.in
 certifi==2022.12.7
     # via requests
