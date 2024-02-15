@@ -8,6 +8,7 @@ import requests
 import requests_mock
 import pytest
 import mock
+import io
 
 from dmtestutils.comparisons import RestrictedAny
 
@@ -16,6 +17,7 @@ from dmapiclient import HTTPError, InvalidResponse
 from dmapiclient.errors import REQUEST_ERROR_STATUS_CODE
 from dmapiclient.exceptions import ImproperlyConfigured
 
+from urllib3 import HTTPResponse
 from urllib3.exceptions import NewConnectionError, ProtocolError, ReadTimeoutError, MaxRetryError
 
 
@@ -36,7 +38,7 @@ def _empty_context_manager():
 
 
 class TestBaseApiClient(object):
-    def _from_httplib_response_mock(self, status, response_data=None):
+    def _make_request_response_mock(self, status, response_data=None):
         response_mock = mock.Mock(
             status=status, headers={}, spec=['get_redirect_location', 'getheader', 'read', 'reason', 'drain_conn']
         )
@@ -110,14 +112,13 @@ class TestBaseApiClient(object):
 
     @pytest.mark.parametrize(('retry_count'), range(1, 4))
     @pytest.mark.parametrize(('status'), BaseAPIClient.RETRIES_FORCE_STATUS_CODES)
-    @mock.patch('urllib3.connectionpool.HTTPConnectionPool.ResponseCls.from_httplib')
     @mock.patch('urllib3.connectionpool.HTTPConnectionPool._make_request')
     @mock.patch('dmapiclient.base.BaseAPIClient._RETRIES_BACKOFF_FACTOR', 0)
     def test_client_retries_on_status_error_and_raises_api_error(
-        self, _make_request, from_httplib, base_client, status, retry_count
+        self, _make_request, base_client, status, retry_count
     ):
-        response_mock = self._from_httplib_response_mock(status)
-        from_httplib.return_value = response_mock
+        response_mock = self._make_request_response_mock(status)
+        _make_request.return_value = response_mock
 
         with mock.patch('dmapiclient.base.BaseAPIClient._RETRIES', retry_count):
             with pytest.raises(HTTPError) as e:
@@ -131,10 +132,9 @@ class TestBaseApiClient(object):
         assert f'{status} Server Error: {response_mock.reason} for url: http://baseurl/\n' in e.value.message
         assert e.value.status_code == status
 
-    @mock.patch('urllib3.connectionpool.HTTPConnectionPool.ResponseCls.from_httplib')
     @mock.patch('urllib3.connectionpool.HTTPConnectionPool._make_request')
     @mock.patch('dmapiclient.base.BaseAPIClient._RETRIES_BACKOFF_FACTOR', 0)
-    def test_client_retries_and_returns_data_if_successful(self, _make_request, from_httplib, base_client):
+    def test_client_retries_and_returns_data_if_successful(self, _make_request, base_client):
         #  The third response here would normally be a httplib response object. It's only use is to be passed in to
         #  `from_httplib`, which we're mocking the return of below. `from_httplib` converts a httplib response into a
         #  urllib3 response. The mock object we're returning is a mock for that urllib3 response.
@@ -142,10 +142,14 @@ class TestBaseApiClient(object):
             ProtocolError(mock.Mock(), '1st error'),
             ProtocolError(mock.Mock(), '2nd error'),
             ProtocolError(mock.Mock(), '3nd error'),
-            'httplib_response - success!',
+            HTTPResponse(
+                body=io.BytesIO(b'{"Success?": "Yes!"}'),
+                status=200,
+                preload_content=False,
+            ),
         ]
 
-        from_httplib.return_value = self._from_httplib_response_mock(200, response_data=b'{"Success?": "Yes!"}')
+        _make_request.return_value = self._make_request_response_mock(200, response_data=b'{"Success?": "Yes!"}')
 
         response = base_client._request("GET", '/')
         requests = _make_request.call_args_list
