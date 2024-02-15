@@ -2,6 +2,15 @@
 
 Records breaking changes from major version bumps
 
+## 25.1.0
+
+Allow for use with all currently maintained Python versions:
+- 3.9
+- 3.10
+- 3.11
+
+Note, because request-mock does not support 3.12 yet, neither can we.
+
 ## 25.0.0
 
 Create the ccs-digitalmarketplace-apiclient from the original [digitalmarketplace-apiclient](https://github.com/Crown-Commercial-Service/digitalmarketplace-apiclient/pulls).
