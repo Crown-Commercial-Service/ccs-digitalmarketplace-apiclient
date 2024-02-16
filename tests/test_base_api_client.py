@@ -21,7 +21,7 @@ from urllib3 import HTTPResponse
 from urllib3.exceptions import NewConnectionError, ProtocolError, ReadTimeoutError, MaxRetryError
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def raw_rmock():
     with mock.patch('dmapiclient.base.requests.request') as rmock:
         yield rmock

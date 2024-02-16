@@ -8,7 +8,7 @@
     # via -r requirements-dev.in
 blinker==1.7.0
     # via flask
-ccs-digitalmarketplace-test-utils==4.1.0
+ccs-digitalmarketplace-test-utils==4.2.0
     # via -r requirements-dev.in
 certifi==2022.12.7
     # via requests
@@ -71,9 +71,9 @@ pytest-cov==4.1.0
     # via -r requirements-dev.in
 requests==2.31.0
     # via
+    #   ccs-digitalmarketplace-apiclient
     #   coveralls
     #   requests-mock
-    #   sanitized-package
 requests-mock==1.11.0
     # via -r requirements-dev.in
 six==1.15.0

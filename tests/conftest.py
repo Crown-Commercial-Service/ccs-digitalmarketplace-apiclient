@@ -8,7 +8,7 @@ def app():
     return Flask(__name__)
 
 
-@pytest.yield_fixture
+@pytest.fixture
 def rmock():
     with requests_mock.mock() as rmock:
         real_register_uri = rmock.register_uri
