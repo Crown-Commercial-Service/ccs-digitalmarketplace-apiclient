@@ -63,7 +63,7 @@ pyflakes==3.2.0
     # via flake8
 pyparsing==2.4.7
     # via packaging
-pytest==8.0.0
+pytest==8.0.1
     # via
     #   -r requirements-dev.in
     #   pytest-cov
@@ -71,9 +71,9 @@ pytest-cov==4.1.0
     # via -r requirements-dev.in
 requests==2.31.0
     # via
-    #   ccs-digitalmarketplace-apiclient
     #   coveralls
     #   requests-mock
+    #   sanitized-package
 requests-mock==1.11.0
     # via -r requirements-dev.in
 six==1.15.0
