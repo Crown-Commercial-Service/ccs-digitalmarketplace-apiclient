@@ -83,6 +83,12 @@ class AuditTypes(Enum):
     # Mailing list actions
     mailing_list_subscription = "mailing_list_subscription"
 
+    # Conversations
+    create_conversation = "create_conversation"
+    archive_conversation = "archive_conversation"
+    send_conversation_message = "send_conversation_message"
+    read_conversation_message = "read_conversation_message"
+
     @staticmethod
     def is_valid_audit_type(test_audit_type):
 
