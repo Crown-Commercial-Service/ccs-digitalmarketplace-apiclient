@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 25.2.0
+
+Add new audit types for conversation messages
+
 ## 25.1.0
 
 Allow for use with all currently maintained Python versions:
