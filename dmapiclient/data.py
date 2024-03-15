@@ -1317,3 +1317,8 @@ class DataAPIClient(BaseAPIClient):
 
     find_conversations_iter = make_iter_method('find_conversations', 'conversations')
     find_conversations_iter.__name__ = str("find_conversations_iter")
+
+    def get_conversation(self, conversation_id):
+        return self._get(
+            "/conversations/{}".format(conversation_id)
+        )

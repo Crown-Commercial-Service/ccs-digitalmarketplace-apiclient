@@ -3031,3 +3031,24 @@ class TestConversationsMethods(object):
 
         assert result == {"conversations": "result"}
         assert rmock.called
+
+    def test_get_conversation(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/conversations/123",
+            json={"conversations": "result"},
+            status_code=200)
+
+        result = data_client.get_conversation(123)
+
+        assert result == {"conversations": "result"}
+        assert rmock.called
+
+    def test_get_conversation_should_return_404(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/conversations/123",
+            status_code=404)
+
+        try:
+            data_client.get_conversation(123)
+        except HTTPError:
+            assert rmock.called
