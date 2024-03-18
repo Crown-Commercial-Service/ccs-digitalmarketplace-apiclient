@@ -3234,3 +3234,215 @@ class TestConversationsMethods(object):
                 ]
             }
         }
+
+    def test_create_conversation(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/conversations",
+            json={"conversations": {
+                'id': 123,
+                'subject': 'Subject text',
+                'supplierId': 0,
+                'supplierName': "Supplier 0",
+                'frameworkSlug': 'g-cloud-6',
+                'frameworkFramework': 'g-cloud',
+                'frameworkFamily': 'g-cloud',
+                'frameworkName': 'G-Cloud 6',
+                'frameworkStatus': 'pending',
+                'createdAt': '2024-03-14T00:00:00.000000Z',
+                'updatedAt': '2024-03-14T00:00:00.000000Z',
+                'messages': [
+                    {
+                        'id': 1,
+                        'conversationId': 123,
+                        'text': 'Message text',
+                        'sentAt': '2024-03-14T00:00:00.000000Z',
+                        'sentByUserId': 456,
+                        'sentByUserEmail': 'test+456@digital.cabinet-office.gov.uk',
+                        'target': 'for_supplier',
+                        'attachments': []
+                    }
+                ]
+            }},
+            status_code=201,
+        )
+
+        result = data_client.create_conversation(
+            0,
+            'g-cloud-6',
+            'Subject text',
+            {
+                'text': 'Message text',
+                'sentByUserId': 123,
+            },
+            user="test@example.com"
+        )
+
+        assert result == {
+            "conversations": {
+                'id': 123,
+                'subject': 'Subject text',
+                'supplierId': 0,
+                'supplierName': "Supplier 0",
+                'frameworkSlug': 'g-cloud-6',
+                'frameworkFramework': 'g-cloud',
+                'frameworkFamily': 'g-cloud',
+                'frameworkName': 'G-Cloud 6',
+                'frameworkStatus': 'pending',
+                'createdAt': '2024-03-14T00:00:00.000000Z',
+                'updatedAt': '2024-03-14T00:00:00.000000Z',
+                'messages': [
+                    {
+                        'id': 1,
+                        'conversationId': 123,
+                        'text': 'Message text',
+                        'sentAt': '2024-03-14T00:00:00.000000Z',
+                        'sentByUserId': 456,
+                        'sentByUserEmail': 'test+456@digital.cabinet-office.gov.uk',
+                        'target': 'for_supplier',
+                        'attachments': []
+                    }
+                ]
+            }
+        }
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "conversations": {
+                "supplierId": 0,
+                "framework": 'g-cloud-6',
+                "subject": 'Subject text',
+                'messages': {
+                    'text': 'Message text',
+                    'sentByUserId': 123,
+                }
+            }
+        }
+
+    def test_create_conversation_with_attachment(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/conversations",
+            json={"conversations": {
+                'id': 123,
+                'subject': 'Subject text',
+                'supplierId': 0,
+                'supplierName': "Supplier 0",
+                'frameworkSlug': 'g-cloud-6',
+                'frameworkFramework': 'g-cloud',
+                'frameworkFamily': 'g-cloud',
+                'frameworkName': 'G-Cloud 6',
+                'frameworkStatus': 'pending',
+                'createdAt': '2024-03-14T00:00:00.000000Z',
+                'updatedAt': '2024-03-14T00:00:00.000000Z',
+                'messages': [
+                    {
+                        'id': 1,
+                        'conversationId': 123,
+                        'text': 'Message text',
+                        'sentAt': '2024-03-14T00:00:00.000000Z',
+                        'sentByUserId': 456,
+                        'sentByUserEmail': 'test+456@digital.cabinet-office.gov.uk',
+                        'target': 'for_supplier',
+                        'attachments': [
+                            {
+                                "id": 1,
+                                "conversationMessageId": 1,
+                                "name": "Attachment 1",
+                                "url": "/attachment/1",
+                            },
+                            {
+                                "id": 2,
+                                "conversationMessageId": 1,
+                                "name": "Attachment 2",
+                                "url": "/attachment/2",
+                            },
+                        ]
+                    }
+                ]
+            }},
+            status_code=201,
+        )
+
+        result = data_client.create_conversation(
+            0,
+            'g-cloud-6',
+            'Subject text',
+            {
+                'text': 'Message text',
+                'sentByUserId': 123,
+            },
+            [
+                {
+                    "name": "Attachment 1",
+                    "url": "/attachment/1",
+                },
+                {
+                    "name": "Attachment 2",
+                    "url": "/attachment/2",
+                }
+            ],
+            user="test@example.com"
+        )
+
+        assert result == {
+            "conversations": {
+                'id': 123,
+                'subject': 'Subject text',
+                'supplierId': 0,
+                'supplierName': "Supplier 0",
+                'frameworkSlug': 'g-cloud-6',
+                'frameworkFramework': 'g-cloud',
+                'frameworkFamily': 'g-cloud',
+                'frameworkName': 'G-Cloud 6',
+                'frameworkStatus': 'pending',
+                'createdAt': '2024-03-14T00:00:00.000000Z',
+                'updatedAt': '2024-03-14T00:00:00.000000Z',
+                'messages': [
+                    {
+                        'id': 1,
+                        'conversationId': 123,
+                        'text': 'Message text',
+                        'sentAt': '2024-03-14T00:00:00.000000Z',
+                        'sentByUserId': 456,
+                        'sentByUserEmail': 'test+456@digital.cabinet-office.gov.uk',
+                        'target': 'for_supplier',
+                        'attachments': [
+                            {
+                                "id": 1,
+                                "conversationMessageId": 1,
+                                "name": "Attachment 1",
+                                "url": "/attachment/1",
+                            },
+                            {
+                                "id": 2,
+                                "conversationMessageId": 1,
+                                "name": "Attachment 2",
+                                "url": "/attachment/2",
+                            },
+                        ]
+                    }
+                ]
+            }
+        }
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "conversations": {
+                "supplierId": 0,
+                "framework": 'g-cloud-6',
+                "subject": 'Subject text',
+                'messages': {
+                    'text': 'Message text',
+                    'sentByUserId': 123,
+                    'attachments': [
+                        {
+                            "name": "Attachment 1",
+                            "url": "/attachment/1",
+                        },
+                        {
+                            "name": "Attachment 2",
+                            "url": "/attachment/2",
+                        }
+                    ]
+                }
+            }
+        }
