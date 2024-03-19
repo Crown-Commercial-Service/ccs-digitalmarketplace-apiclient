@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 25.3.0
+
+Add the API client methods for the conversation messages routes
+
 ## 25.2.0
 
 Add new audit types for conversation messages
