@@ -1297,3 +1297,23 @@ class DataAPIClient(BaseAPIClient):
 
     find_outcomes_iter = make_iter_method("find_outcomes", "outcomes")
     find_outcomes_iter.__name__ = str("find_outcomes_iter")
+
+    # Conversations
+
+    def find_conversations(self, framework, supplier_id=None, archived=None, page=None):
+        warnings.warn(
+            "The output of 'find_conversations' is paginated. Use 'find_conversations_iter' instead.",
+            DeprecationWarning
+        )
+
+        params = {
+            'page': page,
+            'framework': framework,
+            'supplier_id': supplier_id,
+            'archived': archived,
+        }
+
+        return self._get("/conversations", params=params)
+
+    find_conversations_iter = make_iter_method('find_conversations', 'conversations')
+    find_conversations_iter.__name__ = str("find_conversations_iter")

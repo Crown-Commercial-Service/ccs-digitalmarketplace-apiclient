@@ -2948,3 +2948,86 @@ class TestDataAPIClientIterMethods(object):
             url_path="buyer-email-domains",
             iter_kwargs={},
         )
+
+    def test_find_conversations_iter(self, data_client, rmock):
+        self._test_find_iter(
+            data_client, rmock,
+            method_name='find_conversations_iter',
+            model_name='conversations',
+            url_path='conversations?framework=g-cloud-6',
+            iter_kwargs={'framework': 'g-cloud-6'}
+        )
+
+    def test_find_conversations_iter_additional_arguments(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/conversations?framework=g-cloud-6&supplier_id=123',
+            json={
+                'links': {},
+                'conversations': [{'id': 1}, {'id': 2}]
+            },
+            status_code=200)
+
+        result = data_client.find_conversations_iter('g-cloud-6', supplier_id=123)
+        results = list(result)
+
+        assert len(results) == 2
+
+
+class TestConversationsMethods(object):
+    def test_find_conversations(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/conversations?framework=g-cloud-6",
+            json={"conversations": "result"},
+            status_code=200)
+
+        result = data_client.find_conversations('g-cloud-6')
+
+        assert result == {"conversations": "result"}
+        assert rmock.called
+
+    def test_find_conversations_adds_page_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/conversations?framework=g-cloud-6&page=2",
+            json={"conversations": "result"},
+            status_code=200)
+
+        result = data_client.find_conversations('g-cloud-6', page=2)
+
+        assert result == {"conversations": "result"}
+        assert rmock.called
+
+    def test_find_conversations_adds_supplier_id_parameter(
+            self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/conversations?framework=g-cloud-6&supplier_id=1",
+            json={"conversations": "result"},
+            status_code=200)
+
+        result = data_client.find_conversations('g-cloud-6', supplier_id=1)
+
+        assert result == {"conversations": "result"}
+        assert rmock.called
+
+    def test_find_conversations_adds_archived_parameter(
+            self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/conversations?framework=g-cloud-6&archived=true",
+            json={"conversations": "result"},
+            status_code=200)
+
+        result = data_client.find_conversations('g-cloud-6', archived=True)
+
+        assert result == {"conversations": "result"}
+        assert rmock.called
+
+    def test_find_conversations_adds_supplier_id_and_archived_parameter(
+            self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/conversations?framework=g-cloud-6&supplier_id=1&archived=true",
+            json={"conversations": "result"},
+            status_code=200)
+
+        result = data_client.find_conversations('g-cloud-6', supplier_id=1, archived=True)
+
+        assert result == {"conversations": "result"}
+        assert rmock.called
