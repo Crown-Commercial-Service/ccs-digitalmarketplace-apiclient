@@ -3072,3 +3072,23 @@ class TestConversationsMethods(object):
             "updated_by": "test@example.com",
             "archivedByUserId": 456
         }
+
+    def test_read_conversation_message(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/conversations/messages/123/read",
+            json={"message": "done"},
+            status_code=200,
+        )
+
+        result = data_client.read_conversation_message(
+            123,
+            456,
+            "test@example.com"
+        )
+
+        assert result == {"message": "done"}
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "readByUserId": 456
+        }
