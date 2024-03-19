@@ -1348,3 +1348,20 @@ class DataAPIClient(BaseAPIClient):
             },
             user=user,
         )
+
+    def create_conversation(self, supplier_id, framework_slug, subject, message, attachments=None, user=None):
+        if attachments is not None:
+            message["attachments"] = attachments
+
+        return self._post_with_updated_by(
+            "/conversations",
+            data={
+                "conversations": {
+                    "supplierId": supplier_id,
+                    "framework": framework_slug,
+                    "subject": subject,
+                    "messages": message
+                },
+            },
+            user=user,
+        )
