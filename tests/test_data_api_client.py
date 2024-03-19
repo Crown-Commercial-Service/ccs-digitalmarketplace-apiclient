@@ -3052,3 +3052,23 @@ class TestConversationsMethods(object):
             data_client.get_conversation(123)
         except HTTPError:
             assert rmock.called
+
+    def test_archive_conversation(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/conversations/123/archive",
+            json={"message": "done"},
+            status_code=200,
+        )
+
+        result = data_client.archive_conversation(
+            123,
+            456,
+            "test@example.com"
+        )
+
+        assert result == {"message": "done"}
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "archivedByUserId": 456
+        }

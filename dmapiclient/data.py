@@ -1322,3 +1322,10 @@ class DataAPIClient(BaseAPIClient):
         return self._get(
             "/conversations/{}".format(conversation_id)
         )
+
+    def archive_conversation(self, conversation_id, archived_by_user_id, user=None):
+        return self._post_with_updated_by(
+            "/conversations/{}/archive".format(conversation_id),
+            data={"archivedByUserId": int(archived_by_user_id)},
+            user=user,
+        )
