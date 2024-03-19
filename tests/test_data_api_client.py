@@ -3092,3 +3092,145 @@ class TestConversationsMethods(object):
             "updated_by": "test@example.com",
             "readByUserId": 456
         }
+
+    def test_create_conversation_message(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/conversations/123/messages",
+            json={"conversationMessages": {
+                'id': 1,
+                'conversationId': 123,
+                'text': 'Message text',
+                'sentAt': '2024-03-14T00:00:00.000000Z',
+                'sentByUserId': 123,
+                'sentByUserEmail': 'test+123@digital.gov.uk',
+                'target': 'for_admin',
+                'attachments': []
+            }},
+            status_code=201,
+        )
+
+        result = data_client.create_conversation_message(
+            123,
+            {
+                'text': 'Message text',
+                'sentByUserId': 123,
+                'target': 'for_admin',
+            },
+            user="test@example.com"
+        )
+
+        assert result == {
+            "conversationMessages": {
+                'id': 1,
+                'conversationId': 123,
+                'text': 'Message text',
+                'sentAt': '2024-03-14T00:00:00.000000Z',
+                'sentByUserId': 123,
+                'sentByUserEmail': 'test+123@digital.gov.uk',
+                'target': 'for_admin',
+                'attachments': []
+            }
+        }
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "conversationMessages": {
+                'text': 'Message text',
+                'sentByUserId': 123,
+                'target': 'for_admin',
+            }
+        }
+
+    def test_create_conversation_message_with_attachment(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/conversations/123/messages",
+            json={"conversationMessages": {
+                'id': 1,
+                'conversationId': 123,
+                'text': 'Message text',
+                'sentAt': '2024-03-14T00:00:00.000000Z',
+                'sentByUserId': 123,
+                'sentByUserEmail': 'test+123@digital.gov.uk',
+                'target': 'for_admin',
+                'attachments': [
+                    {
+                        "id": 1,
+                        "conversationMessageId": 1,
+                        "name": "Attachment 1",
+                        "url": "/attachment/1",
+                    },
+                    {
+                        "id": 2,
+                        "conversationMessageId": 1,
+                        "name": "Attachment 2",
+                        "url": "/attachment/2",
+                    },
+                ]
+            }},
+            status_code=201,
+        )
+
+        result = data_client.create_conversation_message(
+            123,
+            {
+                'text': 'Message text',
+                'sentByUserId': 123,
+                'target': 'for_admin',
+            },
+            [
+                {
+                    "name": "Attachment 1",
+                    "url": "/attachment/1",
+                },
+                {
+                    "name": "Attachment 2",
+                    "url": "/attachment/2",
+                }
+            ],
+            user="test@example.com"
+        )
+
+        assert result == {
+            "conversationMessages": {
+                'id': 1,
+                'conversationId': 123,
+                'text': 'Message text',
+                'sentAt': '2024-03-14T00:00:00.000000Z',
+                'sentByUserId': 123,
+                'sentByUserEmail': 'test+123@digital.gov.uk',
+                'target': 'for_admin',
+                'attachments': [
+                    {
+                        "id": 1,
+                        "conversationMessageId": 1,
+                        "name": "Attachment 1",
+                        "url": "/attachment/1",
+                    },
+                    {
+                        "id": 2,
+                        "conversationMessageId": 1,
+                        "name": "Attachment 2",
+                        "url": "/attachment/2",
+                    },
+                ]
+            }
+        }
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "conversationMessages": {
+                'text': 'Message text',
+                'sentByUserId': 123,
+                'target': 'for_admin',
+                'attachments': [
+                    {
+                        "name": "Attachment 1",
+                        "url": "/attachment/1",
+                    },
+                    {
+                        "name": "Attachment 2",
+                        "url": "/attachment/2",
+                    }
+                ]
+            }
+        }

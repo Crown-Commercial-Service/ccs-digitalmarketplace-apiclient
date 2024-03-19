@@ -1336,3 +1336,15 @@ class DataAPIClient(BaseAPIClient):
             data={"readByUserId": int(read_by_user_id)},
             user=user,
         )
+
+    def create_conversation_message(self, conversation_id, message, attachments=None, user=None):
+        if attachments is not None:
+            message["attachments"] = attachments
+
+        return self._post_with_updated_by(
+            "/conversations/{}/messages".format(conversation_id),
+            data={
+                "conversationMessages": message,
+            },
+            user=user,
+        )
