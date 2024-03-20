@@ -1300,9 +1300,9 @@ class DataAPIClient(BaseAPIClient):
 
     # Conversations
 
-    def find_conversations(self, framework, supplier_id=None, archived=None, page=None):
+    def find_communications(self, framework, supplier_id=None, archived=None, page=None):
         warnings.warn(
-            "The output of 'find_conversations' is paginated. Use 'find_conversations_iter' instead.",
+            "The output of 'find_communications' is paginated. Use 'find_communications_iter' instead.",
             DeprecationWarning
         )
 
@@ -1313,50 +1313,50 @@ class DataAPIClient(BaseAPIClient):
             'archived': archived,
         }
 
-        return self._get("/conversations", params=params)
+        return self._get("/communications", params=params)
 
-    find_conversations_iter = make_iter_method('find_conversations', 'conversations')
-    find_conversations_iter.__name__ = str("find_conversations_iter")
+    find_communications_iter = make_iter_method('find_communications', 'communications')
+    find_communications_iter.__name__ = str("find_communications_iter")
 
-    def get_conversation(self, conversation_id):
+    def get_communication(self, communication_id):
         return self._get(
-            "/conversations/{}".format(conversation_id)
+            "/communications/{}".format(communication_id)
         )
 
-    def archive_conversation(self, conversation_id, archived_by_user_id, user=None):
+    def archive_communication(self, communication_id, archived_by_user_id, user=None):
         return self._post_with_updated_by(
-            "/conversations/{}/archive".format(conversation_id),
+            "/communications/{}/archive".format(communication_id),
             data={"archivedByUserId": int(archived_by_user_id)},
             user=user,
         )
 
-    def read_conversation_message(self, conversation_message_id, read_by_user_id, user=None):
+    def read_communication_message(self, communication_message_id, read_by_user_id, user=None):
         return self._post_with_updated_by(
-            "/conversations/messages/{}/read".format(conversation_message_id),
+            "/communications/messages/{}/read".format(communication_message_id),
             data={"readByUserId": int(read_by_user_id)},
             user=user,
         )
 
-    def create_conversation_message(self, conversation_id, message, attachments=None, user=None):
+    def create_communication_message(self, communication_id, message, attachments=None, user=None):
         if attachments is not None:
             message["attachments"] = attachments
 
         return self._post_with_updated_by(
-            "/conversations/{}/messages".format(conversation_id),
+            "/communications/{}/messages".format(communication_id),
             data={
-                "conversationMessages": message,
+                "communicationMessages": message,
             },
             user=user,
         )
 
-    def create_conversation(self, supplier_id, framework_slug, subject, message, attachments=None, user=None):
+    def create_communication(self, supplier_id, framework_slug, subject, message, attachments=None, user=None):
         if attachments is not None:
             message["attachments"] = attachments
 
         return self._post_with_updated_by(
-            "/conversations",
+            "/communications",
             data={
-                "conversations": {
+                "communications": {
                     "supplierId": supplier_id,
                     "framework": framework_slug,
                     "subject": subject,

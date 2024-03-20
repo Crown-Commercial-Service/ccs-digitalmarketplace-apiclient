@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 25.4.0
+
+Rename `conversation` methods to `communication` as this is the term we are using for the model and routes now
+
 ## 25.3.0
 
 Add the API client methods for the conversation messages routes
