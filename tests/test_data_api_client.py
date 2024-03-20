@@ -2949,118 +2949,118 @@ class TestDataAPIClientIterMethods(object):
             iter_kwargs={},
         )
 
-    def test_find_conversations_iter(self, data_client, rmock):
+    def test_find_communications_iter(self, data_client, rmock):
         self._test_find_iter(
             data_client, rmock,
-            method_name='find_conversations_iter',
-            model_name='conversations',
-            url_path='conversations?framework=g-cloud-6',
+            method_name='find_communications_iter',
+            model_name='communications',
+            url_path='communications?framework=g-cloud-6',
             iter_kwargs={'framework': 'g-cloud-6'}
         )
 
-    def test_find_conversations_iter_additional_arguments(self, data_client, rmock):
+    def test_find_communications_iter_additional_arguments(self, data_client, rmock):
         rmock.get(
-            'http://baseurl/conversations?framework=g-cloud-6&supplier_id=123',
+            'http://baseurl/communications?framework=g-cloud-6&supplier_id=123',
             json={
                 'links': {},
-                'conversations': [{'id': 1}, {'id': 2}]
+                'communications': [{'id': 1}, {'id': 2}]
             },
             status_code=200)
 
-        result = data_client.find_conversations_iter('g-cloud-6', supplier_id=123)
+        result = data_client.find_communications_iter('g-cloud-6', supplier_id=123)
         results = list(result)
 
         assert len(results) == 2
 
 
 class TestConversationsMethods(object):
-    def test_find_conversations(self, data_client, rmock):
+    def test_find_communications(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/conversations?framework=g-cloud-6",
-            json={"conversations": "result"},
+            "http://baseurl/communications?framework=g-cloud-6",
+            json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_conversations('g-cloud-6')
+        result = data_client.find_communications('g-cloud-6')
 
-        assert result == {"conversations": "result"}
+        assert result == {"communications": "result"}
         assert rmock.called
 
-    def test_find_conversations_adds_page_parameter(self, data_client, rmock):
+    def test_find_communications_adds_page_parameter(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/conversations?framework=g-cloud-6&page=2",
-            json={"conversations": "result"},
+            "http://baseurl/communications?framework=g-cloud-6&page=2",
+            json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_conversations('g-cloud-6', page=2)
+        result = data_client.find_communications('g-cloud-6', page=2)
 
-        assert result == {"conversations": "result"}
+        assert result == {"communications": "result"}
         assert rmock.called
 
-    def test_find_conversations_adds_supplier_id_parameter(
+    def test_find_communications_adds_supplier_id_parameter(
             self, data_client, rmock):
         rmock.get(
-            "http://baseurl/conversations?framework=g-cloud-6&supplier_id=1",
-            json={"conversations": "result"},
+            "http://baseurl/communications?framework=g-cloud-6&supplier_id=1",
+            json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_conversations('g-cloud-6', supplier_id=1)
+        result = data_client.find_communications('g-cloud-6', supplier_id=1)
 
-        assert result == {"conversations": "result"}
+        assert result == {"communications": "result"}
         assert rmock.called
 
-    def test_find_conversations_adds_archived_parameter(
+    def test_find_communications_adds_archived_parameter(
             self, data_client, rmock):
         rmock.get(
-            "http://baseurl/conversations?framework=g-cloud-6&archived=true",
-            json={"conversations": "result"},
+            "http://baseurl/communications?framework=g-cloud-6&archived=true",
+            json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_conversations('g-cloud-6', archived=True)
+        result = data_client.find_communications('g-cloud-6', archived=True)
 
-        assert result == {"conversations": "result"}
+        assert result == {"communications": "result"}
         assert rmock.called
 
-    def test_find_conversations_adds_supplier_id_and_archived_parameter(
+    def test_find_communications_adds_supplier_id_and_archived_parameter(
             self, data_client, rmock):
         rmock.get(
-            "http://baseurl/conversations?framework=g-cloud-6&supplier_id=1&archived=true",
-            json={"conversations": "result"},
+            "http://baseurl/communications?framework=g-cloud-6&supplier_id=1&archived=true",
+            json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_conversations('g-cloud-6', supplier_id=1, archived=True)
+        result = data_client.find_communications('g-cloud-6', supplier_id=1, archived=True)
 
-        assert result == {"conversations": "result"}
+        assert result == {"communications": "result"}
         assert rmock.called
 
-    def test_get_conversation(self, data_client, rmock):
+    def test_get_communication(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/conversations/123",
-            json={"conversations": "result"},
+            "http://baseurl/communications/123",
+            json={"communications": "result"},
             status_code=200)
 
-        result = data_client.get_conversation(123)
+        result = data_client.get_communication(123)
 
-        assert result == {"conversations": "result"}
+        assert result == {"communications": "result"}
         assert rmock.called
 
-    def test_get_conversation_should_return_404(self, data_client, rmock):
+    def test_get_communication_should_return_404(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/conversations/123",
+            "http://baseurl/communications/123",
             status_code=404)
 
         try:
-            data_client.get_conversation(123)
+            data_client.get_communication(123)
         except HTTPError:
             assert rmock.called
 
-    def test_archive_conversation(self, data_client, rmock):
+    def test_archive_communication(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/conversations/123/archive",
+            "http://baseurl/communications/123/archive",
             json={"message": "done"},
             status_code=200,
         )
 
-        result = data_client.archive_conversation(
+        result = data_client.archive_communication(
             123,
             456,
             "test@example.com"
@@ -3073,14 +3073,14 @@ class TestConversationsMethods(object):
             "archivedByUserId": 456
         }
 
-    def test_read_conversation_message(self, data_client, rmock):
+    def test_read_communication_message(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/conversations/messages/123/read",
+            "http://baseurl/communications/messages/123/read",
             json={"message": "done"},
             status_code=200,
         )
 
-        result = data_client.read_conversation_message(
+        result = data_client.read_communication_message(
             123,
             456,
             "test@example.com"
@@ -3093,12 +3093,12 @@ class TestConversationsMethods(object):
             "readByUserId": 456
         }
 
-    def test_create_conversation_message(self, data_client, rmock):
+    def test_create_communication_message(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/conversations/123/messages",
-            json={"conversationMessages": {
+            "http://baseurl/communications/123/messages",
+            json={"communicationMessages": {
                 'id': 1,
-                'conversationId': 123,
+                'communicationId': 123,
                 'text': 'Message text',
                 'sentAt': '2024-03-14T00:00:00.000000Z',
                 'sentByUserId': 123,
@@ -3109,7 +3109,7 @@ class TestConversationsMethods(object):
             status_code=201,
         )
 
-        result = data_client.create_conversation_message(
+        result = data_client.create_communication_message(
             123,
             {
                 'text': 'Message text',
@@ -3120,9 +3120,9 @@ class TestConversationsMethods(object):
         )
 
         assert result == {
-            "conversationMessages": {
+            "communicationMessages": {
                 'id': 1,
-                'conversationId': 123,
+                'communicationId': 123,
                 'text': 'Message text',
                 'sentAt': '2024-03-14T00:00:00.000000Z',
                 'sentByUserId': 123,
@@ -3134,19 +3134,19 @@ class TestConversationsMethods(object):
         assert rmock.called
         assert rmock.last_request.json() == {
             "updated_by": "test@example.com",
-            "conversationMessages": {
+            "communicationMessages": {
                 'text': 'Message text',
                 'sentByUserId': 123,
                 'target': 'for_admin',
             }
         }
 
-    def test_create_conversation_message_with_attachment(self, data_client, rmock):
+    def test_create_communication_message_with_attachment(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/conversations/123/messages",
-            json={"conversationMessages": {
+            "http://baseurl/communications/123/messages",
+            json={"communicationMessages": {
                 'id': 1,
-                'conversationId': 123,
+                'communicationId': 123,
                 'text': 'Message text',
                 'sentAt': '2024-03-14T00:00:00.000000Z',
                 'sentByUserId': 123,
@@ -3155,13 +3155,13 @@ class TestConversationsMethods(object):
                 'attachments': [
                     {
                         "id": 1,
-                        "conversationMessageId": 1,
+                        "communicationMessageId": 1,
                         "name": "Attachment 1",
                         "url": "/attachment/1",
                     },
                     {
                         "id": 2,
-                        "conversationMessageId": 1,
+                        "communicationMessageId": 1,
                         "name": "Attachment 2",
                         "url": "/attachment/2",
                     },
@@ -3170,7 +3170,7 @@ class TestConversationsMethods(object):
             status_code=201,
         )
 
-        result = data_client.create_conversation_message(
+        result = data_client.create_communication_message(
             123,
             {
                 'text': 'Message text',
@@ -3191,9 +3191,9 @@ class TestConversationsMethods(object):
         )
 
         assert result == {
-            "conversationMessages": {
+            "communicationMessages": {
                 'id': 1,
-                'conversationId': 123,
+                'communicationId': 123,
                 'text': 'Message text',
                 'sentAt': '2024-03-14T00:00:00.000000Z',
                 'sentByUserId': 123,
@@ -3202,13 +3202,13 @@ class TestConversationsMethods(object):
                 'attachments': [
                     {
                         "id": 1,
-                        "conversationMessageId": 1,
+                        "communicationMessageId": 1,
                         "name": "Attachment 1",
                         "url": "/attachment/1",
                     },
                     {
                         "id": 2,
-                        "conversationMessageId": 1,
+                        "communicationMessageId": 1,
                         "name": "Attachment 2",
                         "url": "/attachment/2",
                     },
@@ -3218,7 +3218,7 @@ class TestConversationsMethods(object):
         assert rmock.called
         assert rmock.last_request.json() == {
             "updated_by": "test@example.com",
-            "conversationMessages": {
+            "communicationMessages": {
                 'text': 'Message text',
                 'sentByUserId': 123,
                 'target': 'for_admin',
@@ -3235,10 +3235,10 @@ class TestConversationsMethods(object):
             }
         }
 
-    def test_create_conversation(self, data_client, rmock):
+    def test_create_communication(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/conversations",
-            json={"conversations": {
+            "http://baseurl/communications",
+            json={"communications": {
                 'id': 123,
                 'subject': 'Subject text',
                 'supplierId': 0,
@@ -3253,7 +3253,7 @@ class TestConversationsMethods(object):
                 'messages': [
                     {
                         'id': 1,
-                        'conversationId': 123,
+                        'communicationId': 123,
                         'text': 'Message text',
                         'sentAt': '2024-03-14T00:00:00.000000Z',
                         'sentByUserId': 456,
@@ -3266,7 +3266,7 @@ class TestConversationsMethods(object):
             status_code=201,
         )
 
-        result = data_client.create_conversation(
+        result = data_client.create_communication(
             0,
             'g-cloud-6',
             'Subject text',
@@ -3278,7 +3278,7 @@ class TestConversationsMethods(object):
         )
 
         assert result == {
-            "conversations": {
+            "communications": {
                 'id': 123,
                 'subject': 'Subject text',
                 'supplierId': 0,
@@ -3293,7 +3293,7 @@ class TestConversationsMethods(object):
                 'messages': [
                     {
                         'id': 1,
-                        'conversationId': 123,
+                        'communicationId': 123,
                         'text': 'Message text',
                         'sentAt': '2024-03-14T00:00:00.000000Z',
                         'sentByUserId': 456,
@@ -3307,7 +3307,7 @@ class TestConversationsMethods(object):
         assert rmock.called
         assert rmock.last_request.json() == {
             "updated_by": "test@example.com",
-            "conversations": {
+            "communications": {
                 "supplierId": 0,
                 "framework": 'g-cloud-6',
                 "subject": 'Subject text',
@@ -3318,10 +3318,10 @@ class TestConversationsMethods(object):
             }
         }
 
-    def test_create_conversation_with_attachment(self, data_client, rmock):
+    def test_create_communication_with_attachment(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/conversations",
-            json={"conversations": {
+            "http://baseurl/communications",
+            json={"communications": {
                 'id': 123,
                 'subject': 'Subject text',
                 'supplierId': 0,
@@ -3336,7 +3336,7 @@ class TestConversationsMethods(object):
                 'messages': [
                     {
                         'id': 1,
-                        'conversationId': 123,
+                        'communicationId': 123,
                         'text': 'Message text',
                         'sentAt': '2024-03-14T00:00:00.000000Z',
                         'sentByUserId': 456,
@@ -3345,13 +3345,13 @@ class TestConversationsMethods(object):
                         'attachments': [
                             {
                                 "id": 1,
-                                "conversationMessageId": 1,
+                                "communicationMessageId": 1,
                                 "name": "Attachment 1",
                                 "url": "/attachment/1",
                             },
                             {
                                 "id": 2,
-                                "conversationMessageId": 1,
+                                "communicationMessageId": 1,
                                 "name": "Attachment 2",
                                 "url": "/attachment/2",
                             },
@@ -3362,7 +3362,7 @@ class TestConversationsMethods(object):
             status_code=201,
         )
 
-        result = data_client.create_conversation(
+        result = data_client.create_communication(
             0,
             'g-cloud-6',
             'Subject text',
@@ -3384,7 +3384,7 @@ class TestConversationsMethods(object):
         )
 
         assert result == {
-            "conversations": {
+            "communications": {
                 'id': 123,
                 'subject': 'Subject text',
                 'supplierId': 0,
@@ -3399,7 +3399,7 @@ class TestConversationsMethods(object):
                 'messages': [
                     {
                         'id': 1,
-                        'conversationId': 123,
+                        'communicationId': 123,
                         'text': 'Message text',
                         'sentAt': '2024-03-14T00:00:00.000000Z',
                         'sentByUserId': 456,
@@ -3408,13 +3408,13 @@ class TestConversationsMethods(object):
                         'attachments': [
                             {
                                 "id": 1,
-                                "conversationMessageId": 1,
+                                "communicationMessageId": 1,
                                 "name": "Attachment 1",
                                 "url": "/attachment/1",
                             },
                             {
                                 "id": 2,
-                                "conversationMessageId": 1,
+                                "communicationMessageId": 1,
                                 "name": "Attachment 2",
                                 "url": "/attachment/2",
                             },
@@ -3426,7 +3426,7 @@ class TestConversationsMethods(object):
         assert rmock.called
         assert rmock.last_request.json() == {
             "updated_by": "test@example.com",
-            "conversations": {
+            "communications": {
                 "supplierId": 0,
                 "framework": 'g-cloud-6',
                 "subject": 'Subject text',
