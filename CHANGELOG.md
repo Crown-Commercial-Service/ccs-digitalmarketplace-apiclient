@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 25.3.1
+
+Some of our scripts run the native Jenkins version of Python which is v3.8 so we need to re-allow python v3.8 in the API client (which is used by scripts) 
+
 ## 25.3.0
 
 Add the API client methods for the conversation messages routes
