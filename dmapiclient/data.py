@@ -1359,7 +1359,7 @@ class DataAPIClient(BaseAPIClient):
             data={
                 "communications": {
                     "supplierId": supplier_id,
-                    "framework": framework_slug,
+                    "frameworkSlug": framework_slug,
                     "subject": subject,
                     "messages": message
                 },
