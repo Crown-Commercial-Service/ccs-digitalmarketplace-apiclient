@@ -1300,7 +1300,7 @@ class DataAPIClient(BaseAPIClient):
 
     # Conversations
 
-    def find_communications(self, framework, supplier_id=None, archived=None, page=None):
+    def find_communications(self, framework, supplier_id=None, latest_message_target=None, archived=None, page=None):
         warnings.warn(
             "The output of 'find_communications' is paginated. Use 'find_communications_iter' instead.",
             DeprecationWarning
@@ -1310,6 +1310,7 @@ class DataAPIClient(BaseAPIClient):
             'page': page,
             'framework': framework,
             'supplier_id': supplier_id,
+            'latest_message_target': latest_message_target,
             'archived': archived,
         }
 
