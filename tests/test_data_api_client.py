@@ -3309,7 +3309,7 @@ class TestConversationsMethods(object):
             "updated_by": "test@example.com",
             "communications": {
                 "supplierId": 0,
-                "framework": 'g-cloud-6',
+                "frameworkSlug": 'g-cloud-6',
                 "subject": 'Subject text',
                 'messages': {
                     'text': 'Message text',
@@ -3428,7 +3428,7 @@ class TestConversationsMethods(object):
             "updated_by": "test@example.com",
             "communications": {
                 "supplierId": 0,
-                "framework": 'g-cloud-6',
+                "frameworkSlug": 'g-cloud-6',
                 "subject": 'Subject text',
                 'messages': {
                     'text': 'Message text',
