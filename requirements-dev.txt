@@ -8,7 +8,7 @@
     # via -r requirements-dev.in
 blinker==1.7.0
     # via flask
-ccs-digitalmarketplace-test-utils==4.2.0
+ccs-digitalmarketplace-test-utils==4.3.1
     # via -r requirements-dev.in
 certifi==2022.12.7
     # via requests
