@@ -3157,13 +3157,13 @@ class TestConversationsMethods(object):
                         "id": 1,
                         "communicationMessageId": 1,
                         "name": "Attachment 1",
-                        "url": "/attachment/1",
+                        "filePath": "Attachment_1.pdf",
                     },
                     {
                         "id": 2,
                         "communicationMessageId": 1,
                         "name": "Attachment 2",
-                        "url": "/attachment/2",
+                        "filePath": "Attachment_2.pdf",
                     },
                 ]
             }},
@@ -3180,11 +3180,11 @@ class TestConversationsMethods(object):
             [
                 {
                     "name": "Attachment 1",
-                    "url": "/attachment/1",
+                    "filePath": "Attachment_1.pdf",
                 },
                 {
                     "name": "Attachment 2",
-                    "url": "/attachment/2",
+                    "filePath": "Attachment_2.pdf",
                 }
             ],
             user="test@example.com"
@@ -3204,13 +3204,13 @@ class TestConversationsMethods(object):
                         "id": 1,
                         "communicationMessageId": 1,
                         "name": "Attachment 1",
-                        "url": "/attachment/1",
+                        "filePath": "Attachment_1.pdf",
                     },
                     {
                         "id": 2,
                         "communicationMessageId": 1,
                         "name": "Attachment 2",
-                        "url": "/attachment/2",
+                        "filePath": "Attachment_2.pdf",
                     },
                 ]
             }
@@ -3225,11 +3225,11 @@ class TestConversationsMethods(object):
                 'attachments': [
                     {
                         "name": "Attachment 1",
-                        "url": "/attachment/1",
+                        "filePath": "Attachment_1.pdf",
                     },
                     {
                         "name": "Attachment 2",
-                        "url": "/attachment/2",
+                        "filePath": "Attachment_2.pdf",
                     }
                 ]
             }
@@ -3347,13 +3347,13 @@ class TestConversationsMethods(object):
                                 "id": 1,
                                 "communicationMessageId": 1,
                                 "name": "Attachment 1",
-                                "url": "/attachment/1",
+                                "filePath": "Attachment_1.pdf",
                             },
                             {
                                 "id": 2,
                                 "communicationMessageId": 1,
                                 "name": "Attachment 2",
-                                "url": "/attachment/2",
+                                "filePath": "Attachment_2.pdf",
                             },
                         ]
                     }
@@ -3373,11 +3373,11 @@ class TestConversationsMethods(object):
             [
                 {
                     "name": "Attachment 1",
-                    "url": "/attachment/1",
+                    "filePath": "Attachment_1.pdf",
                 },
                 {
                     "name": "Attachment 2",
-                    "url": "/attachment/2",
+                    "filePath": "Attachment_2.pdf",
                 }
             ],
             user="test@example.com"
@@ -3410,13 +3410,13 @@ class TestConversationsMethods(object):
                                 "id": 1,
                                 "communicationMessageId": 1,
                                 "name": "Attachment 1",
-                                "url": "/attachment/1",
+                                "filePath": "Attachment_1.pdf",
                             },
                             {
                                 "id": 2,
                                 "communicationMessageId": 1,
                                 "name": "Attachment 2",
-                                "url": "/attachment/2",
+                                "filePath": "Attachment_2.pdf",
                             },
                         ]
                     }
@@ -3436,11 +3436,11 @@ class TestConversationsMethods(object):
                     'attachments': [
                         {
                             "name": "Attachment 1",
-                            "url": "/attachment/1",
+                            "filePath": "Attachment_1.pdf",
                         },
                         {
                             "name": "Attachment 2",
-                            "url": "/attachment/2",
+                            "filePath": "Attachment_2.pdf",
                         }
                     ]
                 }
