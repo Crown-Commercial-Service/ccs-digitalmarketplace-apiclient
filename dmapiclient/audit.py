@@ -83,7 +83,7 @@ class AuditTypes(Enum):
     # Mailing list actions
     mailing_list_subscription = "mailing_list_subscription"
 
-    # Conversations
+    # Communications
     create_communication = "create_communication"
     archive_communication = "archive_communication"
     send_communication_message = "send_communication_message"
