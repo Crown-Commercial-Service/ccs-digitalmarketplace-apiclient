@@ -1298,7 +1298,7 @@ class DataAPIClient(BaseAPIClient):
     find_outcomes_iter = make_iter_method("find_outcomes", "outcomes")
     find_outcomes_iter.__name__ = str("find_outcomes_iter")
 
-    # Conversations
+    # Communications
 
     def find_communications(self, framework, supplier_id=None, latest_message_target=None, archived=None, page=None):
         warnings.warn(
@@ -1350,7 +1350,16 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def create_communication(self, supplier_id, framework_slug, subject, message, attachments=None, user=None):
+    def create_communication(
+        self,
+        supplier_id,
+        framework_slug,
+        subject,
+        notification_emails,
+        message,
+        attachments=None,
+        user=None
+    ):
         if attachments is not None:
             message["attachments"] = attachments
 
@@ -1361,6 +1370,7 @@ class DataAPIClient(BaseAPIClient):
                     "supplierId": supplier_id,
                     "frameworkSlug": framework_slug,
                     "subject": subject,
+                    "notificationEmails": notification_emails,
                     "messages": message
                 },
             },

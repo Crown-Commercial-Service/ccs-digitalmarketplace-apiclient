@@ -2973,7 +2973,7 @@ class TestDataAPIClientIterMethods(object):
         assert len(results) == 2
 
 
-class TestConversationsMethods(object):
+class TestCommunicationsMethods(object):
     def test_find_communications(self, data_client, rmock):
         rmock.get(
             "http://baseurl/communications?framework=g-cloud-6",
@@ -3241,6 +3241,10 @@ class TestConversationsMethods(object):
             json={"communications": {
                 'id': 123,
                 'subject': 'Subject text',
+                'notificationEmails': [
+                    'test+1@email.com',
+                    'test+2@email.com',
+                ],
                 'supplierId': 0,
                 'supplierName': "Supplier 0",
                 'frameworkSlug': 'g-cloud-6',
@@ -3270,6 +3274,10 @@ class TestConversationsMethods(object):
             0,
             'g-cloud-6',
             'Subject text',
+            [
+                'test+1@email.com',
+                'test+2@email.com',
+            ],
             {
                 'text': 'Message text',
                 'sentByUserId': 123,
@@ -3281,6 +3289,10 @@ class TestConversationsMethods(object):
             "communications": {
                 'id': 123,
                 'subject': 'Subject text',
+                'notificationEmails': [
+                    'test+1@email.com',
+                    'test+2@email.com',
+                ],
                 'supplierId': 0,
                 'supplierName': "Supplier 0",
                 'frameworkSlug': 'g-cloud-6',
@@ -3311,6 +3323,10 @@ class TestConversationsMethods(object):
                 "supplierId": 0,
                 "frameworkSlug": 'g-cloud-6',
                 "subject": 'Subject text',
+                'notificationEmails': [
+                    'test+1@email.com',
+                    'test+2@email.com',
+                ],
                 'messages': {
                     'text': 'Message text',
                     'sentByUserId': 123,
@@ -3324,6 +3340,10 @@ class TestConversationsMethods(object):
             json={"communications": {
                 'id': 123,
                 'subject': 'Subject text',
+                'notificationEmails': [
+                    'test+1@email.com',
+                    'test+2@email.com',
+                ],
                 'supplierId': 0,
                 'supplierName': "Supplier 0",
                 'frameworkSlug': 'g-cloud-6',
@@ -3366,6 +3386,10 @@ class TestConversationsMethods(object):
             0,
             'g-cloud-6',
             'Subject text',
+            [
+                'test+1@email.com',
+                'test+2@email.com',
+            ],
             {
                 'text': 'Message text',
                 'sentByUserId': 123,
@@ -3387,6 +3411,10 @@ class TestConversationsMethods(object):
             "communications": {
                 'id': 123,
                 'subject': 'Subject text',
+                'notificationEmails': [
+                    'test+1@email.com',
+                    'test+2@email.com',
+                ],
                 'supplierId': 0,
                 'supplierName': "Supplier 0",
                 'frameworkSlug': 'g-cloud-6',
@@ -3430,6 +3458,10 @@ class TestConversationsMethods(object):
                 "supplierId": 0,
                 "frameworkSlug": 'g-cloud-6',
                 "subject": 'Subject text',
+                'notificationEmails': [
+                    'test+1@email.com',
+                    'test+2@email.com',
+                ],
                 'messages': {
                     'text': 'Message text',
                     'sentByUserId': 123,
