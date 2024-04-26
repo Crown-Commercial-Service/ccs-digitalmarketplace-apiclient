@@ -3189,13 +3189,11 @@ class TestCommunicationsMethods(object):
                     {
                         "id": 1,
                         "communicationMessageId": 1,
-                        "name": "Attachment 1",
                         "filePath": "Attachment_1.pdf",
                     },
                     {
                         "id": 2,
                         "communicationMessageId": 1,
-                        "name": "Attachment 2",
                         "filePath": "Attachment_2.pdf",
                     },
                 ]
@@ -3212,11 +3210,9 @@ class TestCommunicationsMethods(object):
             },
             [
                 {
-                    "name": "Attachment 1",
                     "filePath": "Attachment_1.pdf",
                 },
                 {
-                    "name": "Attachment 2",
                     "filePath": "Attachment_2.pdf",
                 }
             ],
@@ -3236,13 +3232,11 @@ class TestCommunicationsMethods(object):
                     {
                         "id": 1,
                         "communicationMessageId": 1,
-                        "name": "Attachment 1",
                         "filePath": "Attachment_1.pdf",
                     },
                     {
                         "id": 2,
                         "communicationMessageId": 1,
-                        "name": "Attachment 2",
                         "filePath": "Attachment_2.pdf",
                     },
                 ]
@@ -3257,11 +3251,9 @@ class TestCommunicationsMethods(object):
                 'target': 'for_admin',
                 'attachments': [
                     {
-                        "name": "Attachment 1",
                         "filePath": "Attachment_1.pdf",
                     },
                     {
-                        "name": "Attachment 2",
                         "filePath": "Attachment_2.pdf",
                     }
                 ]
@@ -3399,13 +3391,11 @@ class TestCommunicationsMethods(object):
                             {
                                 "id": 1,
                                 "communicationMessageId": 1,
-                                "name": "Attachment 1",
                                 "filePath": "Attachment_1.pdf",
                             },
                             {
                                 "id": 2,
                                 "communicationMessageId": 1,
-                                "name": "Attachment 2",
                                 "filePath": "Attachment_2.pdf",
                             },
                         ]
@@ -3429,11 +3419,9 @@ class TestCommunicationsMethods(object):
             },
             [
                 {
-                    "name": "Attachment 1",
                     "filePath": "Attachment_1.pdf",
                 },
                 {
-                    "name": "Attachment 2",
                     "filePath": "Attachment_2.pdf",
                 }
             ],
@@ -3470,13 +3458,11 @@ class TestCommunicationsMethods(object):
                             {
                                 "id": 1,
                                 "communicationMessageId": 1,
-                                "name": "Attachment 1",
                                 "filePath": "Attachment_1.pdf",
                             },
                             {
                                 "id": 2,
                                 "communicationMessageId": 1,
-                                "name": "Attachment 2",
                                 "filePath": "Attachment_2.pdf",
                             },
                         ]
@@ -3500,11 +3486,9 @@ class TestCommunicationsMethods(object):
                     'sentByUserId': 123,
                     'attachments': [
                         {
-                            "name": "Attachment 1",
                             "filePath": "Attachment_1.pdf",
                         },
                         {
-                            "name": "Attachment 2",
                             "filePath": "Attachment_2.pdf",
                         }
                     ]
