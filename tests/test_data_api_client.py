@@ -3065,6 +3065,28 @@ class TestCommunicationsMethods(object):
         assert result == {"communications": "result"}
         assert rmock.called
 
+    def test_find_communications_adds_sort_by_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/communications?framework=g-cloud-6&sort_by=supplier_name",
+            json={"communications": "result"},
+            status_code=200)
+
+        result = data_client.find_communications('g-cloud-6', sort_by="supplier_name")
+
+        assert result == {"communications": "result"}
+        assert rmock.called
+
+    def test_find_communications_adds_sort_direction_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/communications?framework=g-cloud-6&sort_direction=asc",
+            json={"communications": "result"},
+            status_code=200)
+
+        result = data_client.find_communications('g-cloud-6', sort_direction="asc")
+
+        assert result == {"communications": "result"}
+        assert rmock.called
+
     def test_get_communication(self, data_client, rmock):
         rmock.get(
             "http://baseurl/communications/123",
