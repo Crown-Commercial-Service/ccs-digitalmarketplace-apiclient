@@ -1310,8 +1310,7 @@ class DataAPIClient(BaseAPIClient):
         subject=None,
         supplier_name=None,
         message_text=None,
-        sort_by=None,
-        sort_direction=None
+        sort_by=None
     ):
         warnings.warn(
             "The output of 'find_communications' is paginated. Use 'find_communications_iter' instead.",
@@ -1328,7 +1327,6 @@ class DataAPIClient(BaseAPIClient):
             'supplier_name': supplier_name,
             'message_text': message_text,
             'sort_by': sort_by,
-            'sort_direction': sort_direction
         }
 
         return self._get("/communications", params=params)
