@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 25.5.0
+
+Add support for Python 3.12
+
 ## 25.4.0
 
 Rename `conversation` methods to `communication` as this is the term we are using for the model and routes now
