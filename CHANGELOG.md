@@ -2,7 +2,7 @@
 
 Records breaking changes from major version bumps
 
-## 25.5.0
+## 25.9.0
 
 Add support for Python 3.12
 
