@@ -89,6 +89,10 @@ class AuditTypes(Enum):
     send_communication_message = "send_communication_message"
     read_communication_message = "read_communication_message"
 
+    # System message
+    create_system_message = "create_system_message"
+    update_system_message = "update_system_message"
+
     @staticmethod
     def is_valid_audit_type(test_audit_type):
 

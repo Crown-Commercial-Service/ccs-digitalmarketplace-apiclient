@@ -1391,3 +1391,53 @@ class DataAPIClient(BaseAPIClient):
             },
             user=user,
         )
+
+    def get_system_message(self, slug):
+        return self._get(
+            "/system-messages/{}".format(slug)
+        )
+
+    def create_system_message(
+        self,
+        slug,
+        data,
+        show=None,
+        user=None
+    ):
+        system_message = {
+            "slug": slug,
+            "data": data,
+        }
+
+        if show is not None:
+            system_message["show"] = show
+
+        return self._post_with_updated_by(
+            "/system-messages",
+            data={
+                "systemMessages": system_message,
+            },
+            user=user,
+        )
+
+    def update_system_message(
+        self,
+        slug,
+        data,
+        show=None,
+        user=None
+    ):
+        system_message = {
+            "data": data,
+        }
+
+        if show is not None:
+            system_message["show"] = show
+
+        return self._post_with_updated_by(
+            "/system-messages/{}".format(slug),
+            data={
+                "systemMessages": system_message,
+            },
+            user=user,
+        )
