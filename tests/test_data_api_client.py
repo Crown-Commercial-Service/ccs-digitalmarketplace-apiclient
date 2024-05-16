@@ -3506,3 +3506,202 @@ class TestCommunicationsMethods(object):
                 }
             }
         }
+
+
+class TestSystemMessagesMethods(object):
+    def test_get_system_message(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/system-messages/test-system-message",
+            json={"systemMessages": "result"},
+            status_code=200)
+
+        result = data_client.get_system_message("test-system-message")
+
+        assert result == {"systemMessages": "result"}
+        assert rmock.called
+
+    def test_get_system_message_should_return_404(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/system-messages/test-system-message",
+            status_code=404)
+
+        try:
+            data_client.get_system_message("test-system-message")
+        except HTTPError:
+            assert rmock.called
+
+    def test_create_system_message(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/system-messages",
+            json={"systemMessages": {
+                'id': 123,
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': False,
+            }},
+            status_code=201,
+        )
+
+        result = data_client.create_system_message(
+            'test-system-message',
+            {
+                "system-message-key": "system-message-value"
+            },
+            user="test@example.com"
+        )
+
+        assert result == {
+            "systemMessages": {
+                'id': 123,
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': False,
+            }
+        }
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "systemMessages": {
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                }
+            }
+        }
+
+    @pytest.mark.parametrize('show', (False, True))
+    def test_create_system_with_show(self, data_client, rmock, show):
+        rmock.post(
+            "http://baseurl/system-messages",
+            json={"systemMessages": {
+                'id': 123,
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': show,
+            }},
+            status_code=201,
+        )
+
+        result = data_client.create_system_message(
+            'test-system-message',
+            {
+                "system-message-key": "system-message-value"
+            },
+            show=show,
+            user="test@example.com"
+        )
+
+        assert result == {
+            "systemMessages": {
+                'id': 123,
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': show,
+            }
+        }
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "systemMessages": {
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': show
+            }
+        }
+
+    def test_update_system_message(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/system-messages/test-system-message",
+            json={"systemMessages": {
+                'id': 123,
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': False,
+            }},
+            status_code=200,
+        )
+
+        result = data_client.update_system_message(
+            'test-system-message',
+            {
+                "system-message-key": "system-message-value"
+            },
+            user="test@example.com"
+        )
+
+        assert result == {
+            "systemMessages": {
+                'id': 123,
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': False,
+            }
+        }
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "systemMessages": {
+                'data': {
+                    "system-message-key": "system-message-value"
+                }
+            }
+        }
+
+    @pytest.mark.parametrize('show', (False, True))
+    def test_update_system_with_show(self, data_client, rmock, show):
+        rmock.post(
+            "http://baseurl/system-messages/test-system-message",
+            json={"systemMessages": {
+                'id': 123,
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': show,
+            }},
+            status_code=200,
+        )
+
+        result = data_client.update_system_message(
+            'test-system-message',
+            {
+                "system-message-key": "system-message-value"
+            },
+            show=show,
+            user="test@example.com"
+        )
+
+        assert result == {
+            "systemMessages": {
+                'id': 123,
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': show,
+            }
+        }
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "systemMessages": {
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': show
+            }
+        }
