@@ -3619,7 +3619,7 @@ class TestSystemMessagesMethods(object):
             }
         }
 
-    def test_update_system_message(self, data_client, rmock):
+    def test_update_system_message_with_data(self, data_client, rmock):
         rmock.post(
             "http://baseurl/system-messages/test-system-message",
             json={"systemMessages": {
@@ -3678,9 +3678,6 @@ class TestSystemMessagesMethods(object):
 
         result = data_client.update_system_message(
             'test-system-message',
-            {
-                "system-message-key": "system-message-value"
-            },
             show=show,
             user="test@example.com"
         )
@@ -3699,9 +3696,50 @@ class TestSystemMessagesMethods(object):
         assert rmock.last_request.json() == {
             "updated_by": "test@example.com",
             "systemMessages": {
+                'show': show
+            }
+        }
+
+    def test_update_system_message_with_show_and_data(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/system-messages/test-system-message",
+            json={"systemMessages": {
+                'id': 123,
+                'slug': 'test-system-message',
                 'data': {
                     "system-message-key": "system-message-value"
                 },
-                'show': show
+                'show': True,
+            }},
+            status_code=200,
+        )
+
+        result = data_client.update_system_message(
+            'test-system-message',
+            {
+                "system-message-key": "system-message-value"
+            },
+            True,
+            user="test@example.com"
+        )
+
+        assert result == {
+            "systemMessages": {
+                'id': 123,
+                'slug': 'test-system-message',
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': True,
+            }
+        }
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+            "systemMessages": {
+                'data': {
+                    "system-message-key": "system-message-value"
+                },
+                'show': True,
             }
         }

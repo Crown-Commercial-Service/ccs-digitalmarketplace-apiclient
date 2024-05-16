@@ -1423,13 +1423,14 @@ class DataAPIClient(BaseAPIClient):
     def update_system_message(
         self,
         slug,
-        data,
+        data=None,
         show=None,
         user=None
     ):
-        system_message = {
-            "data": data,
-        }
+        system_message = {}
+
+        if data is not None:
+            system_message["data"] = data
 
         if show is not None:
             system_message["show"] = show
