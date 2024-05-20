@@ -21,7 +21,7 @@ coverage[toml]==6.5.0
     #   -r requirements-dev.in
     #   coveralls
     #   pytest-cov
-coveralls==4.0.0
+coveralls==4.0.1
     # via -r requirements-dev.in
 docopt==0.6.2
     # via coveralls
