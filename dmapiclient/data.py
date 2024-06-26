@@ -1339,6 +1339,15 @@ class DataAPIClient(BaseAPIClient):
             "/communications/{}".format(communication_id)
         )
 
+    def update_communication(self, communication_id, communication, user=None):
+        return self._post_with_updated_by(
+            "/communications/{}".format(communication_id),
+            data={
+                "communications": communication,
+            },
+            user=user,
+        )
+
     def archive_communication(self, communication_id, archived_by_user_id, user=None):
         return self._post_with_updated_by(
             "/communications/{}/archive".format(communication_id),
@@ -1391,6 +1400,8 @@ class DataAPIClient(BaseAPIClient):
             },
             user=user,
         )
+
+    # System message
 
     def get_system_message(self, slug):
         return self._get(

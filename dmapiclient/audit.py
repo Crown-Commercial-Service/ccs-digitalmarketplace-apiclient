@@ -85,6 +85,7 @@ class AuditTypes(Enum):
 
     # Communications
     create_communication = "create_communication"
+    update_communication = "update_communication"
     archive_communication = "archive_communication"
     send_communication_message = "send_communication_message"
     read_communication_message = "read_communication_message"
