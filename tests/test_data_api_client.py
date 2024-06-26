@@ -3097,6 +3097,21 @@ class TestCommunicationsMethods(object):
         except HTTPError:
             assert rmock.called
 
+    def test_update_communication(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/communications/123",
+            json={"communications": "result"},
+            status_code=201,
+        )
+
+        result = data_client.update_communication(123, {"foo": "bar"}, 'admin')
+
+        assert result == {"communications": "result"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'communications': {'foo': 'bar'}, 'updated_by': 'admin'
+        }
+
     def test_archive_communication(self, data_client, rmock):
         rmock.post(
             "http://baseurl/communications/123/archive",
