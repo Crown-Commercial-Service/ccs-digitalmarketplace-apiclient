@@ -1,6 +1,6 @@
 -e file:.
 
-Flask>=2.2.5
+Flask>=3.0.3
 
 coverage
 coveralls
