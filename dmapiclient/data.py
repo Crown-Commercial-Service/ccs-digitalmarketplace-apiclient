@@ -1475,3 +1475,8 @@ class DataAPIClient(BaseAPIClient):
 
     find_supplier_evaluations_iter = make_iter_method('find_supplier_evaluations', 'supplierEvaluations')
     find_supplier_evaluations_iter.__name__ = str("find_supplier_evaluations_iter")
+
+    def get_supplier_evaluation(self, supplier_id, framework_slug, lot_slug):
+        return self._get(
+            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}"
+        )
