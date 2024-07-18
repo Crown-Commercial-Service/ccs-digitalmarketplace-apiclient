@@ -3794,3 +3794,24 @@ class TestSupplierEvaluationsMethods(object):
 
         assert result == {"supplierEvaluations": "result"}
         assert rmock.called
+
+    def test_get_supplier_evaluation(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/1234/frameworks/g-cloud-6/evaluations/g-lot",
+            json={"supplierEvaluations": "result"},
+            status_code=200)
+
+        result = data_client.get_supplier_evaluation('1234', 'g-cloud-6', 'g-lot')
+
+        assert result == {"supplierEvaluations": "result"}
+        assert rmock.called
+
+    def test_get_supplier_evaluation_should_return_404(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/1234/frameworks/g-cloud-6/evaluations/g-lot",
+            status_code=404)
+
+        try:
+            data_client.get_supplier_evaluation('1234', 'g-cloud-6', 'g-lot')
+        except HTTPError:
+            assert rmock.called
