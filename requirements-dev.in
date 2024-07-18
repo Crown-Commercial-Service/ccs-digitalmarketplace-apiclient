@@ -14,3 +14,6 @@ requests-mock
 types-requests
 
 ccs-digitalmarketplace-test-utils==4.4.1
+
+# TODO: Remove when bug with setuptools is fixed https://github.com/pypa/setuptools/issues/4483
+setuptools<71

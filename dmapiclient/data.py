@@ -1453,3 +1453,25 @@ class DataAPIClient(BaseAPIClient):
             },
             user=user,
         )
+
+    # Supplier Evaluations
+
+    def find_supplier_evaluations(
+        self,
+        supplier_id,
+        framework_slug,
+        page=None,
+    ):
+        warnings.warn(
+            "The output of 'find_supplier_evaluations' is paginated. Use 'find_supplier_evaluations_iter' instead.",
+            DeprecationWarning
+        )
+
+        params = {
+            'page': page,
+        }
+
+        return self._get(f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations", params=params)
+
+    find_supplier_evaluations_iter = make_iter_method('find_supplier_evaluations', 'supplierEvaluations')
+    find_supplier_evaluations_iter.__name__ = str("find_supplier_evaluations_iter")

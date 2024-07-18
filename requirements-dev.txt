@@ -89,3 +89,8 @@ urllib3==2.2.0
     #   types-requests
 werkzeug==3.0.1
     # via flask
+
+setuptools==70.0.0
+    # via -r requirements-dev.in
+# The following packages are considered to be unsafe in a requirements file:
+# setuptools
