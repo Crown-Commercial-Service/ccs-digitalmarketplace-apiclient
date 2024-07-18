@@ -2979,7 +2979,7 @@ class TestDataAPIClientIterMethods(object):
             model_name='supplierEvaluations',
             url_path='suppliers/1234/frameworks/g-cloud-6/evaluations',
             iter_kwargs={
-                'supplier_id': '1234',
+                'supplier_id': 1234,
                 'framework_slug': 'g-cloud-6'
             }
         )
@@ -3779,7 +3779,7 @@ class TestSupplierEvaluationsMethods(object):
             json={"supplierEvaluations": "result"},
             status_code=200)
 
-        result = data_client.find_supplier_evaluations('1234', 'g-cloud-6')
+        result = data_client.find_supplier_evaluations(1234, 'g-cloud-6')
 
         assert result == {"supplierEvaluations": "result"}
         assert rmock.called
@@ -3790,7 +3790,7 @@ class TestSupplierEvaluationsMethods(object):
             json={"supplierEvaluations": "result"},
             status_code=200)
 
-        result = data_client.find_supplier_evaluations('1234', 'g-cloud-6', page=2)
+        result = data_client.find_supplier_evaluations(1234, 'g-cloud-6', page=2)
 
         assert result == {"supplierEvaluations": "result"}
         assert rmock.called
@@ -3801,7 +3801,7 @@ class TestSupplierEvaluationsMethods(object):
             json={"supplierEvaluations": "result"},
             status_code=200)
 
-        result = data_client.get_supplier_evaluation('1234', 'g-cloud-6', 'g-lot')
+        result = data_client.get_supplier_evaluation(1234, 'g-cloud-6', 'g-lot')
 
         assert result == {"supplierEvaluations": "result"}
         assert rmock.called
@@ -3812,6 +3812,20 @@ class TestSupplierEvaluationsMethods(object):
             status_code=404)
 
         try:
-            data_client.get_supplier_evaluation('1234', 'g-cloud-6', 'g-lot')
+            data_client.get_supplier_evaluation(1234, 'g-cloud-6', 'g-lot')
         except HTTPError:
             assert rmock.called
+
+    def test_update_supplier_evaluations(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/1234/frameworks/g-cloud-6/evaluations/g-lot",
+            json={"evaluation": {"question": "answer"}},
+            status_code=200)
+
+        result = data_client.update_supplier_evaluations(1234, 'g-cloud-6', 'g-lot', {"question": "answer"}, "user")
+
+        assert result == {'evaluation': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'evaluation': {'question': 'answer'}}
