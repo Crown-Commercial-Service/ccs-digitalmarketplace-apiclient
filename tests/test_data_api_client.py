@@ -2972,6 +2972,18 @@ class TestDataAPIClientIterMethods(object):
 
         assert len(results) == 2
 
+    def test_find_supplier_evaluations_iter(self, data_client, rmock):
+        self._test_find_iter(
+            data_client, rmock,
+            method_name='find_supplier_evaluations_iter',
+            model_name='supplierEvaluations',
+            url_path='suppliers/1234/frameworks/g-cloud-6/evaluations',
+            iter_kwargs={
+                'supplier_id': '1234',
+                'framework_slug': 'g-cloud-6'
+            }
+        )
+
 
 class TestCommunicationsMethods(object):
     def test_find_communications(self, data_client, rmock):
@@ -3758,3 +3770,27 @@ class TestSystemMessagesMethods(object):
                 'show': True,
             }
         }
+
+
+class TestSupplierEvaluationsMethods(object):
+    def test_find_supplier_evaluations(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/1234/frameworks/g-cloud-6/evaluations",
+            json={"supplierEvaluations": "result"},
+            status_code=200)
+
+        result = data_client.find_supplier_evaluations('1234', 'g-cloud-6')
+
+        assert result == {"supplierEvaluations": "result"}
+        assert rmock.called
+
+    def test_find_supplier_evaluations_adds_page_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/1234/frameworks/g-cloud-6/evaluations?page=2",
+            json={"supplierEvaluations": "result"},
+            status_code=200)
+
+        result = data_client.find_supplier_evaluations('1234', 'g-cloud-6', page=2)
+
+        assert result == {"supplierEvaluations": "result"}
+        assert rmock.called
