@@ -1480,3 +1480,19 @@ class DataAPIClient(BaseAPIClient):
         return self._get(
             f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}"
         )
+
+    def update_supplier_evaluations(
+        self,
+        supplier_id,
+        framework_slug,
+        lot_slug,
+        evaluation,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}",
+            data={
+                "evaluation": evaluation,
+            },
+            user=user,
+        )
