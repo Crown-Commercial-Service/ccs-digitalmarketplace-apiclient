@@ -1503,3 +1503,10 @@ class DataAPIClient(BaseAPIClient):
             },
             user=user,
         )
+
+    def complete_supplier_evaluation(self, supplier_id, framework_slug, lot_slug, user=None):
+        return self._post_with_updated_by(
+            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}/complete",
+            data={},
+            user=user,
+        )

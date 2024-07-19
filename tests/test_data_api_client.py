@@ -3820,7 +3820,7 @@ class TestSupplierEvaluationsMethods(object):
         rmock.post(
             "http://baseurl/suppliers/1234/frameworks/g-cloud-6/evaluations/g-lot",
             json={"evaluation": {"question": "answer"}},
-            status_code=200)
+            status_code=201)
 
         result = data_client.create_supplier_evaluation(1234, 'g-cloud-6', 'g-lot', "user")
 
@@ -3843,4 +3843,18 @@ class TestSupplierEvaluationsMethods(object):
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
             'evaluation': {'question': 'answer'}
+        }
+
+    def test_complete_supplier_evaluation(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/1234/frameworks/g-cloud-6/evaluations/g-lot/complete",
+            json={"message": "done"},
+            status_code=200)
+
+        result = data_client.complete_supplier_evaluation(1234, 'g-cloud-6', 'g-lot', "user")
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
         }
