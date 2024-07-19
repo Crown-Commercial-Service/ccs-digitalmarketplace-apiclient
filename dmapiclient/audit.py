@@ -50,6 +50,7 @@ class AuditTypes(Enum):
     update_supplier_framework = "update_supplier_framework"
     create_supplier_evaluation = "create_supplier_evaluation"
     update_supplier_evaluation_answers = "update_supplier_evaluation_answers"
+    complete_supplier_evaluation = "complete_supplier_evaluation"
 
     # Framework agreements
     create_agreement = "create_agreement"
