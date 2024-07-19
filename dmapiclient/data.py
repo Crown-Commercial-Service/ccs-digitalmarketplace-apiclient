@@ -1481,7 +1481,14 @@ class DataAPIClient(BaseAPIClient):
             f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}"
         )
 
-    def update_supplier_evaluations(
+    def create_supplier_evaluation(self, supplier_id, framework_slug, lot_slug, user=None):
+        return self._post_with_updated_by(
+            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}",
+            data={},
+            user=user,
+        )
+
+    def update_supplier_evaluation(
         self,
         supplier_id,
         framework_slug,
@@ -1489,7 +1496,7 @@ class DataAPIClient(BaseAPIClient):
         evaluation,
         user=None
     ):
-        return self._post_with_updated_by(
+        return self._patch_with_updated_by(
             f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}",
             data={
                 "evaluation": evaluation,

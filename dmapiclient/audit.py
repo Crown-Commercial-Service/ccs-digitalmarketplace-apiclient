@@ -48,6 +48,7 @@ class AuditTypes(Enum):
     update_declaration_answers = "update_declaration_answers"
     agree_framework_variation = "agree_framework_variation"
     update_supplier_framework = "update_supplier_framework"
+    create_supplier_evaluation = "create_supplier_evaluation"
     update_supplier_evaluation_answers = "update_supplier_evaluation_answers"
 
     # Framework agreements
