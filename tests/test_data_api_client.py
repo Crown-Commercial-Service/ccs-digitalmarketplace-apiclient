@@ -3816,16 +3816,31 @@ class TestSupplierEvaluationsMethods(object):
         except HTTPError:
             assert rmock.called
 
-    def test_update_supplier_evaluations(self, data_client, rmock):
+    def test_create_supplier_evaluation(self, data_client, rmock):
         rmock.post(
             "http://baseurl/suppliers/1234/frameworks/g-cloud-6/evaluations/g-lot",
             json={"evaluation": {"question": "answer"}},
             status_code=200)
 
-        result = data_client.update_supplier_evaluations(1234, 'g-cloud-6', 'g-lot', {"question": "answer"}, "user")
+        result = data_client.create_supplier_evaluation(1234, 'g-cloud-6', 'g-lot', "user")
 
         assert result == {'evaluation': {'question': 'answer'}}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
-            'evaluation': {'question': 'answer'}}
+        }
+
+    def test_update_supplier_evaluation(self, data_client, rmock):
+        rmock.patch(
+            "http://baseurl/suppliers/1234/frameworks/g-cloud-6/evaluations/g-lot",
+            json={"evaluation": {"question": "answer"}},
+            status_code=200)
+
+        result = data_client.update_supplier_evaluation(1234, 'g-cloud-6', 'g-lot', {"question": "answer"}, "user")
+
+        assert result == {'evaluation': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'evaluation': {'question': 'answer'}
+        }
