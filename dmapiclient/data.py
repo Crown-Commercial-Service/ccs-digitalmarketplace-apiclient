@@ -1494,13 +1494,19 @@ class DataAPIClient(BaseAPIClient):
         framework_slug,
         lot_slug,
         evaluation,
-        user=None
+        user=None,
+        page_questions=None
     ):
+        data = {
+            "evaluation": evaluation,
+        }
+
+        if page_questions is not None:
+            data['page_questions'] = page_questions
+
         return self._patch_with_updated_by(
             f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}",
-            data={
-                "evaluation": evaluation,
-            },
+            data=data,
             user=user,
         )
 
