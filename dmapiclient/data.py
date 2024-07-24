@@ -341,7 +341,14 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def find_framework_suppliers(self, framework_slug, agreement_returned=None, statuses=None, with_declarations=True):
+    def find_framework_suppliers(
+        self,
+        framework_slug,
+        agreement_returned=None,
+        statuses=None,
+        with_declarations=True,
+        with_evaluations=True
+    ):
         '''
         :param agreement_returned: A boolean value that allows filtering by suppliers who have or have not
                                    returned their framework agreement. If 'agreement_returned' is set then
@@ -349,6 +356,7 @@ class DataAPIClient(BaseAPIClient):
         :param statuses: A comma-separated list of the statuses of framework agreements that should be returned.
                          Valid statuses are: signed, on-hold, approved and countersigned.
         :param with_declarations: whether to include declaration data in returned supplierFrameworks
+        :param with_evaluations: whether to include evaluations data in returned supplierFrameworks
         '''
         params = {}
         if agreement_returned is not None:
@@ -357,6 +365,8 @@ class DataAPIClient(BaseAPIClient):
             params['status'] = statuses
         if with_declarations is not True:
             params['with_declarations'] = bool(with_declarations)
+        if with_evaluations is not True:
+            params['with_evaluations'] = bool(with_evaluations)
         return self._get(
             '/frameworks/{}/suppliers'.format(framework_slug),
             params=params

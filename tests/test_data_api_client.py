@@ -1233,6 +1233,17 @@ class TestSupplierMethods(object):
         assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
         assert rmock.called
 
+    def test_find_framework_suppliers_no_evaluations(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/frameworks/g-cloud-7/suppliers?with_evaluations=false',
+            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
+            status_code=200)
+
+        result = data_client.find_framework_suppliers('g-cloud-7', with_evaluations=False)
+
+        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
+        assert rmock.called
+
     def test_can_export_suppliers(self, data_client, rmock):
         rmock.get(
             "http://baseurl/suppliers/export/g-cloud-9",
