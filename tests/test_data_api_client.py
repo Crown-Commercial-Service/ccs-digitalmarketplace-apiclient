@@ -4020,3 +4020,34 @@ class TestEvaluatorQuestionsMethods(object):
             data_client.get_evaluator_question(1234)
         except HTTPError:
             assert rmock.called
+
+    def test_update_assigned_evaluators_for_question(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/evaluator-questions/g-cloud-6/g-lot/1234/theQuestion",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.update_assigned_evaluators_for_question(
+            'g-cloud-6',
+            'g-lot',
+            1234,
+            'theQuestion',
+            [
+                123,
+                456
+            ],
+            'user'
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'evaluatorQuestions': {
+                'users': [
+                    123,
+                    456
+                ],
+            },
+            'updated_by': 'user',
+        }
