@@ -1526,3 +1526,10 @@ class DataAPIClient(BaseAPIClient):
             data={},
             user=user,
         )
+
+    # Evaluator questions
+
+    def get_evaluator_question(self, evaluator_question_id):
+        return self._get(
+            f"/evaluator-questions/{evaluator_question_id}"
+        )
