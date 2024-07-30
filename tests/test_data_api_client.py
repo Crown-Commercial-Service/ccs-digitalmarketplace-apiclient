@@ -3894,3 +3894,26 @@ class TestSupplierEvaluationsMethods(object):
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
         }
+
+
+class TestEvaluatorQuestionsMethods(object):
+    def test_get_supplier_evaluation(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions/1234",
+            json={"evaluatorQuestions": "result"},
+            status_code=200)
+
+        result = data_client.get_evaluator_question(1234)
+
+        assert result == {"evaluatorQuestions": "result"}
+        assert rmock.called
+
+    def test_get_supplier_evaluation_should_return_404(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions/1234",
+            status_code=404)
+
+        try:
+            data_client.get_evaluator_question(1234)
+        except HTTPError:
+            assert rmock.called
