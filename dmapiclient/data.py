@@ -1529,6 +1529,38 @@ class DataAPIClient(BaseAPIClient):
 
     # Evaluator questions
 
+    def find_evaluator_questions(
+        self,
+        framework,
+        lot,
+        user_id=None,
+        supplier_id=None,
+        question_id=None,
+        status=None,
+        assigned=True,
+        page=None,
+    ):
+        warnings.warn(
+            "The output of 'find_evaluator_questions' is paginated. Use 'find_evaluator_questions_iter' instead.",
+            DeprecationWarning
+        )
+
+        params = {
+            'framework': framework,
+            'lot': lot,
+            'assigned': bool(assigned),
+            'page': page,
+            'user_id': user_id,
+            'supplier_id': supplier_id,
+            'question_id': question_id,
+            'status': status
+        }
+
+        return self._get("/evaluator-questions", params=params)
+
+    find_evaluator_questions_iter = make_iter_method('find_evaluator_questions', 'evaluatorQuestions')
+    find_evaluator_questions_iter.__name__ = str("find_evaluator_questions_iter")
+
     def get_evaluator_question(self, evaluator_question_id):
         return self._get(
             f"/evaluator-questions/{evaluator_question_id}"

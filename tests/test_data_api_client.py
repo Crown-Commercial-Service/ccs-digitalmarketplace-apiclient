@@ -2995,6 +2995,32 @@ class TestDataAPIClientIterMethods(object):
             }
         )
 
+    def test_find_evaluator_questions_iter(self, data_client, rmock):
+        self._test_find_iter(
+            data_client, rmock,
+            method_name='find_evaluator_questions_iter',
+            model_name='evaluatorQuestions',
+            url_path='evaluator-questions?framework=g-cloud-6&lot=g-things&assigned=True',
+            iter_kwargs={
+                'framework': 'g-cloud-6',
+                'lot': 'g-things'
+            }
+        )
+
+    def test_find_evaluator_questions_iter_additional_arguments(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/evaluator-questions?framework=g-cloud-6&lot=g-things&assigned=True&user_id=123',
+            json={
+                'links': {},
+                'evaluatorQuestions': [{'id': 1}, {'id': 2}]
+            },
+            status_code=200)
+
+        result = data_client.find_evaluator_questions_iter('g-cloud-6', 'g-things', user_id=123)
+        results = list(result)
+
+        assert len(results) == 2
+
 
 class TestCommunicationsMethods(object):
     def test_find_communications(self, data_client, rmock):
@@ -3897,6 +3923,83 @@ class TestSupplierEvaluationsMethods(object):
 
 
 class TestEvaluatorQuestionsMethods(object):
+    def test_find_evaluator_questions(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions?framework=g-cloud-6&lot=g-things&assigned=True",
+            json={"evaluatorQuestions": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_questions('g-cloud-6', 'g-things')
+
+        assert result == {"evaluatorQuestions": "result"}
+        assert rmock.called
+
+    def test_find_evaluator_questions_adds_page_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions?framework=g-cloud-6&lot=g-things&assigned=True&page=2",
+            json={"evaluatorQuestions": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_questions('g-cloud-6', 'g-things', page=2)
+
+        assert result == {"evaluatorQuestions": "result"}
+        assert rmock.called
+
+    def test_find_evaluator_questions_adds_user_id_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions?framework=g-cloud-6&lot=g-things&assigned=True&user_id=1",
+            json={"evaluatorQuestions": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_questions('g-cloud-6', 'g-things', user_id=1)
+
+        assert result == {"evaluatorQuestions": "result"}
+        assert rmock.called
+
+    def test_find_evaluator_questions_adds_supplier_id_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions?framework=g-cloud-6&lot=g-things&assigned=True&supplier_id=1",
+            json={"evaluatorQuestions": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_questions('g-cloud-6', 'g-things', supplier_id=1)
+
+        assert result == {"evaluatorQuestions": "result"}
+        assert rmock.called
+
+    def test_find_evaluator_questions_adds_question_id_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions?framework=g-cloud-6&lot=g-things&assigned=True&question_id=1",
+            json={"evaluatorQuestions": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_questions('g-cloud-6', 'g-things', question_id=1)
+
+        assert result == {"evaluatorQuestions": "result"}
+        assert rmock.called
+
+    def test_find_evaluator_questions_adds_status_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions?framework=g-cloud-6&lot=g-things&assigned=True&status=in_progress",
+            json={"evaluatorQuestions": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_questions('g-cloud-6', 'g-things', status='in_progress')
+
+        assert result == {"evaluatorQuestions": "result"}
+        assert rmock.called
+
+    def test_find_evaluator_questions_adds_assigned_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions?framework=g-cloud-6&lot=g-things&assigned=False",
+            json={"evaluatorQuestions": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_questions('g-cloud-6', 'g-things', assigned=False)
+
+        assert result == {"evaluatorQuestions": "result"}
+        assert rmock.called
+
     def test_get_supplier_evaluation(self, data_client, rmock):
         rmock.get(
             "http://baseurl/evaluator-questions/1234",
