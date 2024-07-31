@@ -1565,3 +1565,22 @@ class DataAPIClient(BaseAPIClient):
         return self._get(
             f"/evaluator-questions/{evaluator_question_id}"
         )
+
+    def update_assigned_evaluators_for_question(
+        self,
+        framework,
+        lot,
+        supplier_id,
+        question_id,
+        users,
+        user
+    ):
+        return self._post_with_updated_by(
+            f"/evaluator-questions/{framework}/{lot}/{supplier_id}/{question_id}",
+            data={
+                'evaluatorQuestions': {
+                    'users': users
+                }
+            },
+            user=user,
+        )
