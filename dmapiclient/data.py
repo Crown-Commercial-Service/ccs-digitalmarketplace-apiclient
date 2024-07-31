@@ -347,7 +347,7 @@ class DataAPIClient(BaseAPIClient):
         agreement_returned=None,
         statuses=None,
         with_declarations=True,
-        with_evaluations=True
+        with_lot_responses=True
     ):
         '''
         :param agreement_returned: A boolean value that allows filtering by suppliers who have or have not
@@ -356,7 +356,7 @@ class DataAPIClient(BaseAPIClient):
         :param statuses: A comma-separated list of the statuses of framework agreements that should be returned.
                          Valid statuses are: signed, on-hold, approved and countersigned.
         :param with_declarations: whether to include declaration data in returned supplierFrameworks
-        :param with_evaluations: whether to include evaluations data in returned supplierFrameworks
+        :param with_lot_responses: whether to include lot responses data in returned supplierFrameworks
         '''
         params = {}
         if agreement_returned is not None:
@@ -365,8 +365,8 @@ class DataAPIClient(BaseAPIClient):
             params['status'] = statuses
         if with_declarations is not True:
             params['with_declarations'] = bool(with_declarations)
-        if with_evaluations is not True:
-            params['with_evaluations'] = bool(with_evaluations)
+        if with_lot_responses is not True:
+            params['with_lot_responses'] = bool(with_lot_responses)
         return self._get(
             '/frameworks/{}/suppliers'.format(framework_slug),
             params=params
@@ -1464,16 +1464,17 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    # Supplier Evaluations
+    # Lot Question Responses
 
-    def find_supplier_evaluations(
+    def find_lot_questions_responses(
         self,
         supplier_id,
         framework_slug,
         page=None,
     ):
         warnings.warn(
-            "The output of 'find_supplier_evaluations' is paginated. Use 'find_supplier_evaluations_iter' instead.",
+            "The output of 'find_lot_questions_responses' is paginated. "
+            "Use 'find_lot_questions_responses_iter' instead.",
             DeprecationWarning
         )
 
@@ -1481,48 +1482,48 @@ class DataAPIClient(BaseAPIClient):
             'page': page,
         }
 
-        return self._get(f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations", params=params)
+        return self._get(f"/suppliers/{supplier_id}/frameworks/{framework_slug}/lot-questions-responses", params=params)
 
-    find_supplier_evaluations_iter = make_iter_method('find_supplier_evaluations', 'supplierEvaluations')
-    find_supplier_evaluations_iter.__name__ = str("find_supplier_evaluations_iter")
+    find_lot_questions_responses_iter = make_iter_method('find_lot_questions_responses', 'lotQuestionsResponses')
+    find_lot_questions_responses_iter.__name__ = str("find_lot_questions_responses_iter")
 
-    def get_supplier_evaluation(self, supplier_id, framework_slug, lot_slug):
+    def get_lot_questions_response(self, supplier_id, framework_slug, lot_slug):
         return self._get(
-            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}"
+            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/lot-questions-responses/{lot_slug}"
         )
 
-    def create_supplier_evaluation(self, supplier_id, framework_slug, lot_slug, user=None):
+    def create_lot_questions_response(self, supplier_id, framework_slug, lot_slug, user=None):
         return self._post_with_updated_by(
-            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}",
+            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/lot-questions-responses/{lot_slug}",
             data={},
             user=user,
         )
 
-    def update_supplier_evaluation(
+    def update_lot_questions_response(
         self,
         supplier_id,
         framework_slug,
         lot_slug,
-        evaluation,
+        lotQuestionsResponse,
         user=None,
         page_questions=None
     ):
         data = {
-            "evaluation": evaluation,
+            "lotQuestionsResponse": lotQuestionsResponse,
         }
 
         if page_questions is not None:
             data['page_questions'] = page_questions
 
         return self._patch_with_updated_by(
-            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}",
+            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/lot-questions-responses/{lot_slug}",
             data=data,
             user=user,
         )
 
-    def complete_supplier_evaluation(self, supplier_id, framework_slug, lot_slug, user=None):
+    def complete_lot_questions_response(self, supplier_id, framework_slug, lot_slug, user=None):
         return self._post_with_updated_by(
-            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/evaluations/{lot_slug}/complete",
+            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/lot-questions-responses/{lot_slug}/complete",
             data={},
             user=user,
         )

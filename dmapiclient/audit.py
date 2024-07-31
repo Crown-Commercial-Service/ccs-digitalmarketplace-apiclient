@@ -48,9 +48,6 @@ class AuditTypes(Enum):
     update_declaration_answers = "update_declaration_answers"
     agree_framework_variation = "agree_framework_variation"
     update_supplier_framework = "update_supplier_framework"
-    create_supplier_evaluation = "create_supplier_evaluation"
-    update_supplier_evaluation_answers = "update_supplier_evaluation_answers"
-    complete_supplier_evaluation = "complete_supplier_evaluation"
 
     # Framework agreements
     create_agreement = "create_agreement"
@@ -96,6 +93,11 @@ class AuditTypes(Enum):
     # System message
     create_system_message = "create_system_message"
     update_system_message = "update_system_message"
+
+    # Lot questions responses
+    create_lot_questions_response = "create_lot_questions_response"
+    update_lot_questions_response_answers = "update_lot_questions_response_answers"
+    complete_lot_questions_response = "complete_lot_questions_response"
 
     # Evaluator questions
     create_evaluatior_question = "create_evaluatior_question"
