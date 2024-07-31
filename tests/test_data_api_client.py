@@ -1235,11 +1235,11 @@ class TestSupplierMethods(object):
 
     def test_find_framework_suppliers_no_lot_responses(self, data_client, rmock):
         rmock.get(
-            'http://baseurl/frameworks/g-cloud-7/suppliers?with_lot_responses=false',
+            'http://baseurl/frameworks/g-cloud-7/suppliers?with_lot_questions_responses=false',
             json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
             status_code=200)
 
-        result = data_client.find_framework_suppliers('g-cloud-7', with_lot_responses=False)
+        result = data_client.find_framework_suppliers('g-cloud-7', with_lot_questions_responses=False)
 
         assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
         assert rmock.called

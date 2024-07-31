@@ -347,7 +347,7 @@ class DataAPIClient(BaseAPIClient):
         agreement_returned=None,
         statuses=None,
         with_declarations=True,
-        with_lot_responses=True
+        with_lot_questions_responses=True
     ):
         '''
         :param agreement_returned: A boolean value that allows filtering by suppliers who have or have not
@@ -356,7 +356,8 @@ class DataAPIClient(BaseAPIClient):
         :param statuses: A comma-separated list of the statuses of framework agreements that should be returned.
                          Valid statuses are: signed, on-hold, approved and countersigned.
         :param with_declarations: whether to include declaration data in returned supplierFrameworks
-        :param with_lot_responses: whether to include lot responses data in returned supplierFrameworks
+        :param with_lot_questions_responses: whether to include lot questions responses data
+                                             in returned supplierFrameworks
         '''
         params = {}
         if agreement_returned is not None:
@@ -365,8 +366,8 @@ class DataAPIClient(BaseAPIClient):
             params['status'] = statuses
         if with_declarations is not True:
             params['with_declarations'] = bool(with_declarations)
-        if with_lot_responses is not True:
-            params['with_lot_responses'] = bool(with_lot_responses)
+        if with_lot_questions_responses is not True:
+            params['with_lot_questions_responses'] = bool(with_lot_questions_responses)
         return self._get(
             '/frameworks/{}/suppliers'.format(framework_slug),
             params=params
