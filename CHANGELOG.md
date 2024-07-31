@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 26.0.0
+
+Rename Supplier Evaluation methods to Lot Questions Response
+
 ## 25.9.0
 
 Add support for Python 3.12
