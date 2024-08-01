@@ -4021,6 +4021,22 @@ class TestEvaluatorQuestionsMethods(object):
         except HTTPError:
             assert rmock.called
 
+    def test_update_evaluator_question(self, data_client, rmock):
+        rmock.patch(
+            "http://baseurl/evaluator-questions/1234",
+            json={"elvauatorQuestion": {"question": "answer"}},
+            status_code=200
+        )
+
+        result = data_client.update_evaluator_question(1234, {"question": "answer"}, "user")
+
+        assert result == {'elvauatorQuestion': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'elvauatorQuestion': {'question': 'answer'}
+        }
+
     def test_update_assigned_evaluators_for_question(self, data_client, rmock):
         rmock.post(
             "http://baseurl/evaluator-questions/g-cloud-6/g-lot/1234/theQuestion",
