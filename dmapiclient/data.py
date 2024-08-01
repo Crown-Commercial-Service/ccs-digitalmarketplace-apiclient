@@ -1568,6 +1568,15 @@ class DataAPIClient(BaseAPIClient):
             f"/evaluator-questions/{evaluator_question_id}"
         )
 
+    def update_evaluator_question(self, evaluator_question_id, elvauator_question, user=None):
+        return self._patch_with_updated_by(
+            f"/evaluator-questions/{evaluator_question_id}",
+            data={
+                "elvauatorQuestion": elvauator_question,
+            },
+            user=user,
+        )
+
     def update_assigned_evaluators_for_question(
         self,
         framework,

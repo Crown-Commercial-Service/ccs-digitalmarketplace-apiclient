@@ -102,6 +102,7 @@ class AuditTypes(Enum):
     # Evaluator questions
     create_evaluatior_question = "create_evaluatior_question"
     update_evaluatior_question_assignment_status = "update_evaluatior_question_assignment_status"
+    update_evaluatior_question_answers = "update_evaluatior_question_answers"
 
     @staticmethod
     def is_valid_audit_type(test_audit_type):
