@@ -1505,12 +1505,12 @@ class DataAPIClient(BaseAPIClient):
         supplier_id,
         framework_slug,
         lot_slug,
-        lotQuestionsResponse,
+        lot_questions_response,
         user=None,
         page_questions=None
     ):
         data = {
-            "lotQuestionsResponse": lotQuestionsResponse,
+            "lotQuestionsResponse": lot_questions_response,
         }
 
         if page_questions is not None:
