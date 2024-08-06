@@ -100,9 +100,9 @@ class AuditTypes(Enum):
     complete_lot_questions_response = "complete_lot_questions_response"
 
     # Evaluator questions
-    create_evaluatior_question = "create_evaluatior_question"
-    update_evaluatior_question_assignment_status = "update_evaluatior_question_assignment_status"
-    update_evaluatior_question_answers = "update_evaluatior_question_answers"
+    create_evaluator_question = "create_evaluator_question"
+    update_evaluator_question_assignment_status = "update_evaluator_question_assignment_status"
+    update_evaluator_question_answers = "update_evaluator_question_answers"
 
     @staticmethod
     def is_valid_audit_type(test_audit_type):
