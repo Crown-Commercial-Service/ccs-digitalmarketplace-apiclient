@@ -103,7 +103,7 @@ class AuditTypes(Enum):
     create_evaluator_question = "create_evaluator_question"
     update_evaluator_question_assignment_status = "update_evaluator_question_assignment_status"
     update_evaluator_question_answers = "update_evaluator_question_answers"
-    create_final_evaluator_question = "create_evaluator_question_final"
+    create_final_evaluator_question = "create_final_evaluator_question"
     update_final_evaluator_question_answers = "update_final_evaluator_question_answers"
 
     @staticmethod
