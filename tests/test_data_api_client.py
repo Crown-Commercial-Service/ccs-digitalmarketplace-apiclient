@@ -4037,6 +4037,29 @@ class TestEvaluatorQuestionsMethods(object):
             'evaluatorQuestions': {'question': 'answer'}
         }
 
+    def test_set_final_evaluator_question(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/evaluator-questions/g-cloud-6/g-lot/1234/theQuestion/final",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.set_final_evaluator_question(
+            'g-cloud-6',
+            'g-lot',
+            1234,
+            'theQuestion',
+            {"question": "answer"},
+            'user'
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'evaluatorQuestions': {'question': 'answer'}
+        }
+
     def test_update_assigned_evaluators_for_question(self, data_client, rmock):
         rmock.post(
             "http://baseurl/evaluator-questions/g-cloud-6/g-lot/1234/theQuestion",
