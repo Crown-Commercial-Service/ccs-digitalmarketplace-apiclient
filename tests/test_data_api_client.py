@@ -3856,12 +3856,12 @@ class TestLotQuestionsResponsesMethods(object):
     def test_create_lot_questions_response(self, data_client, rmock):
         rmock.post(
             "http://baseurl/suppliers/1234/frameworks/g-cloud-6/lot-questions-responses/g-lot",
-            json={"lotQuestionsResponse": {"question": "answer"}},
+            json={"lotQuestionsResponses": {"question": "answer"}},
             status_code=201)
 
         result = data_client.create_lot_questions_response(1234, 'g-cloud-6', 'g-lot', "user")
 
-        assert result == {'lotQuestionsResponse': {'question': 'answer'}}
+        assert result == {'lotQuestionsResponses': {'question': 'answer'}}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
@@ -3870,23 +3870,23 @@ class TestLotQuestionsResponsesMethods(object):
     def test_update_lot_questions_response(self, data_client, rmock):
         rmock.patch(
             "http://baseurl/suppliers/1234/frameworks/g-cloud-6/lot-questions-responses/g-lot",
-            json={"lotQuestionsResponse": {"question": "answer"}},
+            json={"lotQuestionsResponses": {"question": "answer"}},
             status_code=200
         )
 
         result = data_client.update_lot_questions_response(1234, 'g-cloud-6', 'g-lot', {"question": "answer"}, "user")
 
-        assert result == {'lotQuestionsResponse': {'question': 'answer'}}
+        assert result == {'lotQuestionsResponses': {'question': 'answer'}}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
-            'lotQuestionsResponse': {'question': 'answer'}
+            'lotQuestionsResponses': {'question': 'answer'}
         }
 
     def test_update_lot_questions_response_with_page_questions(self, data_client, rmock):
         rmock.patch(
             "http://baseurl/suppliers/1234/frameworks/g-cloud-6/lot-questions-responses/g-lot",
-            json={"lotQuestionsResponse": {"question": "answer"}},
+            json={"lotQuestionsResponses": {"question": "answer"}},
             status_code=200
         )
 
@@ -3899,11 +3899,11 @@ class TestLotQuestionsResponsesMethods(object):
             ["question"]
         )
 
-        assert result == {'lotQuestionsResponse': {'question': 'answer'}}
+        assert result == {'lotQuestionsResponses': {'question': 'answer'}}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
-            'lotQuestionsResponse': {'question': 'answer'},
+            'lotQuestionsResponses': {'question': 'answer'},
             'page_questions': ['question']
         }
 
@@ -4024,17 +4024,17 @@ class TestEvaluatorQuestionsMethods(object):
     def test_update_evaluator_question(self, data_client, rmock):
         rmock.patch(
             "http://baseurl/evaluator-questions/1234",
-            json={"elvauatorQuestion": {"question": "answer"}},
+            json={"evaluatorQuestions": {"question": "answer"}},
             status_code=200
         )
 
         result = data_client.update_evaluator_question(1234, {"question": "answer"}, "user")
 
-        assert result == {'elvauatorQuestion': {'question': 'answer'}}
+        assert result == {'evaluatorQuestions': {'question': 'answer'}}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
-            'elvauatorQuestion': {'question': 'answer'}
+            'evaluatorQuestions': {'question': 'answer'}
         }
 
     def test_update_assigned_evaluators_for_question(self, data_client, rmock):

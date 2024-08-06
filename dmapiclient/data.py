@@ -1510,7 +1510,7 @@ class DataAPIClient(BaseAPIClient):
         page_questions=None
     ):
         data = {
-            "lotQuestionsResponse": lot_questions_response,
+            "lotQuestionsResponses": lot_questions_response,
         }
 
         if page_questions is not None:
@@ -1572,7 +1572,7 @@ class DataAPIClient(BaseAPIClient):
         return self._patch_with_updated_by(
             f"/evaluator-questions/{evaluator_question_id}",
             data={
-                "elvauatorQuestion": elvauator_question,
+                "evaluatorQuestions": elvauator_question,
             },
             user=user,
         )
