@@ -1577,6 +1577,23 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def set_final_evaluator_question(
+        self,
+        framework,
+        lot,
+        supplier_id,
+        question_id,
+        elvauator_question,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            f"/evaluator-questions/{framework}/{lot}/{supplier_id}/{question_id}/final",
+            data={
+                "evaluatorQuestions": elvauator_question,
+            },
+            user=user,
+        )
+
     def update_assigned_evaluators_for_question(
         self,
         framework,
@@ -1584,7 +1601,7 @@ class DataAPIClient(BaseAPIClient):
         supplier_id,
         question_id,
         users,
-        user
+        user=None
     ):
         return self._post_with_updated_by(
             f"/evaluator-questions/{framework}/{lot}/{supplier_id}/{question_id}",
