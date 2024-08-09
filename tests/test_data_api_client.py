@@ -1253,6 +1253,17 @@ class TestSupplierMethods(object):
         assert rmock.called
         assert result == {"suppliers": "result"}
 
+    def test_find_framework_suppliers_with_evaluation_for_lot(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/frameworks/g-cloud-9/suppliers/lots/g-lot/evaluations",
+            json={"supplierFrameworks": "result"},
+            status_code=200
+        )
+        result = data_client.find_framework_suppliers_with_evaluation_for_lot('g-cloud-9', 'g-lot')
+
+        assert rmock.called
+        assert result == {"supplierFrameworks": "result"}
+
 
 class TestAgreementMethods(object):
     def test_put_signed_agreement_on_hold(self, data_client, rmock):
@@ -3020,6 +3031,18 @@ class TestDataAPIClientIterMethods(object):
         results = list(result)
 
         assert len(results) == 2
+
+    def test_find_framework_suppliers_with_evaluation_for_lot_iter(self, data_client, rmock):
+        self._test_find_iter(
+            data_client, rmock,
+            method_name='find_framework_suppliers_with_evaluation_for_lot_iter',
+            model_name='supplierFrameworks',
+            url_path='frameworks/g-cloud-6/suppliers/lots/g-lot/evaluations',
+            iter_kwargs={
+                'framework': 'g-cloud-6',
+                'lot': 'g-lot',
+            }
+        )
 
 
 class TestCommunicationsMethods(object):

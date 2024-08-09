@@ -384,6 +384,33 @@ class DataAPIClient(BaseAPIClient):
     export_suppliers_iter = make_iter_method('export_suppliers', 'suppliers')
     export_suppliers_iter.__name__ = str("export_suppliers_iter")
 
+    def find_framework_suppliers_with_evaluation_for_lot(
+        self,
+        framework,
+        lot,
+        page=None,
+    ):
+        warnings.warn(
+            "The output of 'find_framework_suppliers_with_evaluation_for_lot' is paginated. "
+            "Use 'find_framework_suppliers_with_evaluation_for_lot_iter' instead.",
+            DeprecationWarning
+        )
+
+        params = {}
+
+        if page is not None:
+            params['page'] = page
+
+        return self._get(
+            f"/frameworks/{framework}/suppliers/lots/{lot}/evaluations",
+            params=params
+        )
+
+    find_framework_suppliers_with_evaluation_for_lot_iter = \
+        make_iter_method('find_framework_suppliers_with_evaluation_for_lot', 'supplierFrameworks')
+    find_framework_suppliers_with_evaluation_for_lot_iter.__name__ = \
+        str("find_framework_suppliers_with_evaluation_for_lot_iter")
+
     # Users
 
     def create_user(self, user):
