@@ -390,12 +390,6 @@ class DataAPIClient(BaseAPIClient):
         lot,
         page=None,
     ):
-        warnings.warn(
-            "The output of 'find_framework_suppliers_with_evaluation_for_lot' is paginated. "
-            "Use 'find_framework_suppliers_with_evaluation_for_lot_iter' instead.",
-            DeprecationWarning
-        )
-
         params = {}
 
         if page is not None:
