@@ -4044,6 +4044,23 @@ class TestEvaluatorQuestionsMethods(object):
         except HTTPError:
             assert rmock.called
 
+    def test_get_final_evaluator_question(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions/g-cloud-6/g-lot/1234/theQuestion/final",
+            json={"evaluatorQuestions": "result"},
+            status_code=200
+        )
+
+        result = data_client.get_final_evaluator_question(
+            'g-cloud-6',
+            'g-lot',
+            1234,
+            'theQuestion'
+        )
+
+        assert result == {"evaluatorQuestions": "result"}
+        assert rmock.called
+
     def test_update_evaluator_question(self, data_client, rmock):
         rmock.patch(
             "http://baseurl/evaluator-questions/1234",

@@ -1594,6 +1594,11 @@ class DataAPIClient(BaseAPIClient):
             f"/evaluator-questions/{evaluator_question_id}"
         )
 
+    def get_final_evaluator_question(self, framework, lot, supplier_id, question_id):
+        return self._get(
+            f"/evaluator-questions/{framework}/{lot}/{supplier_id}/{question_id}/final",
+        )
+
     def update_evaluator_question(self, evaluator_question_id, elvauator_question, user=None):
         return self._patch_with_updated_by(
             f"/evaluator-questions/{evaluator_question_id}",
