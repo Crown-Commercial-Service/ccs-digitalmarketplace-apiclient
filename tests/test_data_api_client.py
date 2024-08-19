@@ -4034,6 +4034,17 @@ class TestEvaluatorQuestionsMethods(object):
         assert result == {"usersWithEvaluatorQuestions": "result"}
         assert rmock.called
 
+    def test_find_evaluator_question_users_adds_page_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluator-questions/g-cloud-6/g-things/users?page=2",
+            json={"usersWithEvaluatorQuestions": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_question_users('g-cloud-6', 'g-things', page=2)
+
+        assert result == {"usersWithEvaluatorQuestions": "result"}
+        assert rmock.called
+
     def test_get_lot_questions_response(self, data_client, rmock):
         rmock.get(
             "http://baseurl/evaluator-questions/1234",
