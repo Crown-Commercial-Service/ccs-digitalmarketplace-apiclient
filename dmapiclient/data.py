@@ -1344,11 +1344,6 @@ class DataAPIClient(BaseAPIClient):
         message_text=None,
         sort_by=None
     ):
-        warnings.warn(
-            "The output of 'find_communications' is paginated. Use 'find_communications_iter' instead.",
-            DeprecationWarning
-        )
-
         params = {
             'page': page,
             'framework': framework,
@@ -1563,11 +1558,6 @@ class DataAPIClient(BaseAPIClient):
         assigned=True,
         page=None,
     ):
-        warnings.warn(
-            "The output of 'find_evaluator_questions' is paginated. Use 'find_evaluator_questions_iter' instead.",
-            DeprecationWarning
-        )
-
         params = {
             'framework': framework,
             'lot': lot,
@@ -1584,9 +1574,9 @@ class DataAPIClient(BaseAPIClient):
     find_evaluator_questions_iter = make_iter_method('find_evaluator_questions', 'evaluatorQuestions')
     find_evaluator_questions_iter.__name__ = str("find_evaluator_questions_iter")
 
-    def group_evaluator_questions_by_lot_with_status(self, framework):
+    def find_evaluator_question_users(self, framework, lot):
         return self._get(
-            f"/evaluator-questions/{framework}/group-by/lot/with-status"
+            f"/evaluator-questions/{framework}/{lot}/users"
         )
 
     def get_evaluator_question(self, evaluator_question_id):
