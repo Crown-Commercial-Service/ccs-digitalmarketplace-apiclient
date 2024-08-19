@@ -1574,9 +1574,12 @@ class DataAPIClient(BaseAPIClient):
     find_evaluator_questions_iter = make_iter_method('find_evaluator_questions', 'evaluatorQuestions')
     find_evaluator_questions_iter.__name__ = str("find_evaluator_questions_iter")
 
-    def find_evaluator_question_users(self, framework, lot):
+    def find_evaluator_question_users(self, framework, lot, page=None):
         return self._get(
-            f"/evaluator-questions/{framework}/{lot}/users"
+            f"/evaluator-questions/{framework}/{lot}/users",
+            params={
+                'page': page
+            }
         )
 
     def get_evaluator_question(self, evaluator_question_id):
