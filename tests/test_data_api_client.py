@@ -859,6 +859,21 @@ class TestSupplierMethods(object):
             'suppliers': {'foo': 'bar'}, 'updated_by': 'supplier'
         }
 
+    def test_update_supplier_sharecode(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/123/sharecode",
+            json={"suppliers": "result"},
+            status_code=200,
+        )
+
+        result = data_client.update_supplier_sharecode(123, "123456789", 'supplier')
+
+        assert result == {"suppliers": "result"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'suppliers': {'sharecode': '123456789'}, 'updated_by': 'supplier'
+        }
+
     def test_update_contact_information(self, data_client, rmock):
         rmock.post(
             "http://baseurl/suppliers/123/contact-information/2",

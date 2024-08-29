@@ -153,6 +153,17 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def update_supplier_sharecode(self, supplier_id, sharecode, user=None):
+        return self._post_with_updated_by(
+            "/suppliers/{}/sharecode".format(supplier_id),
+            data={
+                "suppliers": {
+                    "sharecode": sharecode
+                },
+            },
+            user=user,
+        )
+
     def update_contact_information(self, supplier_id, contact_id,
                                    contact, user=None):
         return self._post_with_updated_by(

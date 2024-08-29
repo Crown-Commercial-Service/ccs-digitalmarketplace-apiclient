@@ -1,4 +1,4 @@
-__version__ = '26.6.1'
+__version__ = '26.7.0'
 
 from .errors import APIError, HTTPError, InvalidResponse  # noqa
 from .errors import REQUEST_ERROR_STATUS_CODE, REQUEST_ERROR_MESSAGE  # noqa
