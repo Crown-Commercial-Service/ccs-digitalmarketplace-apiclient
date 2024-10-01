@@ -2401,11 +2401,26 @@ class TestFrameworkAgreementMethods(object):
             json={"agreement": {'details': 'here'}},
             status_code=201)
 
-        result = data_client.create_framework_agreement(10, 'g-cloud-8', "user@example.com")
+        result = data_client.create_framework_agreement(
+            10,
+            'g-cloud-8',
+            {
+                "signerName": "Rex",
+                "signerRole": "Driver of the Aegis"
+            },
+            "user@example.com"
+        )
 
         assert result == {"agreement": {'details': 'here'}}
         assert rmock.last_request.json() == {
-            "agreement": {"supplierId": 10, "frameworkSlug": "g-cloud-8"},
+            "agreement": {
+                "supplierId": 10,
+                "frameworkSlug": "g-cloud-8",
+                "signedAgreementDetails": {
+                    "signerName": "Rex",
+                    "signerRole": "Driver of the Aegis"
+                }
+            },
             "updated_by": "user@example.com",
         }
 

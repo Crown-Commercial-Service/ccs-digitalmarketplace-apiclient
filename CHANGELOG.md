@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 27.0.0
+
+Require the agreement details when creating a framework agreement
+
 ## 26.0.0
 
 Rename Supplier Evaluation methods to Lot Questions Response
