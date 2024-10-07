@@ -13,4 +13,4 @@ requests-mock
 
 types-requests
 
-ccs-digitalmarketplace-test-utils==5.1.0
+ccs-digitalmarketplace-test-utils==5.2.0
