@@ -1532,6 +1532,49 @@ class TestDraftServiceMethods(object):
             'page_questions': ['question1', 'question2']
         }
 
+    def test_update_draft_service_with_ignored_fields(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/draft-services/2",
+            json={"done": "it"},
+            status_code=200,
+        )
+
+        result = data_client.update_draft_service(
+            2, {"field": "value"}, 'user', None, ['question2', 'question3']
+        )
+
+        assert result == {"done": "it"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'services': {
+                "field": "value"
+            },
+            'updated_by': 'user',
+            'ignored_fields': ['question2', 'question3']
+        }
+
+    def test_update_draft_service_with_page_questions_and_ignored_fields(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/draft-services/2",
+            json={"done": "it"},
+            status_code=200,
+        )
+
+        result = data_client.update_draft_service(
+            2, {"field": "value"}, 'user', ['question1', 'question2'], ['question2', 'question3']
+        )
+
+        assert result == {"done": "it"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'services': {
+                "field": "value"
+            },
+            'updated_by': 'user',
+            'page_questions': ['question1', 'question2'],
+            'ignored_fields': ['question2', 'question3']
+        }
+
     def test_publish_draft_service(self, data_client, rmock):
         rmock.post(
             "http://baseurl/draft-services/2/publish",

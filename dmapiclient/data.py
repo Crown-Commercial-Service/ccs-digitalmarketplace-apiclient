@@ -692,13 +692,16 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def update_draft_service(self, draft_id, service, user=None, page_questions=None):
+    def update_draft_service(self, draft_id, service, user=None, page_questions=None, ignored_fields=None):
         data = {
             "services": service,
         }
 
         if page_questions is not None:
             data['page_questions'] = page_questions
+
+        if ignored_fields is not None:
+            data['ignored_fields'] = ignored_fields
 
         return self._post_with_updated_by("/draft-services/{}".format(draft_id), data=data, user=user)
 
