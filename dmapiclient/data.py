@@ -294,6 +294,21 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def set_supplier_framework_agreement_version(
+        self,
+        supplier_id,
+        framework_slug,
+        agreement_version,
+        user=None,
+    ):
+        return self._post_with_updated_by(
+            "/suppliers/{}/frameworks/{}".format(supplier_id, framework_slug),
+            data={
+                "frameworkInterest": {"agreementVersion": agreement_version},
+            },
+            user=user,
+        )
+
     def register_framework_agreement_returned(self, supplier_id, framework_slug, user=None, uploader_user_id=None):
         framework_interest_dict = {
             "agreementReturned": True,

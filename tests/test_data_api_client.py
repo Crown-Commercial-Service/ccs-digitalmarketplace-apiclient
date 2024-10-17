@@ -1073,6 +1073,25 @@ class TestSupplierMethods(object):
             "updated_by": 'user'
         }
 
+    def test_set_supplier_framework_agreement_version(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/8765/frameworks/g-cloud-10",
+            json={"frameworkInterest": {"agreementVersion": 'aegis'}},
+            status_code=200)
+
+        result = data_client.set_supplier_framework_agreement_version(
+            8765,
+            'g-cloud-10',
+            'aegis',
+            'user'
+        )
+        assert result == {"frameworkInterest": {"agreementVersion": 'aegis'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            "frameworkInterest": {"agreementVersion": 'aegis'},
+            "updated_by": 'user'
+        }
+
     def test_register_framework_agreement_returned_with_uploader_user_id(self, data_client, rmock):
         rmock.post(
             "http://baseurl/suppliers/123/frameworks/g-cloud-8",
