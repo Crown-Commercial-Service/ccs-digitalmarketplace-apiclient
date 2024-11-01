@@ -2,6 +2,11 @@
 
 Records breaking changes from major version bumps
 
+## Unreleased
+
+Add support for Python 3.13
+Drop support for Python 3.9 (though it should still work)
+
 ## 27.0.0
 
 Require the agreement details when creating a framework agreement
