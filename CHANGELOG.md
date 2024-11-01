@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## Unreleased
+
+Replace `setup.py` with `pyproject.toml`
+
 ## 27.0.0
 
 Require the agreement details when creating a framework agreement

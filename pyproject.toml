@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "ccs-digitalmarketplace-apiclient"
+dynamic = ["version"]
+dependencies = [
+  'requests<3,>=2.18.4',
+  'Flask>=3.0.3',
+]
+requires-python = ">=3.9,<3.13"
+authors = [
+  {name = "GDS Developers"},
+  {name = "CCS Developers"},
+]
+description = "API clients for Digital Marketplace Data API and Search API."
+readme = "README.md"
+license = {file = "LICENSE"}
+
+[project.urls]
+Homepage = "https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace-apiclient"
+Repository = "https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace-apiclient.git"
+Issues = "https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace-apiclient/issues"
+Changelog = "https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace-apiclient/CHANGELOG.md"
+
+[tool.setuptools.dynamic]
+version = {attr = "dmapiclient.__version__"}
+
+[tool.setuptools.package-data]
+"dmapiclient" = ["py.typed"]

@@ -53,6 +53,11 @@ git+https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace-apiclient
 When changing a major version number consider adding a record to the `CHANGELOG.md` with a
 description of the change and an example of the upgrade process for the client apps.
 
+## Pre-commit hooks
+
+This project has a [pre-commit hook][pre-commit hook] to do some general file checks and check the `pyproject.toml`.
+Follow the [Quick start][pre-commit quick start] to see how to set this up in your local checkout of this project.
+
 ## Licence
 
 Unless stated otherwise, the codebase is released under [the MIT License][mit].
@@ -64,3 +69,6 @@ of the [Open Government 3.0][ogl] licence.
 [mit]: LICENCE
 [copyright]: http://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/
 [ogl]: http://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/
+
+[pre-commit hook]: https://pre-commit.com/
+[pre-commit quick start]: https://pre-commit.com/#quick-start
