@@ -2,7 +2,7 @@
 
 Records breaking changes from major version bumps
 
-## Unreleased
+## 27.3.0
 
 Replace `setup.py` with `pyproject.toml`
 
