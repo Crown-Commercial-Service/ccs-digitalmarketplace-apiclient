@@ -1,9 +1,9 @@
 Digital Marketplace API client
 =========================
 
-![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)
-![Python 3.10](https://img.shields.io/badge/python-3.10-blue.svg)
 ![Python 3.11](https://img.shields.io/badge/python-3.11-blue.svg)
+![Python 3.12](https://img.shields.io/badge/python-3.12-blue.svg)
+![Python 3.13](https://img.shields.io/badge/python-3.13-blue.svg)
 [![PyPI version](https://badge.fury.io/py/ccs-digitalmarketplace-apiclient.svg)](https://badge.fury.io/py/ccs-digitalmarketplace-apiclient)
 
 ## What's in here?
