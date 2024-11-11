@@ -1,7 +1,5 @@
 -e file:.
 
-coverage
-coveralls
 flake8
 mock
 mypy
@@ -11,4 +9,4 @@ requests-mock
 
 types-requests
 
-ccs-digitalmarketplace-test-utils==5.3.0
+ccs-digitalmarketplace-test-utils==6.0.0

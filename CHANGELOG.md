@@ -2,6 +2,11 @@
 
 Records breaking changes from major version bumps
 
+## 28.0.0
+
+Make Python 3.11 the minimum supported version
+Add support for Python 3.13
+
 ## 27.3.0
 
 Replace `setup.py` with `pyproject.toml`
