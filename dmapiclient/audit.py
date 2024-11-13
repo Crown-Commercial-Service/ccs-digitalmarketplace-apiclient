@@ -99,12 +99,16 @@ class AuditTypes(Enum):
     update_lot_questions_response_answers = "update_lot_questions_response_answers"
     complete_lot_questions_response = "complete_lot_questions_response"
 
-    # Evaluator questions
-    create_evaluator_question = "create_evaluator_question"
-    update_evaluator_question_assignment_status = "update_evaluator_question_assignment_status"
-    update_evaluator_question_answers = "update_evaluator_question_answers"
-    create_final_evaluator_question = "create_final_evaluator_question"
-    update_final_evaluator_question_answers = "update_final_evaluator_question_answers"
+    # Evaluations
+    update_evaluator_framework_lot_assignment_status = "update_evaluator_framework_lot_assignment_status"
+    create_evaluator_framework_lot = "create_evaluator_framework_lot"
+    update_evaluator_framework_lot_status = "update_evaluator_framework_lot_status"
+    create_evaluator_framework_lot_section = "create_evaluator_framework_lot_section"
+    update_evaluator_framework_lot_section_assignment_status = \
+        "update_evaluator_framework_lot_section_assignment_status"
+
+    create_evaluator_framework_lot_section_evaluation = "create_evaluator_framework_lot_section_evaluation"
+    update_evaluator_framework_lot_section_evaluation = "update_evaluator_framework_lot_section_evaluation"
 
     @staticmethod
     def is_valid_audit_type(test_audit_type):
