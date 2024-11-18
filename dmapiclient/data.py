@@ -410,27 +410,6 @@ class DataAPIClient(BaseAPIClient):
     export_suppliers_iter = make_iter_method('export_suppliers', 'suppliers')
     export_suppliers_iter.__name__ = str("export_suppliers_iter")
 
-    def find_framework_suppliers_with_evaluation_for_lot(
-        self,
-        framework,
-        lot,
-        page=None,
-    ):
-        params = {}
-
-        if page is not None:
-            params['page'] = page
-
-        return self._get(
-            f"/frameworks/{framework}/suppliers/lots/{lot}/evaluations",
-            params=params
-        )
-
-    find_framework_suppliers_with_evaluation_for_lot_iter = \
-        make_iter_method('find_framework_suppliers_with_evaluation_for_lot', 'supplierFrameworks')
-    find_framework_suppliers_with_evaluation_for_lot_iter.__name__ = \
-        str("find_framework_suppliers_with_evaluation_for_lot_iter")
-
     # Users
 
     def create_user(self, user):
@@ -1529,31 +1508,35 @@ class DataAPIClient(BaseAPIClient):
         )
 
         params = {
+            'framework': framework_slug,
+            'supplier_id': supplier_id,
             'page': page,
         }
 
-        return self._get(f"/suppliers/{supplier_id}/frameworks/{framework_slug}/lot-questions-responses", params=params)
+        return self._get("/lot-questions-responses", params=params)
 
     find_lot_questions_responses_iter = make_iter_method('find_lot_questions_responses', 'lotQuestionsResponses')
     find_lot_questions_responses_iter.__name__ = str("find_lot_questions_responses_iter")
 
-    def get_lot_questions_response(self, supplier_id, framework_slug, lot_slug):
-        return self._get(
-            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/lot-questions-responses/{lot_slug}"
-        )
-
     def create_lot_questions_response(self, supplier_id, framework_slug, lot_slug, user=None):
         return self._post_with_updated_by(
-            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/lot-questions-responses/{lot_slug}",
-            data={},
+            "/lot-questions-responses",
+            data={
+                "supplierId": supplier_id,
+                "frameworkSlug": framework_slug,
+                "lotSlug": lot_slug,
+            },
             user=user,
+        )
+
+    def get_lot_questions_response(self, lot_questions_response_id):
+        return self._get(
+            f"/lot-questions-responses/{lot_questions_response_id}"
         )
 
     def update_lot_questions_response(
         self,
-        supplier_id,
-        framework_slug,
-        lot_slug,
+        lot_questions_response_id,
         lot_questions_response,
         user=None,
         page_questions=None
@@ -1566,28 +1549,25 @@ class DataAPIClient(BaseAPIClient):
             data['page_questions'] = page_questions
 
         return self._patch_with_updated_by(
-            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/lot-questions-responses/{lot_slug}",
+            f"/lot-questions-responses/{lot_questions_response_id}",
             data=data,
             user=user,
         )
 
-    def complete_lot_questions_response(self, supplier_id, framework_slug, lot_slug, user=None):
+    def complete_lot_questions_response(self, lot_questions_response_id, user=None):
         return self._post_with_updated_by(
-            f"/suppliers/{supplier_id}/frameworks/{framework_slug}/lot-questions-responses/{lot_slug}/complete",
+            f"/lot-questions-responses/{lot_questions_response_id}/complete",
             data={},
             user=user,
         )
 
-    # Evaluator questions
+    # Evaluations
 
-    def find_evaluator_questions(
+    def find_evaluator_framework_lots(
         self,
         framework,
         lot,
         user_id=None,
-        supplier_id=None,
-        question_id=None,
-        status=None,
         assigned=True,
         page=None,
     ):
@@ -1597,75 +1577,104 @@ class DataAPIClient(BaseAPIClient):
             'assigned': bool(assigned),
             'page': page,
             'user_id': user_id,
-            'supplier_id': supplier_id,
-            'question_id': question_id,
-            'status': status
         }
 
-        return self._get("/evaluator-questions", params=params)
+        return self._get("/evaluations/evaluator-framework-lots", params=params)
 
-    find_evaluator_questions_iter = make_iter_method('find_evaluator_questions', 'evaluatorQuestions')
-    find_evaluator_questions_iter.__name__ = str("find_evaluator_questions_iter")
+    find_evaluator_framework_lots_iter = make_iter_method('find_evaluator_framework_lots', 'evaluatorFrameworkLots')
+    find_evaluator_framework_lots_iter.__name__ = str("find_evaluator_framework_lots")
 
-    def find_evaluator_question_users(self, framework, lot, page=None):
-        return self._get(
-            f"/evaluator-questions/{framework}/{lot}/users",
-            params={
-                'page': page
-            }
-        )
-
-    def get_evaluator_question(self, evaluator_question_id):
-        return self._get(
-            f"/evaluator-questions/{evaluator_question_id}"
-        )
-
-    def get_final_evaluator_question(self, framework, lot, supplier_id, question_id):
-        return self._get(
-            f"/evaluator-questions/{framework}/{lot}/{supplier_id}/{question_id}/final",
-        )
-
-    def update_evaluator_question(self, evaluator_question_id, elvauator_question, user=None):
-        return self._patch_with_updated_by(
-            f"/evaluator-questions/{evaluator_question_id}",
-            data={
-                "evaluatorQuestions": elvauator_question,
-            },
-            user=user,
-        )
-
-    def set_final_evaluator_question(
+    def update_assigned_evaluators_for_framework_lot(
         self,
         framework,
         lot,
-        supplier_id,
-        question_id,
-        elvauator_question,
-        user=None
-    ):
-        return self._post_with_updated_by(
-            f"/evaluator-questions/{framework}/{lot}/{supplier_id}/{question_id}/final",
-            data={
-                "evaluatorQuestions": elvauator_question,
-            },
-            user=user,
-        )
-
-    def update_assigned_evaluators_for_question(
-        self,
-        framework,
-        lot,
-        supplier_id,
-        question_id,
         users,
         user=None
     ):
         return self._post_with_updated_by(
-            f"/evaluator-questions/{framework}/{lot}/{supplier_id}/{question_id}",
+            "/evaluations/evaluator-framework-lots",
             data={
-                'evaluatorQuestions': {
-                    'users': users
+                'evaluatorFrameworkLots': {
+                    'frameworkSlug': framework,
+                    "lotSlug": lot,
+                    'users': users,
                 }
+            },
+            user=user,
+        )
+
+    def update_evaluator_framework_lot_status(
+        self,
+        evaluator_framework_lot_id,
+        status,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            f"/evaluations/evaluator-framework-lots/{evaluator_framework_lot_id}/status/{status}",
+            data={},
+            user=user,
+        )
+
+    def update_assigned_sections_for_evaluator_framework_lot(
+        self,
+        framework,
+        lot,
+        section_slug,
+        evaluator_framework_lots,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            "/evaluations/evaluator-framework-lot-sections",
+            data={
+                'evaluatorFrameworkLotSections': {
+                    'evaluatorFrameworkLots': evaluator_framework_lots,
+                    'frameworkSlug': framework,
+                    "lotSlug": lot,
+                    'sectionSlug': section_slug,
+                }
+            },
+            user=user,
+        )
+
+    def get_evaluator_framework_lot_section_evaluation(
+        self,
+        evaluator_framework_lot_section_evaluation_id,
+    ):
+        return self._get(
+            "/evaluations/evaluator-framework-lot-section-evaluations/"
+            f"{evaluator_framework_lot_section_evaluation_id}"
+        )
+
+    def create_evaluator_framework_lot_section_evaluation(
+        self,
+        evaluator_framework_lot_section_id,
+        supplier_id,
+        evaluator_framework_lot_section_evaluation,
+        page_questions,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            '/evaluations/evaluator-framework-lot-section-evaluations',
+            data={
+                'evaluatorFrameworkLotSectionId': evaluator_framework_lot_section_id,
+                'supplierId': supplier_id,
+                'evaluatorFrameworkLotSectionEvaluations': evaluator_framework_lot_section_evaluation,
+                'page_questions': page_questions
+            },
+            user=user,
+        )
+
+    def update_evaluator_framework_lot_section_evaluation(
+        self,
+        evaluator_framework_lot_section_evaluation_id,
+        evaluator_framework_lot_section_evaluation,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            '/evaluations/evaluator-framework-lot-section-evaluations'
+            f'/{evaluator_framework_lot_section_evaluation_id}',
+            data={
+                'evaluatorFrameworkLotSectionEvaluations': evaluator_framework_lot_section_evaluation,
             },
             user=user,
         )

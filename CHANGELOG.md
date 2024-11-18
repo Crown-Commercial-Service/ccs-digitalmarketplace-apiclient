@@ -2,6 +2,12 @@
 
 Records breaking changes from major version bumps
 
+## 29.0.0
+
+Update the lot questions reponses routes
+Remove old evaluator questions routes
+Add routes relating to evaluations
+
 ## 28.0.0
 
 Make Python 3.11 the minimum supported version
