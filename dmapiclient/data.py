@@ -1615,6 +1615,30 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def find_evaluator_framework_lot_sections(
+        self,
+        framework,
+        lot,
+        assigned=True,
+        section_slug=None,
+        page=None,
+    ):
+        params = {
+            'framework': framework,
+            'lot': lot,
+            'assigned': bool(assigned),
+            'section_slug': section_slug,
+            'page': page
+        }
+
+        return self._get("/evaluations/evaluator-framework-lot-sections", params=params)
+
+    find_evaluator_framework_lot_sections_iter = make_iter_method(
+        'find_evaluator_framework_lot_sections',
+        'evaluatorFrameworkLotSections'
+    )
+    find_evaluator_framework_lot_sections_iter.__name__ = str("find_evaluator_framework_lot_sections")
+
     def update_assigned_sections_for_evaluator_framework_lot(
         self,
         framework,
