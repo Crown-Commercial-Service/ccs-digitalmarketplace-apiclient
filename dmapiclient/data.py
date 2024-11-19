@@ -402,6 +402,25 @@ class DataAPIClient(BaseAPIClient):
     find_framework_suppliers_iter = make_iter_method('find_framework_suppliers', 'supplierFrameworks')
     find_framework_suppliers_iter.__name__ = str("find_framework_suppliers_iter")
 
+    def find_supplier_framework_applications_by_lot(
+        self,
+        framework_slug,
+        lot_slug,
+        page=None
+    ):
+        return self._get(
+            f"/frameworks/{framework_slug}/suppliers/applications/{lot_slug}",
+            params={
+                'page': page
+            }
+        )
+
+    find_supplier_framework_applications_by_lot_iter = make_iter_method(
+        'find_supplier_framework_applications_by_lot',
+        'supplierFrameworks'
+    )
+    find_supplier_framework_applications_by_lot_iter.__name__ = str("find_supplier_framework_applications_by_lot_iter")
+
     def export_suppliers(self, framework_slug):
         return self._get(
             "/suppliers/export/{}".format(framework_slug)
@@ -1561,6 +1580,73 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def find_lot_questions_response_section_evaluations(
+        self,
+        framework,
+        lot,
+        section_slug=None,
+        page=None,
+    ):
+        params = {
+            'framework': framework,
+            'lot': lot,
+            'section_slug': section_slug,
+            'page': page
+        }
+
+        return self._get("/lot-questions-response-section-evaluations", params=params)
+
+    find_lot_questions_response_section_evaluations_iter = make_iter_method(
+        'find_lot_questions_response_section_evaluations',
+        'lotQuestionsResponseSectionEvaluations'
+    )
+    find_lot_questions_response_section_evaluations_iter.__name__ = str(
+        "find_lot_questions_response_section_evaluations_iter"
+    )
+
+    def get_lot_questions_response_section_evaluation(
+        self,
+        lot_questions_response_section_evaluation_id,
+    ):
+        return self._get(
+            "/lot-questions-response-section-evaluations"
+            f"/{lot_questions_response_section_evaluation_id}"
+        )
+
+    def create_lot_questions_response_section_evaluation(
+        self,
+        lot_question_response_id,
+        section_slug,
+        lot_questions_response_section_evaluation,
+        page_questions,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            '/lot-questions-response-section-evaluations',
+            data={
+                'lotQuestionsResponseId': lot_question_response_id,
+                'sectionSlug': section_slug,
+                'lotQuestionsResponseSectionEvaluations': lot_questions_response_section_evaluation,
+                'page_questions': page_questions
+            },
+            user=user,
+        )
+
+    def update_lot_questions_response_section_evaluation(
+        self,
+        lot_questions_response_section_evaluation_id,
+        lot_questions_response_section_evaluation,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            '/lot-questions-response-section-evaluations'
+            f'/{lot_questions_response_section_evaluation_id}',
+            data={
+                'lotQuestionsResponseSectionEvaluations': lot_questions_response_section_evaluation,
+            },
+            user=user,
+        )
+
     # Evaluations
 
     def find_evaluator_framework_lots(
@@ -1569,6 +1655,7 @@ class DataAPIClient(BaseAPIClient):
         lot,
         user_id=None,
         assigned=True,
+        locked=None,
         page=None,
     ):
         params = {
@@ -1577,12 +1664,13 @@ class DataAPIClient(BaseAPIClient):
             'assigned': bool(assigned),
             'page': page,
             'user_id': user_id,
+            'locked': locked,
         }
 
         return self._get("/evaluations/evaluator-framework-lots", params=params)
 
     find_evaluator_framework_lots_iter = make_iter_method('find_evaluator_framework_lots', 'evaluatorFrameworkLots')
-    find_evaluator_framework_lots_iter.__name__ = str("find_evaluator_framework_lots")
+    find_evaluator_framework_lots_iter.__name__ = str("find_evaluator_framework_lots_iter")
 
     def update_assigned_evaluators_for_framework_lot(
         self,
@@ -1621,6 +1709,7 @@ class DataAPIClient(BaseAPIClient):
         lot,
         assigned=True,
         section_slug=None,
+        locked=None,
         page=None,
     ):
         params = {
@@ -1628,6 +1717,7 @@ class DataAPIClient(BaseAPIClient):
             'lot': lot,
             'assigned': bool(assigned),
             'section_slug': section_slug,
+            'locked': locked,
             'page': page
         }
 
@@ -1637,7 +1727,7 @@ class DataAPIClient(BaseAPIClient):
         'find_evaluator_framework_lot_sections',
         'evaluatorFrameworkLotSections'
     )
-    find_evaluator_framework_lot_sections_iter.__name__ = str("find_evaluator_framework_lot_sections")
+    find_evaluator_framework_lot_sections_iter.__name__ = str("find_evaluator_framework_lot_sections_iter")
 
     def update_assigned_sections_for_evaluator_framework_lot(
         self,

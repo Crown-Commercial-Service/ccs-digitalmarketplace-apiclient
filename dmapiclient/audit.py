@@ -99,6 +99,9 @@ class AuditTypes(Enum):
     update_lot_questions_response_answers = "update_lot_questions_response_answers"
     complete_lot_questions_response = "complete_lot_questions_response"
 
+    create_lot_questions_response_section_evaluation = "create_lot_questions_response_section_evaluation"
+    update_lot_questions_response_section_evaluation = "update_lot_questions_response_section_evaluation"
+
     # Evaluations
     update_evaluator_framework_lot_assignment_status = "update_evaluator_framework_lot_assignment_status"
     create_evaluator_framework_lot = "create_evaluator_framework_lot"
