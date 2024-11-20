@@ -1750,14 +1750,33 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def get_evaluator_framework_lot_section_evaluation(
+    def find_evaluator_framework_lot_section_evaluations(
         self,
-        evaluator_framework_lot_section_evaluation_id,
+        framework,
+        lot,
+        section_slug=None,
+        evaluator_framework_lot_id=None,
+        supplier_id=None,
+        page=None,
     ):
-        return self._get(
-            "/evaluations/evaluator-framework-lot-section-evaluations/"
-            f"{evaluator_framework_lot_section_evaluation_id}"
-        )
+        params = {
+            'framework': framework,
+            'lot': lot,
+            'section_slug': section_slug,
+            'evaluator_framework_lot_id': evaluator_framework_lot_id,
+            'supplier_id': supplier_id,
+            'page': page
+        }
+
+        return self._get("/evaluations/evaluator-framework-lot-section-evaluations", params=params)
+
+    find_evaluator_framework_lot_section_evaluations_iter = make_iter_method(
+        'find_evaluator_framework_lot_section_evaluations',
+        'evaluatorFrameworkLotSectionEvaluations'
+    )
+    find_evaluator_framework_lot_section_evaluations_iter.__name__ = str(
+        "find_evaluator_framework_lot_section_evaluations_iter"
+    )
 
     def create_evaluator_framework_lot_section_evaluation(
         self,
@@ -1776,6 +1795,15 @@ class DataAPIClient(BaseAPIClient):
                 'page_questions': page_questions
             },
             user=user,
+        )
+
+    def get_evaluator_framework_lot_section_evaluation(
+        self,
+        evaluator_framework_lot_section_evaluation_id,
+    ):
+        return self._get(
+            "/evaluations/evaluator-framework-lot-section-evaluations/"
+            f"{evaluator_framework_lot_section_evaluation_id}"
         )
 
     def update_evaluator_framework_lot_section_evaluation(
