@@ -4249,6 +4249,28 @@ class TestLotQuestionsResponsesMethods(object):
 class TestEvaluatorFrameworkLotMethods(object):
     def test_find_evaluator_framework_lots(self, data_client, rmock):
         rmock.get(
+            "http://baseurl/evaluations/evaluator-framework-lots?assigned=True",
+            json={"evaluatorFrameworkLots": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_framework_lots()
+
+        assert result == {"evaluatorFrameworkLots": "result"}
+        assert rmock.called
+
+    def test_find_evaluator_framework_lots_adds_framework_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluations/evaluator-framework-lots?framework=g-cloud-6&assigned=True",
+            json={"evaluatorFrameworkLots": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_framework_lots('g-cloud-6')
+
+        assert result == {"evaluatorFrameworkLots": "result"}
+        assert rmock.called
+
+    def test_find_evaluator_framework_lots_adds_lot_parameter(self, data_client, rmock):
+        rmock.get(
             "http://baseurl/evaluations/evaluator-framework-lots?framework=g-cloud-6&lot=g-things&assigned=True",
             json={"evaluatorFrameworkLots": "result"},
             status_code=200)
@@ -4300,6 +4322,18 @@ class TestEvaluatorFrameworkLotMethods(object):
             status_code=200)
 
         result = data_client.find_evaluator_framework_lots('g-cloud-6', 'g-things', locked=True)
+
+        assert result == {"evaluatorFrameworkLotSections": "result"}
+        assert rmock.called
+
+    def test_find_evaluator_framework_lot_adds_with_sections_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluations/evaluator-framework-lots?"
+            "framework=g-cloud-6&lot=g-things&assigned=True&with_sections=True",
+            json={"evaluatorFrameworkLotSections": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_framework_lots('g-cloud-6', 'g-things', with_sections=True)
 
         assert result == {"evaluatorFrameworkLotSections": "result"}
         assert rmock.called

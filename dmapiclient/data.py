@@ -1651,11 +1651,12 @@ class DataAPIClient(BaseAPIClient):
 
     def find_evaluator_framework_lots(
         self,
-        framework,
-        lot,
+        framework=None,
+        lot=None,
         user_id=None,
         assigned=True,
         locked=None,
+        with_sections=None,
         page=None,
     ):
         params = {
@@ -1664,6 +1665,7 @@ class DataAPIClient(BaseAPIClient):
             'assigned': bool(assigned),
             'page': page,
             'user_id': user_id,
+            'with_sections': with_sections,
             'locked': locked,
         }
 
