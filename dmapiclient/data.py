@@ -1693,6 +1693,17 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def get_evaluator_framework_lot(
+        self,
+        evaluator_framework_lot_id,
+        with_sections=True
+    ):
+        params = {
+            'with_sections': bool(with_sections),
+        }
+
+        return self._get(f"/evaluations/evaluator-framework-lots/{evaluator_framework_lot_id}", params=params)
+
     def update_evaluator_framework_lot_status(
         self,
         evaluator_framework_lot_id,
