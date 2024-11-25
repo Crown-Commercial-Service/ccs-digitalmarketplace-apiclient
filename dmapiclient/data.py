@@ -406,11 +406,17 @@ class DataAPIClient(BaseAPIClient):
         self,
         framework_slug,
         lot_slug,
+        evaluation_status=None,
+        section_slug=None,
+        evaluator_framework_lot_id=None,
         page=None
     ):
         return self._get(
             f"/frameworks/{framework_slug}/suppliers/applications/{lot_slug}",
             params={
+                'evaluation_status': evaluation_status,
+                'section_slug': section_slug,
+                'evaluator_framework_lot_id': evaluator_framework_lot_id,
                 'page': page
             }
         )

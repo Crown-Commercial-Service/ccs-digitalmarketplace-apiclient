@@ -1289,6 +1289,24 @@ class TestSupplierMethods(object):
         assert result == {'supplierFrameworks': [{"supplierId": 1}, {"supplierId": 2}]}
         assert rmock.called
 
+    def test_find_supplier_framework_applications_by_lot_with_attributes(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/frameworks/g-cloud-7/suppliers/applications/cloud-sourcing'
+            '?evaluation_status=not-evaluated&section_slug=slug-name&evaluator_framework_lot_id=1234',
+            json={'supplierFrameworks': [{"supplierId": 1}, {"supplierId": 2}]},
+            status_code=200)
+
+        result = data_client.find_supplier_framework_applications_by_lot(
+            'g-cloud-7',
+            'cloud-sourcing',
+            evaluation_status='not-evaluated',
+            section_slug='slug-name',
+            evaluator_framework_lot_id=1234
+        )
+
+        assert result == {'supplierFrameworks': [{"supplierId": 1}, {"supplierId": 2}]}
+        assert rmock.called
+
     def test_can_export_suppliers(self, data_client, rmock):
         rmock.get(
             "http://baseurl/suppliers/export/g-cloud-9",
