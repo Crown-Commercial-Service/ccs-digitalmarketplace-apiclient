@@ -4521,6 +4521,17 @@ class TestEvaluatorFrameworkLotMethods(object):
             'updated_by': 'user',
         }
 
+    def test_get_evaluator_framework_lot_section(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluations/evaluator-framework-lot-sections/1234",
+            json={"evaluatorFrameworkLotSections": "result"},
+            status_code=200)
+
+        result = data_client.get_evaluator_framework_lot_section(1234)
+
+        assert result == {"evaluatorFrameworkLotSections": "result"}
+        assert rmock.called
+
     def test_find_evaluator_framework_lot_section_evaluations(self, data_client, rmock):
         rmock.get(
             "http://baseurl/evaluations/evaluator-framework-lot-section-evaluations?"
