@@ -1769,6 +1769,15 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def get_evaluator_framework_lot_section(
+        self,
+        evaluator_framework_lot_section_id,
+    ):
+        return self._get(
+            "/evaluations/evaluator-framework-lot-sections/"
+            f"{evaluator_framework_lot_section_id}"
+        )
+
     def find_evaluator_framework_lot_section_evaluations(
         self,
         framework,
