@@ -4097,6 +4097,35 @@ class TestLotQuestionsResponsesMethods(object):
         except HTTPError:
             assert rmock.called
 
+    def test_get_lot_questions_response_by_framework_lot_suppler(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-questions-responses/frameworks/g-cloud-6/lots/g-things/suppliers/1234",
+            json={"lotQuestionsResponses": "result"},
+            status_code=200)
+
+        result = data_client.get_lot_questions_response_by_framework_lot_suppler(
+            'g-cloud-6',
+            'g-things',
+            1234
+        )
+
+        assert result == {"lotQuestionsResponses": "result"}
+        assert rmock.called
+
+    def test_get_lot_questions_response_by_framework_lot_suppler_should_return_404(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-questions-responses/frameworks/g-cloud-6/lots/g-things/suppliers/1234",
+            status_code=404)
+
+        try:
+            data_client.get_lot_questions_response_by_framework_lot_suppler(
+                'g-cloud-6',
+                'g-things',
+                1234
+            )
+        except HTTPError:
+            assert rmock.called
+
     def test_update_lot_questions_response(self, data_client, rmock):
         rmock.patch(
             "http://baseurl/lot-questions-responses/1234",
