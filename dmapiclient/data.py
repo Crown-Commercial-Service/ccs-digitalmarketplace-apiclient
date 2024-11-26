@@ -1559,6 +1559,11 @@ class DataAPIClient(BaseAPIClient):
             f"/lot-questions-responses/{lot_questions_response_id}"
         )
 
+    def get_lot_questions_response_by_framework_lot_suppler(self, framework_slug, lot_slug, supplier_id):
+        return self._get(
+            f"/lot-questions-responses/frameworks/{framework_slug}/lots/{lot_slug}/suppliers/{supplier_id}"
+        )
+
     def update_lot_questions_response(
         self,
         lot_questions_response_id,
