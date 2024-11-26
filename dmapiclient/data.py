@@ -412,8 +412,9 @@ class DataAPIClient(BaseAPIClient):
         page=None
     ):
         return self._get(
-            f"/frameworks/{framework_slug}/suppliers/applications/{lot_slug}",
+            f"/frameworks/{framework_slug}/suppliers/applications",
             params={
+                'lot': lot_slug,
                 'evaluation_status': evaluation_status,
                 'section_slug': section_slug,
                 'evaluator_framework_lot_id': evaluator_framework_lot_id,
@@ -426,6 +427,14 @@ class DataAPIClient(BaseAPIClient):
         'supplierFrameworks'
     )
     find_supplier_framework_applications_by_lot_iter.__name__ = str("find_supplier_framework_applications_by_lot_iter")
+
+    def verify_supplier_framework_application(self, framework_slug, supplier_id, lot_slug=None):
+        return self._get(
+            f"/frameworks/{framework_slug}/suppliers/{supplier_id}/applications/verify",
+            params={
+                'lot': lot_slug
+            }
+        )
 
     def export_suppliers(self, framework_slug):
         return self._get(

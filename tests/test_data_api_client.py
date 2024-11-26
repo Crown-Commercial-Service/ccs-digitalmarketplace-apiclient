@@ -1280,7 +1280,7 @@ class TestSupplierMethods(object):
 
     def test_find_supplier_framework_applications_by_lot(self, data_client, rmock):
         rmock.get(
-            'http://baseurl/frameworks/g-cloud-7/suppliers/applications/cloud-sourcing',
+            'http://baseurl/frameworks/g-cloud-7/suppliers/applications?lot=cloud-sourcing',
             json={'supplierFrameworks': [{"supplierId": 1}, {"supplierId": 2}]},
             status_code=200)
 
@@ -1291,8 +1291,8 @@ class TestSupplierMethods(object):
 
     def test_find_supplier_framework_applications_by_lot_with_attributes(self, data_client, rmock):
         rmock.get(
-            'http://baseurl/frameworks/g-cloud-7/suppliers/applications/cloud-sourcing'
-            '?evaluation_status=not-evaluated&section_slug=slug-name&evaluator_framework_lot_id=1234',
+            'http://baseurl/frameworks/g-cloud-7/suppliers/applications?lot=cloud-sourcing'
+            '&evaluation_status=not-evaluated&section_slug=slug-name&evaluator_framework_lot_id=1234',
             json={'supplierFrameworks': [{"supplierId": 1}, {"supplierId": 2}]},
             status_code=200)
 
@@ -1305,6 +1305,28 @@ class TestSupplierMethods(object):
         )
 
         assert result == {'supplierFrameworks': [{"supplierId": 1}, {"supplierId": 2}]}
+        assert rmock.called
+
+    def test_verify_supplier_framework_application(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/frameworks/g-things-88/suppliers/1234/applications/verify",
+            json={"applicationStatus": "result"},
+            status_code=200)
+
+        result = data_client.verify_supplier_framework_application('g-things-88', 1234)
+
+        assert result == {"applicationStatus": "result"}
+        assert rmock.called
+
+    def test_verify_supplier_framework_application_with_lot(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/frameworks/g-things-88/suppliers/1234/applications/verify?lot=g-thing",
+            json={"applicationStatus": "result"},
+            status_code=200)
+
+        result = data_client.verify_supplier_framework_application('g-things-88', 1234, 'g-thing')
+
+        assert result == {"applicationStatus": "result"}
         assert rmock.called
 
     def test_can_export_suppliers(self, data_client, rmock):
@@ -3210,10 +3232,10 @@ class TestDataAPIClientIterMethods(object):
             data_client, rmock,
             method_name='find_supplier_framework_applications_by_lot_iter',
             model_name='supplierFrameworks',
-            url_path='frameworks/g-cloud-6/suppliers/applications/g-things',
+            url_path='frameworks/g-cloud-6/suppliers/applications?lot=g-things',
             iter_kwargs={
                 'framework_slug': 'g-cloud-6',
-                'lot_slug': 'g-things'
+                'lot_slug': 'g-things',
             }
         )
 
