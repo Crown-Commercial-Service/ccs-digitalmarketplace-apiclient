@@ -1338,6 +1338,23 @@ class TestSupplierMethods(object):
         assert rmock.called
         assert result == {"suppliers": "result"}
 
+    def test_migrate_framework_application(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/frameworks/g-things-88/migrate-application",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.migrate_framework_application('g-things-88', 1234, 4567, 'user')
+
+        assert result == {"message": "done"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'fromSupplierId': 1234,
+            'toSupplierId': 4567,
+            'updated_by': 'user',
+        }
+
 
 class TestAgreementMethods(object):
     def test_put_signed_agreement_on_hold(self, data_client, rmock):
