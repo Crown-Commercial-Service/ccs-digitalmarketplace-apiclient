@@ -113,6 +113,9 @@ class AuditTypes(Enum):
     create_evaluator_framework_lot_section_evaluation = "create_evaluator_framework_lot_section_evaluation"
     update_evaluator_framework_lot_section_evaluation = "update_evaluator_framework_lot_section_evaluation"
 
+    # Migrate supplier
+    migrate_supplier = "migrate_supplier"
+
     @staticmethod
     def is_valid_audit_type(test_audit_type):
 

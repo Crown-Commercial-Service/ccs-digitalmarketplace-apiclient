@@ -444,6 +444,16 @@ class DataAPIClient(BaseAPIClient):
     export_suppliers_iter = make_iter_method('export_suppliers', 'suppliers')
     export_suppliers_iter.__name__ = str("export_suppliers_iter")
 
+    def migrate_framework_application(self, framework_slug, from_supplier_id, to_supplier_id, user=None):
+        return self._post_with_updated_by(
+            f"/frameworks/{framework_slug}/migrate-application",
+            data={
+                'fromSupplierId': from_supplier_id,
+                'toSupplierId': to_supplier_id,
+            },
+            user=user,
+        )
+
     # Users
 
     def create_user(self, user):
