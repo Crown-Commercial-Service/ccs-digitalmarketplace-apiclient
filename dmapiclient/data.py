@@ -1687,6 +1687,7 @@ class DataAPIClient(BaseAPIClient):
         assigned=True,
         locked=None,
         with_sections=None,
+        with_evaluations=None,
         page=None,
     ):
         params = {
@@ -1696,6 +1697,7 @@ class DataAPIClient(BaseAPIClient):
             'page': page,
             'user_id': user_id,
             'with_sections': with_sections,
+            'with_evaluations': with_evaluations,
             'locked': locked,
         }
 
@@ -1726,10 +1728,12 @@ class DataAPIClient(BaseAPIClient):
     def get_evaluator_framework_lot(
         self,
         evaluator_framework_lot_id,
-        with_sections=True
+        with_sections=True,
+        with_evaluations=True,
     ):
         params = {
             'with_sections': bool(with_sections),
+            'with_evaluations': bool(with_evaluations),
         }
 
         return self._get(f"/evaluations/evaluator-framework-lots/{evaluator_framework_lot_id}", params=params)
@@ -1796,10 +1800,16 @@ class DataAPIClient(BaseAPIClient):
     def get_evaluator_framework_lot_section(
         self,
         evaluator_framework_lot_section_id,
+        with_evaluations=True,
     ):
+        params = {
+            'with_evaluations': bool(with_evaluations),
+        }
+
         return self._get(
             "/evaluations/evaluator-framework-lot-sections/"
-            f"{evaluator_framework_lot_section_id}"
+            f"{evaluator_framework_lot_section_id}",
+            params=params
         )
 
     def find_evaluator_framework_lot_section_evaluations(
