@@ -4579,6 +4579,18 @@ class TestEvaluatorFrameworkLotMethods(object):
         assert result == {"evaluatorFrameworkLotSections": "result"}
         assert rmock.called
 
+    def test_find_evaluator_framework_lot_sections_adds_with_evaluations_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluations/evaluator-framework-lot-sections?"
+            "framework=g-cloud-6&lot=g-things&assigned=True&with_evaluations=True",
+            json={"evaluatorFrameworkLotSections": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_framework_lot_sections('g-cloud-6', 'g-things', with_evaluations=True)
+
+        assert result == {"evaluatorFrameworkLotSections": "result"}
+        assert rmock.called
+
     def test_update_assigned_sections_for_evaluator_framework_lot(self, data_client, rmock):
         rmock.post(
             "http://baseurl/evaluations/evaluator-framework-lot-sections",

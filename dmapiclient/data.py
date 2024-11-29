@@ -1757,6 +1757,7 @@ class DataAPIClient(BaseAPIClient):
         assigned=True,
         section_slug=None,
         locked=None,
+        with_evaluations=None,
         page=None,
     ):
         params = {
@@ -1765,6 +1766,7 @@ class DataAPIClient(BaseAPIClient):
             'assigned': bool(assigned),
             'section_slug': section_slug,
             'locked': locked,
+            'with_evaluations': with_evaluations,
             'page': page
         }
 
