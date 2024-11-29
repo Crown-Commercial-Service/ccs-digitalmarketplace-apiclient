@@ -4424,9 +4424,21 @@ class TestEvaluatorFrameworkLotMethods(object):
         assert result == {"evaluatorFrameworkLotSections": "result"}
         assert rmock.called
 
+    def test_find_evaluator_framework_lot_adds_with_evaluations_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluations/evaluator-framework-lots?"
+            "framework=g-cloud-6&lot=g-things&assigned=True&with_evaluations=True",
+            json={"evaluatorFrameworkLotSections": "result"},
+            status_code=200)
+
+        result = data_client.find_evaluator_framework_lots('g-cloud-6', 'g-things', with_evaluations=True)
+
+        assert result == {"evaluatorFrameworkLotSections": "result"}
+        assert rmock.called
+
     def test_get_evaluator_framework_lot(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/evaluations/evaluator-framework-lots/1234?with_sections=True",
+            "http://baseurl/evaluations/evaluator-framework-lots/1234?with_sections=True&with_evaluations=True",
             json={"evaluatorFrameworkLots": "result"},
             status_code=200)
 
@@ -4437,11 +4449,22 @@ class TestEvaluatorFrameworkLotMethods(object):
 
     def test_get_evaluator_framework_lot_adds_with_sections_parameter(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/evaluations/evaluator-framework-lots/1234?with_sections=False",
+            "http://baseurl/evaluations/evaluator-framework-lots/1234?with_sections=False&with_evaluations=True",
             json={"evaluatorFrameworkLots": "result"},
             status_code=200)
 
         result = data_client.get_evaluator_framework_lot(1234, with_sections=False)
+
+        assert result == {"evaluatorFrameworkLots": "result"}
+        assert rmock.called
+
+    def test_get_evaluator_framework_lot_adds_with_evaluations_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluations/evaluator-framework-lots/1234?with_sections=True&with_evaluations=False",
+            json={"evaluatorFrameworkLots": "result"},
+            status_code=200)
+
+        result = data_client.get_evaluator_framework_lot(1234, with_evaluations=False)
 
         assert result == {"evaluatorFrameworkLots": "result"}
         assert rmock.called
@@ -4591,11 +4614,22 @@ class TestEvaluatorFrameworkLotMethods(object):
 
     def test_get_evaluator_framework_lot_section(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/evaluations/evaluator-framework-lot-sections/1234",
+            "http://baseurl/evaluations/evaluator-framework-lot-sections/1234?with_evaluations=True",
             json={"evaluatorFrameworkLotSections": "result"},
             status_code=200)
 
         result = data_client.get_evaluator_framework_lot_section(1234)
+
+        assert result == {"evaluatorFrameworkLotSections": "result"}
+        assert rmock.called
+
+    def test_get_evaluator_framework_lot_section_adds_with_evaluations_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluations/evaluator-framework-lot-sections/1234?with_evaluations=False",
+            json={"evaluatorFrameworkLotSections": "result"},
+            status_code=200)
+
+        result = data_client.get_evaluator_framework_lot_section(1234, with_evaluations=False)
 
         assert result == {"evaluatorFrameworkLotSections": "result"}
         assert rmock.called
