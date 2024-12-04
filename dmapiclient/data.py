@@ -1588,9 +1588,12 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def get_lot_questions_response(self, lot_questions_response_id):
+    def get_lot_questions_response(self, lot_questions_response_id, with_evaluations=None):
         return self._get(
-            f"/lot-questions-responses/{lot_questions_response_id}"
+            f"/lot-questions-responses/{lot_questions_response_id}",
+            params={
+                "with_evaluations": with_evaluations
+            }
         )
 
     def get_lot_questions_response_by_framework_lot_suppler(self, framework_slug, lot_slug, supplier_id):
@@ -1660,7 +1663,7 @@ class DataAPIClient(BaseAPIClient):
 
     def create_lot_questions_response_section_evaluation(
         self,
-        lot_question_response_id,
+        lot_questions_response_id,
         section_slug,
         lot_questions_response_section_evaluation,
         page_questions,
@@ -1669,7 +1672,7 @@ class DataAPIClient(BaseAPIClient):
         return self._post_with_updated_by(
             '/lot-questions-response-section-evaluations',
             data={
-                'lotQuestionsResponseId': lot_question_response_id,
+                'lotQuestionsResponseId': lot_questions_response_id,
                 'sectionSlug': section_slug,
                 'lotQuestionsResponseSectionEvaluations': lot_questions_response_section_evaluation,
                 'page_questions': page_questions
