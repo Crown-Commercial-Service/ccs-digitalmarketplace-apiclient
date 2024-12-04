@@ -1545,12 +1545,6 @@ class DataAPIClient(BaseAPIClient):
         framework_slug,
         page=None,
     ):
-        warnings.warn(
-            "The output of 'find_lot_questions_responses' is paginated. "
-            "Use 'find_lot_questions_responses_iter' instead.",
-            DeprecationWarning
-        )
-
         params = {
             'framework': framework_slug,
             'supplier_id': supplier_id,
@@ -1561,6 +1555,27 @@ class DataAPIClient(BaseAPIClient):
 
     find_lot_questions_responses_iter = make_iter_method('find_lot_questions_responses', 'lotQuestionsResponses')
     find_lot_questions_responses_iter.__name__ = str("find_lot_questions_responses_iter")
+
+    def find_lot_questions_responses_applicants_for_framework_lot(
+        self,
+        framework_slug,
+        lot_slug,
+        with_evaluations=None,
+        page=None,
+    ):
+        params = {
+            'framework': framework_slug,
+            'lot': lot_slug,
+            'with_evaluations': with_evaluations,
+            'page': page,
+        }
+
+        return self._get("/lot-questions-responses/applications", params=params)
+
+    find_lot_questions_responses_applicants_for_framework_lot_iter = \
+        make_iter_method('find_lot_questions_responses_applicants_for_framework_lot', 'lotQuestionsResponses')
+    find_lot_questions_responses_applicants_for_framework_lot_iter.__name__ = \
+        str("find_lot_questions_responses_applicants_for_framework_lot_iter")
 
     def create_lot_questions_response(self, supplier_id, framework_slug, lot_slug, user=None):
         return self._post_with_updated_by(
@@ -1864,10 +1879,14 @@ class DataAPIClient(BaseAPIClient):
     def get_evaluator_framework_lot_section_evaluation(
         self,
         evaluator_framework_lot_section_evaluation_id,
+        with_lot_questions_response=None
     ):
         return self._get(
             "/evaluations/evaluator-framework-lot-section-evaluations/"
-            f"{evaluator_framework_lot_section_evaluation_id}"
+            f"{evaluator_framework_lot_section_evaluation_id}",
+            params={
+                "with_lot_questions_response": with_lot_questions_response
+            }
         )
 
     def update_evaluator_framework_lot_section_evaluation(

@@ -3155,6 +3155,18 @@ class TestDataAPIClientIterMethods(object):
             }
         )
 
+    def test_find_lot_questions_responses_applicants_for_framework_lot_iter(self, data_client, rmock):
+        self._test_find_iter(
+            data_client, rmock,
+            method_name='find_lot_questions_responses_applicants_for_framework_lot_iter',
+            model_name='lotQuestionsResponses',
+            url_path='lot-questions-responses/applications?framework=g-cloud-6&lot=g-lot',
+            iter_kwargs={
+                'framework_slug': 'g-cloud-6',
+                'lot_slug': 'g-lot'
+            }
+        )
+
     def test_find_evaluator_framework_lots_iter(self, data_client, rmock):
         self._test_find_iter(
             data_client, rmock,
@@ -4098,6 +4110,50 @@ class TestLotQuestionsResponsesMethods(object):
         assert result == {"lotQuestionsResponses": "result"}
         assert rmock.called
 
+    def test_find_lot_questions_responses_applicants_for_framework_lot(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-questions-responses/applications?framework=g-cloud-6&lot=g-lot",
+            json={"lotQuestionsResponses": "result"},
+            status_code=200
+        )
+
+        result = data_client.find_lot_questions_responses_applicants_for_framework_lot('g-cloud-6', 'g-lot')
+
+        assert result == {"lotQuestionsResponses": "result"}
+        assert rmock.called
+
+    def test_find_lot_questions_responses_applicants_for_framework_lot_adds_with_evaluations_parameter(
+        self,
+        data_client,
+        rmock
+    ):
+        rmock.get(
+            "http://baseurl/lot-questions-responses/applications?framework=g-cloud-6&lot=g-lot&with_evaluations=True",
+            json={"lotQuestionsResponses": "result"},
+            status_code=200
+        )
+
+        result = data_client.find_lot_questions_responses_applicants_for_framework_lot(
+            'g-cloud-6',
+            'g-lot',
+            with_evaluations=True
+        )
+
+        assert result == {"lotQuestionsResponses": "result"}
+        assert rmock.called
+
+    def test_find_lot_questions_responses_applicants_for_framework_lot_adds_page_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-questions-responses/applications?framework=g-cloud-6&lot=g-lot&page=2",
+            json={"lotQuestionsResponses": "result"},
+            status_code=200
+        )
+
+        result = data_client.find_lot_questions_responses_applicants_for_framework_lot('g-cloud-6', 'g-lot', page=2)
+
+        assert result == {"lotQuestionsResponses": "result"}
+        assert rmock.called
+
     def test_create_lot_questions_response(self, data_client, rmock):
         rmock.post(
             "http://baseurl/lot-questions-responses",
@@ -4762,6 +4818,18 @@ class TestEvaluatorFrameworkLotMethods(object):
             status_code=200)
 
         result = data_client.get_evaluator_framework_lot_section_evaluation(1234)
+
+        assert result == {"evaluatorFrameworkLotSectionEvaluations": "result"}
+        assert rmock.called
+
+    def test_get_evaluator_framework_lot_section_evaluation_with_lot_questions_response(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/evaluations/evaluator-framework-lot-section-evaluations/1234"
+            "?with_lot_questions_response=True",
+            json={"evaluatorFrameworkLotSectionEvaluations": "result"},
+            status_code=200)
+
+        result = data_client.get_evaluator_framework_lot_section_evaluation(1234, with_lot_questions_response=True)
 
         assert result == {"evaluatorFrameworkLotSectionEvaluations": "result"}
         assert rmock.called
