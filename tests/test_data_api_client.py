@@ -4192,6 +4192,17 @@ class TestLotQuestionsResponsesMethods(object):
         except HTTPError:
             assert rmock.called
 
+    def test_get_lot_questions_response_with_evaluations(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-questions-responses/1234?with_evaluations=True",
+            json={"lotQuestionsResponses": "result"},
+            status_code=200)
+
+        result = data_client.get_lot_questions_response(1234, with_evaluations=True)
+
+        assert result == {"lotQuestionsResponses": "result"}
+        assert rmock.called
+
     def test_get_lot_questions_response_by_framework_lot_suppler(self, data_client, rmock):
         rmock.get(
             "http://baseurl/lot-questions-responses/frameworks/g-cloud-6/lots/g-things/suppliers/1234",
