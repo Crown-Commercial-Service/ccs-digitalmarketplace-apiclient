@@ -41,3 +41,6 @@ version = {attr = "dmapiclient.__version__"}
 
 [tool.setuptools.package-data]
 "dmapiclient" = ["py.typed"]
+
+[tool.pytest.ini_options]
+addopts = "--cov=dmapiclient"
