@@ -21,6 +21,10 @@ updates:
         - 'click'
         - 'blinker'
 
+    digitalmarketplace:
+      patterns:
+        - 'ccs-digitalmarketplace*'
+
 - package-ecosystem: "github-actions"
   directory: "/"
   schedule:

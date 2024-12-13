@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 29.12.2
+
+Update the `pyproject.toml` to add dev dependancies
+
 ## 29.0.0
 
 Update the lot questions reponses routes
