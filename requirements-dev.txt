@@ -52,7 +52,7 @@ pytest==8.3.4
     # via
     #   ccs-digitalmarketplace-apiclient (pyproject.toml)
     #   pytest-cov
-pytest-cov==5.0.0
+pytest-cov==6.0.0
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 requests==2.32.3
     # via
