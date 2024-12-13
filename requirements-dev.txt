@@ -20,7 +20,7 @@ flake8==7.1.1
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 flask==3.0.3
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
-idna==2.10
+idna==3.10
     # via requests
 iniconfig==2.0.0
     # via pytest
