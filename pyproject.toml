@@ -24,6 +24,18 @@ Repository = "https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace
 Issues = "https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace-apiclient/issues"
 Changelog = "https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace-apiclient/CHANGELOG.md"
 
+[project.optional-dependencies]
+dev = [
+  'flake8',
+  'mock',
+  'mypy',
+  'pytest',
+  'pytest-cov',
+  'requests-mock',
+  'types-requests',
+  'ccs-digitalmarketplace-test-utils==6.0.0',
+]
+
 [tool.setuptools.dynamic]
 version = {attr = "dmapiclient.__version__"}
 
