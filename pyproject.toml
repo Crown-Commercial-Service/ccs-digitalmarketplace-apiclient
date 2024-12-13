@@ -43,4 +43,5 @@ version = {attr = "dmapiclient.__version__"}
 "dmapiclient" = ["py.typed"]
 
 [tool.pytest.ini_options]
-addopts = "--cov=dmapiclient"
+addopts = "-p no:logging --cov=dmapiclient"
+testpaths = "tests"
