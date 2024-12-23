@@ -36,7 +36,7 @@ mccabe==0.7.0
     # via flake8
 mock==5.1.0
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
-mypy==1.13.0
+mypy==1.14.0
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 mypy-extensions==1.0.0
     # via mypy
