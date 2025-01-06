@@ -10,7 +10,7 @@ ccs-digitalmarketplace-test-utils==6.1.1
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 certifi==2024.8.30
     # via requests
-charset-normalizer==3.4.0
+charset-normalizer==3.4.1
     # via requests
 click==8.1.7
     # via flask
