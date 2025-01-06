@@ -39,3 +39,7 @@ class HTTPError(APIError):
 
 class InvalidResponse(APIError):
     pass
+
+
+class InvalidResponseType(APIError):
+    pass
