@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 30.0.0
+
+Add the Central Digital Platform (CDP) API client to the other API clients
+
 ## 29.12.2
 
 Update the `pyproject.toml` to add dev dependancies

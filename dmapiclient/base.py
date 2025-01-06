@@ -1,4 +1,4 @@
-from __future__ import absolute_import
+from enum import Enum
 import logging
 import time
 from typing import Optional
@@ -11,7 +11,7 @@ from flask import has_request_context, request, current_app
 import urllib.parse as urlparse
 
 from . import __version__
-from .errors import APIError, HTTPError, InvalidResponse
+from .errors import APIError, HTTPError, InvalidResponse, InvalidResponseType
 from .exceptions import ImproperlyConfigured
 
 
@@ -53,6 +53,11 @@ class classproperty(object):
 
     def __get__(self, instance, owner):
         return self.getter(owner)
+
+
+class ResponseType(Enum):
+    JSON = 1
+    CONTENT = 2
 
 
 class BaseAPIClient(object):
@@ -115,40 +120,154 @@ class BaseAPIClient(object):
         else:
             return user
 
-    def _patch(self, url, data, *, client_wait_for_response: bool = True):
-        return self._request("PATCH", url, data=data, client_wait_for_response=client_wait_for_response)
+    def _patch(
+        self,
+        url,
+        data,
+        *,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None
+    ):
+        return self._request(
+            "PATCH",
+            url,
+            data=data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type
+        )
 
-    def _patch_with_updated_by(self, url, data, *, user: Optional[str] = None, client_wait_for_response: bool = True):
+    def _patch_with_updated_by(
+        self,
+        url,
+        data,
+        *,
+        user: Optional[str] = None,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None
+    ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._patch(url, data, client_wait_for_response=client_wait_for_response)
+        return self._patch(
+            url,
+            data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type
+        )
 
-    def _put(self, url, data, *, client_wait_for_response: bool = True):
-        return self._request("PUT", url, data=data, client_wait_for_response=client_wait_for_response)
+    def _put(
+        self,
+        url,
+        data,
+        *,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None
+    ):
+        return self._request(
+            "PUT",
+            url,
+            data=data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type
+        )
 
-    def _put_with_updated_by(self, url, data, *, user: Optional[str] = None, client_wait_for_response: bool = True):
+    def _put_with_updated_by(
+        self,
+        url,
+        data,
+        *,
+        user: Optional[str] = None,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None
+    ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._put(url, data, client_wait_for_response=client_wait_for_response)
+        return self._put(
+            url,
+            data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type
+        )
 
-    def _get(self, url, params=None, *, client_wait_for_response: bool = True):
-        return self._request("GET", url, params=params, client_wait_for_response=client_wait_for_response)
+    def _get(
+        self,
+        url,
+        params=None,
+        *,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None
+    ):
+        return self._request(
+            "GET",
+            url,
+            params=params,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type
+        )
 
-    def _post(self, url, data, *, client_wait_for_response: bool = True):
-        return self._request("POST", url, data=data, client_wait_for_response=client_wait_for_response)
+    def _post(
+        self,
+        url,
+        data,
+        *,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None
+    ):
+        return self._request(
+            "POST",
+            url,
+            data=data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type
+        )
 
-    def _post_with_updated_by(self, url, data, *, user: Optional[str] = None, client_wait_for_response: bool = True):
+    def _post_with_updated_by(
+        self,
+        url,
+        data,
+        *,
+        user: Optional[str] = None,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None
+    ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._post(url, data, client_wait_for_response=client_wait_for_response)
+        return self._post(
+            url,
+            data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type
+        )
 
-    def _delete(self, url, data=None, *, client_wait_for_response: bool = True):
-        return self._request("DELETE", url, data=data, client_wait_for_response=client_wait_for_response)
+    def _delete(
+        self,
+        url,
+        data=None, *,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None
+    ):
+        return self._request(
+            "DELETE",
+            url,
+            data=data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type
+        )
 
-    def _delete_with_updated_by(self, url, data, *, user: Optional[str] = None, client_wait_for_response: bool = True):
+    def _delete_with_updated_by(
+        self,
+        url,
+        data, *, user: Optional[str] = None,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None
+    ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._delete(url, data, client_wait_for_response=client_wait_for_response)
+        return self._delete(
+            url,
+            data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type
+        )
 
     def _build_url(self, url, params):
         if not self._base_url:
@@ -202,11 +321,7 @@ class BaseAPIClient(object):
 
             yield exc
 
-    def _request(self, method, url, data=None, params=None, *, client_wait_for_response: bool = True):
-        if not self._enabled:
-            return None
-
-        url = self._build_url(url, params)
+    def _get_headers(self):
         headers = {
             "Content-type": "application/json",
             "Authorization": "Bearer {}".format(self._auth_token),
@@ -223,9 +338,23 @@ class BaseAPIClient(object):
         # not using CaseInsensitiveDict as our header dict initially as technically .update()'s behaviour is undefined
         # for it, but past a certain point we want to be able to know we've resolved what our final header value is
         # going to be for any certain header name
-        ci_headers = requests.structures.CaseInsensitiveDict(headers)
-        # just in case anyone misses the point and thinks adding anything more to `headers` will do anything beyond here
-        del headers
+        return requests.structures.CaseInsensitiveDict(headers)
+
+    def _request(
+        self,
+        method,
+        url,
+        data=None,
+        params=None,
+        *,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None
+    ):
+        if not self._enabled:
+            return None
+
+        url = self._build_url(url, params)
+        ci_headers = self._get_headers()
 
         # determine our final outgoing span id - find the first of DM_SPAN_ID_HEADERS which is set to something truthy
         child_span_id = next(
@@ -294,7 +423,7 @@ class BaseAPIClient(object):
                     'api_time': elapsed_time,
                 },
             )
-            raise api_error
+            raise api_error from e
         else:
             elapsed_time = time.perf_counter() - start_time
             logger.log(
@@ -308,11 +437,23 @@ class BaseAPIClient(object):
                     'api_time': elapsed_time,
                 },
             )
-        try:
-            return response.json()
-        except ValueError:
-            raise InvalidResponse(response,
-                                  message="No JSON object could be decoded")
+
+        if response_type is None or response_type == ResponseType.JSON:
+            try:
+                return response.json()
+            except ValueError as e:
+
+                raise InvalidResponse(
+                    response,
+                    message="No JSON object could be decoded"
+                ) from e
+        elif response_type == ResponseType.CONTENT:
+            return response.content
+        else:
+            raise InvalidResponseType(
+                response,
+                message=f"Response type: '{response_type}' is not a valid response type"
+            )
 
     def get_status(self):
         try:

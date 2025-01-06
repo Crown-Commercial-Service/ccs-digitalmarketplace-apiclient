@@ -12,8 +12,8 @@ import io
 
 from dmtestutils.comparisons import RestrictedAny
 
-from dmapiclient.base import BaseAPIClient
-from dmapiclient import HTTPError, InvalidResponse
+from dmapiclient.base import BaseAPIClient, ResponseType
+from dmapiclient import HTTPError, InvalidResponse, InvalidResponseType
 from dmapiclient.errors import REQUEST_ERROR_STATUS_CODE
 from dmapiclient.exceptions import ImproperlyConfigured
 
@@ -194,7 +194,31 @@ class TestBaseApiClient(object):
         assert e.value.message == "No JSON object could be decoded"
         assert e.value.status_code == 200
 
-    def test_user_agent_is_set(self, base_client, rmock):
+    def test_text_does_not_raise_error_when_response_type_is_content(self, base_client, rmock):
+        rmock.request(
+            "GET",
+            "http://baseurl/",
+            text="No Error",
+            status_code=200)
+
+        response = base_client._request("GET", '/', response_type=ResponseType.CONTENT)
+
+        assert response == b"No Error"
+
+    def test_invalid_response_type_raises_api_error(self, base_client, rmock):
+        rmock.request(
+            "GET",
+            "http://baseurl/",
+            text="No Error",
+            status_code=200)
+
+        with pytest.raises(InvalidResponseType) as e:
+            base_client._request("GET", '/', response_type="Invalid Response Type")
+
+        assert e.value.message == "Response type: 'Invalid Response Type' is not a valid response type"
+        assert e.value.status_code == 200
+
+    def test_base_headers_are_set(self, base_client, rmock):
         rmock.request(
             "GET",
             "http://baseurl/",
@@ -203,6 +227,8 @@ class TestBaseApiClient(object):
 
         base_client._request('GET', '/')
 
+        assert rmock.last_request.headers.get("Content-type") == "application/json"
+        assert rmock.last_request.headers.get("Authorization") == "Bearer auth-token"
         assert rmock.last_request.headers.get("User-Agent").startswith("DM-API-Client/")
 
     def test_request_always_uses_base_url_scheme(self, base_client, rmock):
