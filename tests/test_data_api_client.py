@@ -897,6 +897,30 @@ class TestSupplierMethods(object):
         assert rmock.called
         assert rmock.last_request.json() == {"updated_by": "test@example.com"}
 
+    def test_create_central_digital_platform_connection(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/1234/central-digital-platform/create",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.create_central_digital_platform_connection(
+            1234,
+            {
+                "supplierInformation": "value"
+            },
+            'user'
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'centralDigitalPlatformData': {
+                "supplierInformation": "value"
+            },
+            'updated_by': 'user',
+        }
+
     def test_get_framework_interest(self, data_client, rmock):
         rmock.get(
             "http://baseurl/suppliers/123/frameworks/interest",

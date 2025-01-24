@@ -48,6 +48,8 @@ class AuditTypes(Enum):
     update_declaration_answers = "update_declaration_answers"
     agree_framework_variation = "agree_framework_variation"
     update_supplier_framework = "update_supplier_framework"
+    supplier_central_digital_platform_connection_created = "supplier_central_digital_platform_connection_created"
+    contact_update_from_central_digital_platform = "contact_update_from_central_digital_platform"
 
     # Framework agreements
     create_agreement = "create_agreement"
