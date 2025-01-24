@@ -939,6 +939,62 @@ class TestSupplierMethods(object):
             'updated_by': 'user',
         }
 
+    def test_update_supplier_central_digital_platform_data(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/1234/central-digital-platform/update",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.update_supplier_central_digital_platform_data(
+            1234,
+            {
+                "supplierInformation": "value"
+            },
+            user='user'
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'centralDigitalPlatformData': {
+                "supplierInformation": "value"
+            },
+            'updated_by': 'user',
+        }
+
+    def test_update_supplier_central_digital_platform_data_frameworks_to_update(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/1234/central-digital-platform/update",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.update_supplier_central_digital_platform_data(
+            1234,
+            {
+                "supplierInformation": "value"
+            },
+            [
+                'g-cloud-99',
+                'dos-67',
+            ],
+            user='user'
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'centralDigitalPlatformData': {
+                "supplierInformation": "value"
+            },
+            'frameworksToUpdate': [
+                'g-cloud-99',
+                'dos-67',
+            ],
+            'updated_by': 'user',
+        }
+
     def test_get_framework_interest(self, data_client, rmock):
         rmock.get(
             "http://baseurl/suppliers/123/frameworks/interest",

@@ -190,6 +190,26 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def update_supplier_central_digital_platform_data(
+        self,
+        supplier_id,
+        central_digital_platform_data,
+        frameworks_to_update=None,
+        user=None
+    ):
+        data = {
+            "centralDigitalPlatformData": central_digital_platform_data
+        }
+
+        if frameworks_to_update is not None:
+            data["frameworksToUpdate"] = frameworks_to_update
+
+        return self._post_with_updated_by(
+            f"/suppliers/{supplier_id}/central-digital-platform/update",
+            data=data,
+            user=user,
+        )
+
     def get_framework_interest(self, supplier_id):
         return self._get(
             "/suppliers/{}/frameworks/interest".format(supplier_id)

@@ -49,8 +49,9 @@ class AuditTypes(Enum):
     agree_framework_variation = "agree_framework_variation"
     update_supplier_framework = "update_supplier_framework"
     supplier_central_digital_platform_connection_created = "supplier_central_digital_platform_connection_created"
-    contact_update_from_central_digital_platform = "contact_update_from_central_digital_platform"
     supplier_central_digital_platform_connection_revoked = "supplier_central_digital_platform_connection_revoked"
+    supplier_central_digital_platform_data_updated = "supplier_central_digital_platform_data_updated"
+    contact_update_from_central_digital_platform = "contact_update_from_central_digital_platform"
 
     # Framework agreements
     create_agreement = "create_agreement"
@@ -61,6 +62,8 @@ class AuditTypes(Enum):
     countersign_agreement = "countersign_agreement"
     delete_countersigned_agreement = "delete_countersigned_agreement"
     delete_supplier_framework_declaration = "delete_supplier_framework_declaration"
+    supplier_framework_central_digital_platform_data_updated = \
+        "supplier_framework_central_digital_platform_data_updated"
 
     # Framework lifecycle
     create_framework = "create_framework"
