@@ -995,6 +995,31 @@ class TestSupplierMethods(object):
             'updated_by': 'user',
         }
 
+    def test_update_supplier_framework_central_digital_platform_data(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/1234/frameworks/g-things-99/central-digital-platform/update",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.update_supplier_framework_central_digital_platform_data(
+            1234,
+            'g-things-99',
+            {
+                "supplierInformation": "value"
+            },
+            user='user'
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'centralDigitalPlatformData': {
+                "supplierInformation": "value"
+            },
+            'updated_by': 'user',
+        }
+
     def test_get_framework_interest(self, data_client, rmock):
         rmock.get(
             "http://baseurl/suppliers/123/frameworks/interest",
