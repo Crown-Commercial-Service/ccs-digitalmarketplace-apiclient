@@ -174,6 +174,15 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def create_central_digital_platform_connection(self, supplier_id, central_digital_platform_data, user=None):
+        return self._post_with_updated_by(
+            f"/suppliers/{supplier_id}/central-digital-platform/create",
+            data={
+                "centralDigitalPlatformData": central_digital_platform_data
+            },
+            user=user,
+        )
+
     def get_framework_interest(self, supplier_id):
         return self._get(
             "/suppliers/{}/frameworks/interest".format(supplier_id)
