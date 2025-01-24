@@ -183,6 +183,13 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def revoke_central_digital_platform_connection(self, supplier_id, user=None):
+        return self._post_with_updated_by(
+            f"/suppliers/{supplier_id}/central-digital-platform/revoke",
+            data={},
+            user=user,
+        )
+
     def get_framework_interest(self, supplier_id):
         return self._get(
             "/suppliers/{}/frameworks/interest".format(supplier_id)
