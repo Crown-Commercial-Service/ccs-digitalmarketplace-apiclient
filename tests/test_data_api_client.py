@@ -921,6 +921,24 @@ class TestSupplierMethods(object):
             'updated_by': 'user',
         }
 
+    def test_revoke_central_digital_platform_connection(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/1234/central-digital-platform/revoke",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.revoke_central_digital_platform_connection(
+            1234,
+            'user'
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+        }
+
     def test_get_framework_interest(self, data_client, rmock):
         rmock.get(
             "http://baseurl/suppliers/123/frameworks/interest",
