@@ -131,9 +131,14 @@ class DataAPIClient(BaseAPIClient):
     find_suppliers_iter = make_iter_method('find_suppliers', 'suppliers')
     find_suppliers_iter.__name__ = str("find_suppliers_iter")
 
-    def get_supplier(self, supplier_id):
+    def get_supplier(self, supplier_id, with_cdp_supplier_information=None):
+        params = {}
+        if with_cdp_supplier_information is not None:
+            params['with_cdp_supplier_information'] = bool(with_cdp_supplier_information)
+
         return self._get(
-            "/suppliers/{}".format(supplier_id)
+            "/suppliers/{}".format(supplier_id),
+            params=params
         )
 
     def create_supplier(self, supplier):
@@ -147,17 +152,6 @@ class DataAPIClient(BaseAPIClient):
             "/suppliers/{}".format(supplier_id),
             data={
                 "suppliers": supplier,
-            },
-            user=user,
-        )
-
-    def update_supplier_sharecode(self, supplier_id, sharecode, user=None):
-        return self._post_with_updated_by(
-            "/suppliers/{}/sharecode".format(supplier_id),
-            data={
-                "suppliers": {
-                    "sharecode": sharecode
-                },
             },
             user=user,
         )
@@ -371,7 +365,8 @@ class DataAPIClient(BaseAPIClient):
         agreement_returned=None,
         statuses=None,
         with_declarations=True,
-        with_lot_questions_responses=True
+        with_lot_questions_responses=True,
+        with_cdp_supplier_information=None,
     ):
         '''
         :param agreement_returned: A boolean value that allows filtering by suppliers who have or have not
@@ -381,6 +376,8 @@ class DataAPIClient(BaseAPIClient):
                          Valid statuses are: signed, on-hold, approved and countersigned.
         :param with_declarations: whether to include declaration data in returned supplierFrameworks
         :param with_lot_questions_responses: whether to include lot questions responses data
+                                             in returned supplierFrameworks
+        :param with_cdp_supplier_information: whether to include CDP supplier information data
                                              in returned supplierFrameworks
         '''
         params = {}
@@ -392,6 +389,8 @@ class DataAPIClient(BaseAPIClient):
             params['with_declarations'] = bool(with_declarations)
         if with_lot_questions_responses is not True:
             params['with_lot_questions_responses'] = bool(with_lot_questions_responses)
+        if with_cdp_supplier_information is not None:
+            params['with_cdp_supplier_information'] = bool(with_cdp_supplier_information)
         return self._get(
             '/frameworks/{}/suppliers'.format(framework_slug),
             params=params

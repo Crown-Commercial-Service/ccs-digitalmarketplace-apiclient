@@ -832,6 +832,17 @@ class TestSupplierMethods(object):
         except HTTPError:
             assert rmock.called
 
+    def test_get_supplier_with_cdp_supplier_information(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/123?with_cdp_supplier_information=true",
+            json={"services": "result"},
+            status_code=200)
+
+        result = data_client.get_supplier(123, with_cdp_supplier_information=True)
+
+        assert result == {"services": "result"}
+        assert rmock.called
+
     def test_create_supplier(self, data_client, rmock):
         rmock.post(
             "http://baseurl/suppliers",
@@ -857,21 +868,6 @@ class TestSupplierMethods(object):
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'suppliers': {'foo': 'bar'}, 'updated_by': 'supplier'
-        }
-
-    def test_update_supplier_sharecode(self, data_client, rmock):
-        rmock.post(
-            "http://baseurl/suppliers/123/sharecode",
-            json={"suppliers": "result"},
-            status_code=200,
-        )
-
-        result = data_client.update_supplier_sharecode(123, "123456789", 'supplier')
-
-        assert result == {"suppliers": "result"}
-        assert rmock.called
-        assert rmock.request_history[0].json() == {
-            'suppliers': {'sharecode': '123456789'}, 'updated_by': 'supplier'
         }
 
     def test_update_contact_information(self, data_client, rmock):
@@ -1274,6 +1270,17 @@ class TestSupplierMethods(object):
             status_code=200)
 
         result = data_client.find_framework_suppliers('g-cloud-7', with_lot_questions_responses=False)
+
+        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
+        assert rmock.called
+
+    def test_find_framework_suppliers_with_cdp_supplier_information(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/frameworks/g-cloud-7/suppliers?with_cdp_supplier_information=true',
+            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
+            status_code=200)
+
+        result = data_client.find_framework_suppliers('g-cloud-7', with_cdp_supplier_information=True)
 
         assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
         assert rmock.called
