@@ -6,7 +6,7 @@ from dmapiclient import AntivirusAPIClient
 
 @pytest.fixture
 def antivirus_client():
-    return AntivirusAPIClient('http://baseurl', 'auth-token', True)
+    return AntivirusAPIClient("http://baseurl", "auth-token", True)
 
 
 class TestAntivirusApiClient(object):
@@ -30,7 +30,7 @@ class TestAntivirusApiClient(object):
 
         result = antivirus_client.get_status()
 
-        assert result['status'] == "ok"
+        assert result["status"] == "ok"
         assert rmock.called
 
 

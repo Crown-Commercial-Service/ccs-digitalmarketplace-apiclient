@@ -23,13 +23,13 @@ from urllib3.exceptions import NewConnectionError, ProtocolError, ReadTimeoutErr
 
 @pytest.fixture
 def raw_rmock():
-    with mock.patch('dmapiclient.base.requests.request') as rmock:
+    with mock.patch("dmapiclient.base.requests.request") as rmock:
         yield rmock
 
 
 @pytest.fixture
 def base_client():
-    return BaseAPIClient('http://baseurl', 'auth-token', True)
+    return BaseAPIClient("http://baseurl", "auth-token", True)
 
 
 @contextmanager
@@ -40,23 +40,46 @@ def _empty_context_manager():
 class TestBaseApiClient(object):
     def _make_request_response_mock(self, status, response_data=None):
         response_mock = mock.Mock(
-            status=status, headers={}, spec=['get_redirect_location', 'getheader', 'read', 'reason', 'drain_conn']
+            status=status, headers={}, spec=["get_redirect_location", "getheader", "read", "reason", "drain_conn"]
         )
         response_mock.get_redirect_location.return_value = None
         response_mock.getheader.return_value = None
         response_mock.read.side_effect = [response_data, None, None, None]
-        response_mock.reason = f'Mocked {status} response'
+        response_mock.reason = f"Mocked {status} response"
 
         return response_mock
 
-    @pytest.mark.parametrize("method,exc_factory", chain(
-        ((m, lambda: NewConnectionError(mock.Mock(), "I'm a message")) for m in ("GET", "PUT", "POST", "PATCH",)),
-        ((m, lambda: ProtocolError(mock.Mock(), "I'm a message")) for m in ("GET", "PUT",)),
-        ((m, lambda: ReadTimeoutError(mock.Mock(), mock.Mock(), "I'm a message")) for m in ("GET", "PUT",)),
-    ))
-    @pytest.mark.parametrize('retry_count', range(1, 4))
-    @mock.patch('urllib3.connectionpool.HTTPConnectionPool._make_request')
-    @mock.patch('dmapiclient.base.BaseAPIClient._RETRIES_BACKOFF_FACTOR', 0)
+    @pytest.mark.parametrize(
+        "method,exc_factory",
+        chain(
+            (
+                (m, lambda: NewConnectionError(mock.Mock(), "I'm a message"))
+                for m in (
+                    "GET",
+                    "PUT",
+                    "POST",
+                    "PATCH",
+                )
+            ),
+            (
+                (m, lambda: ProtocolError(mock.Mock(), "I'm a message"))
+                for m in (
+                    "GET",
+                    "PUT",
+                )
+            ),
+            (
+                (m, lambda: ReadTimeoutError(mock.Mock(), mock.Mock(), "I'm a message"))
+                for m in (
+                    "GET",
+                    "PUT",
+                )
+            ),
+        ),
+    )
+    @pytest.mark.parametrize("retry_count", range(1, 4))
+    @mock.patch("urllib3.connectionpool.HTTPConnectionPool._make_request")
+    @mock.patch("dmapiclient.base.BaseAPIClient._RETRIES_BACKOFF_FACTOR", 0)
     def test_client_retries_on_httperror_and_raises_api_error(
         self,
         _make_request,
@@ -67,26 +90,35 @@ class TestBaseApiClient(object):
     ):
         _make_request.side_effect = exc_factory()
 
-        with mock.patch('dmapiclient.base.BaseAPIClient._RETRIES', retry_count):
+        with mock.patch("dmapiclient.base.BaseAPIClient._RETRIES", retry_count):
             with pytest.raises(HTTPError) as e:
-                base_client._request(method, '/')
+                base_client._request(method, "/")
 
         requests = _make_request.call_args_list
 
         assert len(requests) == retry_count + 1
-        assert all((request[0][1], request[0][2]) == (method, '/') for request in requests)
+        assert all((request[0][1], request[0][2]) == (method, "/") for request in requests)
 
         assert type(_make_request.side_effect).__name__ in e.value.message
         assert e.value.status_code == REQUEST_ERROR_STATUS_CODE
 
-    @pytest.mark.parametrize("exc_factory", (
-        lambda: ProtocolError(mock.Mock(), "I'm a message"),
-        lambda: ReadTimeoutError(mock.Mock(), mock.Mock(), "I'm a message"),
-    ))
-    @pytest.mark.parametrize("method", ("POST", "PATCH",))
-    @pytest.mark.parametrize('retry_count', range(1, 4))
-    @mock.patch('urllib3.connectionpool.HTTPConnectionPool._make_request')
-    @mock.patch('dmapiclient.base.BaseAPIClient._RETRIES_BACKOFF_FACTOR', 0)
+    @pytest.mark.parametrize(
+        "exc_factory",
+        (
+            lambda: ProtocolError(mock.Mock(), "I'm a message"),
+            lambda: ReadTimeoutError(mock.Mock(), mock.Mock(), "I'm a message"),
+        ),
+    )
+    @pytest.mark.parametrize(
+        "method",
+        (
+            "POST",
+            "PATCH",
+        ),
+    )
+    @pytest.mark.parametrize("retry_count", range(1, 4))
+    @mock.patch("urllib3.connectionpool.HTTPConnectionPool._make_request")
+    @mock.patch("dmapiclient.base.BaseAPIClient._RETRIES_BACKOFF_FACTOR", 0)
     def test_client_doesnt_retry_non_whitelisted_methods_on_unsafe_errors(
         self,
         _make_request,
@@ -97,9 +129,9 @@ class TestBaseApiClient(object):
     ):
         _make_request.side_effect = exc_factory()
 
-        with mock.patch('dmapiclient.base.BaseAPIClient._RETRIES', retry_count):
+        with mock.patch("dmapiclient.base.BaseAPIClient._RETRIES", retry_count):
             with pytest.raises(HTTPError) as e:
-                base_client._request(method, '/')
+                base_client._request(method, "/")
 
         requests = _make_request.call_args_list
 
@@ -110,38 +142,36 @@ class TestBaseApiClient(object):
         assert type(_make_request.side_effect).__name__ in e.value.message
         assert e.value.status_code == REQUEST_ERROR_STATUS_CODE
 
-    @pytest.mark.parametrize(('retry_count'), range(1, 4))
-    @pytest.mark.parametrize(('status'), BaseAPIClient.RETRIES_FORCE_STATUS_CODES)
-    @mock.patch('urllib3.connectionpool.HTTPConnectionPool._make_request')
-    @mock.patch('dmapiclient.base.BaseAPIClient._RETRIES_BACKOFF_FACTOR', 0)
-    def test_client_retries_on_status_error_and_raises_api_error(
-        self, _make_request, base_client, status, retry_count
-    ):
+    @pytest.mark.parametrize(("retry_count"), range(1, 4))
+    @pytest.mark.parametrize(("status"), BaseAPIClient.RETRIES_FORCE_STATUS_CODES)
+    @mock.patch("urllib3.connectionpool.HTTPConnectionPool._make_request")
+    @mock.patch("dmapiclient.base.BaseAPIClient._RETRIES_BACKOFF_FACTOR", 0)
+    def test_client_retries_on_status_error_and_raises_api_error(self, _make_request, base_client, status, retry_count):
         response_mock = self._make_request_response_mock(status)
         _make_request.return_value = response_mock
 
-        with mock.patch('dmapiclient.base.BaseAPIClient._RETRIES', retry_count):
+        with mock.patch("dmapiclient.base.BaseAPIClient._RETRIES", retry_count):
             with pytest.raises(HTTPError) as e:
-                base_client._request("GET", '/')
+                base_client._request("GET", "/")
 
         requests = _make_request.call_args_list
 
         assert len(requests) == retry_count + 1
-        assert all((request[0][1], request[0][2]) == ('GET', '/') for request in requests)
+        assert all((request[0][1], request[0][2]) == ("GET", "/") for request in requests)
 
-        assert f'{status} Server Error: {response_mock.reason} for url: http://baseurl/\n' in e.value.message
+        assert f"{status} Server Error: {response_mock.reason} for url: http://baseurl/\n" in e.value.message
         assert e.value.status_code == status
 
-    @mock.patch('urllib3.connectionpool.HTTPConnectionPool._make_request')
-    @mock.patch('dmapiclient.base.BaseAPIClient._RETRIES_BACKOFF_FACTOR', 0)
+    @mock.patch("urllib3.connectionpool.HTTPConnectionPool._make_request")
+    @mock.patch("dmapiclient.base.BaseAPIClient._RETRIES_BACKOFF_FACTOR", 0)
     def test_client_retries_and_returns_data_if_successful(self, _make_request, base_client):
         #  The third response here would normally be a httplib response object. It's only use is to be passed in to
         #  `from_httplib`, which we're mocking the return of below. `from_httplib` converts a httplib response into a
         #  urllib3 response. The mock object we're returning is a mock for that urllib3 response.
         _make_request.side_effect = [
-            ProtocolError(mock.Mock(), '1st error'),
-            ProtocolError(mock.Mock(), '2nd error'),
-            ProtocolError(mock.Mock(), '3nd error'),
+            ProtocolError(mock.Mock(), "1st error"),
+            ProtocolError(mock.Mock(), "2nd error"),
+            ProtocolError(mock.Mock(), "3nd error"),
             HTTPResponse(
                 body=io.BytesIO(b'{"Success?": "Yes!"}'),
                 status=200,
@@ -151,29 +181,25 @@ class TestBaseApiClient(object):
 
         _make_request.return_value = self._make_request_response_mock(200, response_data=b'{"Success?": "Yes!"}')
 
-        response = base_client._request("GET", '/')
+        response = base_client._request("GET", "/")
         requests = _make_request.call_args_list
 
         assert len(requests) == 4
-        assert all((request[0][1], request[0][2]) == ('GET', '/') for request in requests)
-        assert response == {'Success?': 'Yes!'}
+        assert all((request[0][1], request[0][2]) == ("GET", "/") for request in requests)
+        assert response == {"Success?": "Yes!"}
 
     def test_non_2xx_response_raises_api_error(self, base_client, rmock):
-        rmock.request(
-            "GET",
-            "http://baseurl/",
-            json={"error": "Not found"},
-            status_code=404)
+        rmock.request("GET", "http://baseurl/", json={"error": "Not found"}, status_code=404)
 
         with pytest.raises(HTTPError) as e:
-            base_client._request("GET", '/')
+            base_client._request("GET", "/")
 
         assert e.value.message == "Not found"
         assert e.value.status_code == 404
 
     def test_base_error_is_logged(self, base_client):
         with requests_mock.Mocker() as m:
-            m.register_uri('GET', '/', exc=requests.RequestException())
+            m.register_uri("GET", "/", exc=requests.RequestException())
 
             with pytest.raises(HTTPError) as e:
                 base_client._request("GET", "/")
@@ -182,73 +208,53 @@ class TestBaseApiClient(object):
             assert e.value.status_code == 503
 
     def test_invalid_json_raises_api_error(self, base_client, rmock):
-        rmock.request(
-            "GET",
-            "http://baseurl/",
-            text="Internal Error",
-            status_code=200)
+        rmock.request("GET", "http://baseurl/", text="Internal Error", status_code=200)
 
         with pytest.raises(InvalidResponse) as e:
-            base_client._request("GET", '/')
+            base_client._request("GET", "/")
 
         assert e.value.message == "No JSON object could be decoded"
         assert e.value.status_code == 200
 
     def test_text_does_not_raise_error_when_response_type_is_content(self, base_client, rmock):
-        rmock.request(
-            "GET",
-            "http://baseurl/",
-            text="No Error",
-            status_code=200)
+        rmock.request("GET", "http://baseurl/", text="No Error", status_code=200)
 
-        response = base_client._request("GET", '/', response_type=ResponseType.CONTENT)
+        response = base_client._request("GET", "/", response_type=ResponseType.CONTENT)
 
         assert response == b"No Error"
 
     def test_invalid_response_type_raises_api_error(self, base_client, rmock):
-        rmock.request(
-            "GET",
-            "http://baseurl/",
-            text="No Error",
-            status_code=200)
+        rmock.request("GET", "http://baseurl/", text="No Error", status_code=200)
 
         with pytest.raises(InvalidResponseType) as e:
-            base_client._request("GET", '/', response_type="Invalid Response Type")
+            base_client._request("GET", "/", response_type="Invalid Response Type")
 
         assert e.value.message == "Response type: 'Invalid Response Type' is not a valid response type"
         assert e.value.status_code == 200
 
     def test_base_headers_are_set(self, base_client, rmock):
-        rmock.request(
-            "GET",
-            "http://baseurl/",
-            json={},
-            status_code=200)
+        rmock.request("GET", "http://baseurl/", json={}, status_code=200)
 
-        base_client._request('GET', '/')
+        base_client._request("GET", "/")
 
         assert rmock.last_request.headers.get("Content-type") == "application/json"
         assert rmock.last_request.headers.get("Authorization") == "Bearer auth-token"
         assert rmock.last_request.headers.get("User-Agent").startswith("DM-API-Client/")
 
     def test_request_always_uses_base_url_scheme(self, base_client, rmock):
-        rmock.request(
-            "GET",
-            "http://baseurl/path/",
-            json={},
-            status_code=200)
+        rmock.request("GET", "http://baseurl/path/", json={}, status_code=200)
 
-        base_client._request('GET', 'https://host/path/')
+        base_client._request("GET", "https://host/path/")
         assert rmock.called
 
     def test_null_api_throws(self):
-        bad_client = BaseAPIClient(None, 'auth-token', True)
+        bad_client = BaseAPIClient(None, "auth-token", True)
         with pytest.raises(ImproperlyConfigured):
-            bad_client._request('GET', '/anything')
+            bad_client._request("GET", "/anything")
 
     def test_onwards_request_headers_added_if_available(self, base_client, rmock, app):
         rmock.get("http://baseurl/_status", json={"status": "ok"}, status_code=200)
-        with app.test_request_context('/'):
+        with app.test_request_context("/"):
             # add a simple mock callable instead of using a full request implementation
             request.get_onwards_request_headers = mock.Mock()
             request.get_onwards_request_headers.return_value = {
@@ -268,7 +274,7 @@ class TestBaseApiClient(object):
 
     def test_onwards_request_headers_not_available(self, base_client, rmock, app):
         rmock.get("http://baseurl/_status", json={"status": "ok"}, status_code=200)
-        with app.test_request_context('/'):
+        with app.test_request_context("/"):
             # really just asserting no exception arose from performing a call without get_onwards_request_headers being
             # available
             base_client.get_status()
@@ -277,15 +283,27 @@ class TestBaseApiClient(object):
         # request.request_id is an old interface which we're still supporting here just for compatibility
         rmock.get("http://baseurl/_status", json={"status": "ok"}, status_code=200)
         app.config["DM_REQUEST_ID_HEADER"] = "Bar"
-        with app.test_request_context('/'):
+        with app.test_request_context("/"):
             request.request_id = "Ormond"
 
             base_client.get_status()
 
             assert rmock.last_request.headers["bar"] == "Ormond"
 
-    @pytest.mark.parametrize("dm_span_id_headers_setting", (None, ("X-Brian-Tweedy", "Major-Tweedy",),))
-    @pytest.mark.parametrize("has_request_context", (False, True),)
+    @pytest.mark.parametrize(
+        "dm_span_id_headers_setting",
+        (
+            None,
+            (
+                "X-Brian-Tweedy",
+                "Major-Tweedy",
+            ),
+        ),
+    )
+    @pytest.mark.parametrize(
+        "has_request_context",
+        (False, True),
+    )
     @mock.patch("dmapiclient.base.logger")
     def test_child_span_id_not_provided(
         self,
@@ -298,48 +316,67 @@ class TestBaseApiClient(object):
     ):
         rmock.get("http://baseurl/_status", json={"status": "ok"}, status_code=200)
         app.config["DM_SPAN_ID_HEADERS"] = dm_span_id_headers_setting
-        with (app.test_request_context('/') if has_request_context else _empty_context_manager()):
+        with app.test_request_context("/") if has_request_context else _empty_context_manager():
             if has_request_context:
-                request.get_onwards_request_headers = mock.Mock(return_value={
-                    "impression": "arrested",
-                })
+                request.get_onwards_request_headers = mock.Mock(
+                    return_value={
+                        "impression": "arrested",
+                    }
+                )
 
             base_client.get_status()
 
             assert rmock.called
             assert logger.log.call_args_list == [
-                mock.call(logging.DEBUG, "API request {method} {url}", extra={
-                    "method": "GET",
-                    "url": "http://baseurl/_status",
-                    # childSpanId NOT provided
-                }),
-                mock.call(logging.INFO, "API {api_method} request on {api_url} finished in {api_time}", extra={
-                    "api_method": "GET",
-                    "api_url": "http://baseurl/_status",
-                    "api_status": 200,
-                    "api_time": mock.ANY,
-                    # childSpanId NOT provided
-                }),
+                mock.call(
+                    logging.DEBUG,
+                    "API request {method} {url}",
+                    extra={
+                        "method": "GET",
+                        "url": "http://baseurl/_status",
+                        # childSpanId NOT provided
+                    },
+                ),
+                mock.call(
+                    logging.INFO,
+                    "API {api_method} request on {api_url} finished in {api_time}",
+                    extra={
+                        "api_method": "GET",
+                        "api_url": "http://baseurl/_status",
+                        "api_status": 200,
+                        "api_time": mock.ANY,
+                        # childSpanId NOT provided
+                    },
+                ),
             ]
 
-    @pytest.mark.parametrize("onwards_request_headers", (
-        {
-            "X-Brian-Tweedy": "Amiens Street",
-        },
-        {
-            "major-TWEEDY": "Amiens Street",
-        },
-        {
-            "Major-Tweedy": "terminus",
-            "x-brian-tweedy": "Amiens Street",
-        },
-        {
-            # note same header name, different capitalizations
-            "X-BRIAN-TWEEDY": "great northern",
-            "x-brian-tweedy": "Amiens Street",
-        },
-    ))
-    @pytest.mark.parametrize("response_status", (200, 500,))
+    @pytest.mark.parametrize(
+        "onwards_request_headers",
+        (
+            {
+                "X-Brian-Tweedy": "Amiens Street",
+            },
+            {
+                "major-TWEEDY": "Amiens Street",
+            },
+            {
+                "Major-Tweedy": "terminus",
+                "x-brian-tweedy": "Amiens Street",
+            },
+            {
+                # note same header name, different capitalizations
+                "X-BRIAN-TWEEDY": "great northern",
+                "x-brian-tweedy": "Amiens Street",
+            },
+        ),
+    )
+    @pytest.mark.parametrize(
+        "response_status",
+        (
+            200,
+            500,
+        ),
+    )
     @mock.patch("dmapiclient.base.logger")
     def test_child_span_id_provided(
         self,
@@ -351,8 +388,11 @@ class TestBaseApiClient(object):
         app,
     ):
         rmock.get("http://baseurl/_status", json={"status": "foobar"}, status_code=response_status)
-        app.config["DM_SPAN_ID_HEADERS"] = ("X-Brian-Tweedy", "major-tweedy",)
-        with app.test_request_context('/'):
+        app.config["DM_SPAN_ID_HEADERS"] = (
+            "X-Brian-Tweedy",
+            "major-tweedy",
+        )
+        with app.test_request_context("/"):
             request.get_onwards_request_headers = mock.Mock(return_value=onwards_request_headers)
 
             try:
@@ -369,24 +409,32 @@ class TestBaseApiClient(object):
             either_span_id = RestrictedAny(lambda value: value == "Amiens Street" or value == "great northern")
 
             assert mock_logger.log.call_args_list == [
-                mock.call(logging.DEBUG, "API request {method} {url}", extra={
-                    "method": "GET",
-                    "url": "http://baseurl/_status",
-                    "childSpanId": either_span_id,
-                }),
+                mock.call(
+                    logging.DEBUG,
+                    "API request {method} {url}",
+                    extra={
+                        "method": "GET",
+                        "url": "http://baseurl/_status",
+                        "childSpanId": either_span_id,
+                    },
+                ),
                 (
                     mock.call(
                         logging.INFO,
-                        "API {api_method} request on {api_url} finished in {api_time}", extra={
+                        "API {api_method} request on {api_url} finished in {api_time}",
+                        extra={
                             "api_method": "GET",
                             "api_url": "http://baseurl/_status",
                             "api_status": response_status,
                             "api_time": mock.ANY,
                             "childSpanId": either_span_id,
-                        }
-                    ) if response_status == 200 else mock.call(
+                        },
+                    )
+                    if response_status == 200
+                    else mock.call(
                         logging.WARNING,
-                        "API {api_method} request on {api_url} failed with {api_status} '{api_error}'", extra={
+                        "API {api_method} request on {api_url} failed with {api_status} '{api_error}'",
+                        extra={
                             "api_method": "GET",
                             "api_url": "http://baseurl/_status",
                             "api_status": response_status,
@@ -395,26 +443,30 @@ class TestBaseApiClient(object):
                             "childSpanId": either_span_id,
                         },
                     )
-                )
+                ),
             ]
             # both logging calls should have had the *same* childSpanId value
-            assert mock_logger.log.call_args_list[0][1]["extra"]["childSpanId"] \
+            assert (
+                mock_logger.log.call_args_list[0][1]["extra"]["childSpanId"]
                 == mock_logger.log.call_args_list[1][1]["extra"]["childSpanId"]
+            )
 
             # that value should be the same one that was sent in the onwards request header
             assert (
-                rmock.last_request.headers.get("x-brian-tweedy")
-                or rmock.last_request.headers.get("major-tweedy")
+                rmock.last_request.headers.get("x-brian-tweedy") or rmock.last_request.headers.get("major-tweedy")
             ) == mock_logger.log.call_args_list[0][1]["extra"]["childSpanId"]
 
-    @pytest.mark.parametrize("thrown_exception", (
-        # requests can be slightly unpredictable in the exceptions it raises
-        requests.exceptions.ConnectionError(
-            MaxRetryError(mock.Mock(), "http://abc.net", ReadTimeoutError(mock.Mock(), mock.Mock(), mock.Mock()))
+    @pytest.mark.parametrize(
+        "thrown_exception",
+        (
+            # requests can be slightly unpredictable in the exceptions it raises
+            requests.exceptions.ConnectionError(
+                MaxRetryError(mock.Mock(), "http://abc.net", ReadTimeoutError(mock.Mock(), mock.Mock(), mock.Mock()))
+            ),
+            requests.exceptions.ConnectionError(ReadTimeoutError(mock.Mock(), mock.Mock(), mock.Mock())),
+            requests.exceptions.ReadTimeout,
         ),
-        requests.exceptions.ConnectionError(ReadTimeoutError(mock.Mock(), mock.Mock(), mock.Mock())),
-        requests.exceptions.ReadTimeout,
-    ))
+    )
     @mock.patch("dmapiclient.base.logger")
     def test_nowait_times_out(
         self,
@@ -440,16 +492,24 @@ class TestBaseApiClient(object):
         assert tuple(req.timeout for req in rmock.request_history) == (base_client.nowait_timeout,)
 
         assert mock_logger.log.call_args_list == [
-            mock.call(logging.DEBUG, "API request {method} {url}", extra={
-                "method": "POST",
-                "url": "http://baseurl/services/10000",
-            }),
-            mock.call(logging.INFO, "API {api_method} request on {api_url} dispatched but ignoring response", extra={
-                "api_method": "POST",
-                "api_url": "http://baseurl/services/10000",
-                "api_time": mock.ANY,
-                "api_time_incomplete": True,
-            }),
+            mock.call(
+                logging.DEBUG,
+                "API request {method} {url}",
+                extra={
+                    "method": "POST",
+                    "url": "http://baseurl/services/10000",
+                },
+            ),
+            mock.call(
+                logging.INFO,
+                "API {api_method} request on {api_url} dispatched but ignoring response",
+                extra={
+                    "api_method": "POST",
+                    "api_url": "http://baseurl/services/10000",
+                    "api_time": mock.ANY,
+                    "api_time_incomplete": True,
+                },
+            ),
         ]
 
     @mock.patch("dmapiclient.base.logger")
@@ -476,14 +536,22 @@ class TestBaseApiClient(object):
         assert tuple(req.timeout for req in rmock.request_history) == (base_client.nowait_timeout,)
 
         assert mock_logger.log.call_args_list == [
-            mock.call(logging.DEBUG, "API request {method} {url}", extra={
-                "method": "POST",
-                "url": "http://baseurl/services/10000",
-            }),
-            mock.call(logging.INFO, "API {api_method} request on {api_url} finished in {api_time}", extra={
-                "api_method": "POST",
-                "api_url": "http://baseurl/services/10000",
-                "api_time": mock.ANY,
-                "api_status": 200,
-            }),
+            mock.call(
+                logging.DEBUG,
+                "API request {method} {url}",
+                extra={
+                    "method": "POST",
+                    "url": "http://baseurl/services/10000",
+                },
+            ),
+            mock.call(
+                logging.INFO,
+                "API {api_method} request on {api_url} finished in {api_time}",
+                extra={
+                    "api_method": "POST",
+                    "api_url": "http://baseurl/services/10000",
+                    "api_time": mock.ANY,
+                    "api_status": 200,
+                },
+            ),
         ]

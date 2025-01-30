@@ -13,7 +13,7 @@ class APIError(Exception):
     def message(self) -> Union[str, dict]:
         try:
             # If the API returns a well-formed `error`, it should always be a dict.
-            return cast(dict, self.response.json()['error'])
+            return cast(dict, self.response.json()["error"])
         except (TypeError, ValueError, AttributeError, KeyError):
             return self._message or REQUEST_ERROR_MESSAGE
 
@@ -32,7 +32,7 @@ class APIError(Exception):
 class HTTPError(APIError):
     @staticmethod
     def create(e):
-        fallback_message = '{}\n{}'.format(str(e), repr(e))
+        fallback_message = "{}\n{}".format(str(e), repr(e))
 
         return HTTPError(e.response, fallback_message)
 

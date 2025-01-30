@@ -62,8 +62,9 @@ class AuditTypes(Enum):
     countersign_agreement = "countersign_agreement"
     delete_countersigned_agreement = "delete_countersigned_agreement"
     delete_supplier_framework_declaration = "delete_supplier_framework_declaration"
-    supplier_framework_central_digital_platform_data_updated = \
+    supplier_framework_central_digital_platform_data_updated = (
         "supplier_framework_central_digital_platform_data_updated"
+    )
 
     # Framework lifecycle
     create_framework = "create_framework"
@@ -113,8 +114,9 @@ class AuditTypes(Enum):
     create_evaluator_framework_lot = "create_evaluator_framework_lot"
     update_evaluator_framework_lot_status = "update_evaluator_framework_lot_status"
     create_evaluator_framework_lot_section = "create_evaluator_framework_lot_section"
-    update_evaluator_framework_lot_section_assignment_status = \
+    update_evaluator_framework_lot_section_assignment_status = (
         "update_evaluator_framework_lot_section_assignment_status"
+    )
 
     create_evaluator_framework_lot_section_evaluation = "create_evaluator_framework_lot_section_evaluation"
     update_evaluator_framework_lot_section_evaluation = "update_evaluator_framework_lot_section_evaluation"
