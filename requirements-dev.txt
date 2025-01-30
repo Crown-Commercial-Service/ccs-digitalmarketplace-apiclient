@@ -4,6 +4,8 @@
 #
 #    pip-compile --extra=dev --output-file=requirements-dev.txt pyproject.toml
 #
+black==25.1.0
+    # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 blinker==1.9.0
     # via flask
 ccs-digitalmarketplace-test-utils==6.2.2
@@ -13,7 +15,9 @@ certifi==2024.12.14
 charset-normalizer==3.4.1
     # via requests
 click==8.1.8
-    # via flask
+    # via
+    #   black
+    #   flask
 coverage[toml]==7.6.10
     # via pytest-cov
 flake8==7.1.1
@@ -39,9 +43,17 @@ mock==5.1.0
 mypy==1.14.1
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 mypy-extensions==1.0.0
-    # via mypy
+    # via
+    #   black
+    #   mypy
 packaging==24.2
-    # via pytest
+    # via
+    #   black
+    #   pytest
+pathspec==0.12.1
+    # via black
+platformdirs==4.3.6
+    # via black
 pluggy==1.5.0
     # via pytest
 pycodestyle==2.12.1

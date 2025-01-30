@@ -14,8 +14,8 @@ def rmock():
         real_register_uri = rmock.register_uri
 
         def register_uri_with_complete_qs(*args, **kwargs):
-            if 'complete_qs' not in kwargs:
-                kwargs['complete_qs'] = True
+            if "complete_qs" not in kwargs:
+                kwargs["complete_qs"] = True
 
             return real_register_uri(*args, **kwargs)
 

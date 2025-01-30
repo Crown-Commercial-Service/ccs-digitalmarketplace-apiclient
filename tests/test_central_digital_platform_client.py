@@ -11,18 +11,14 @@ from dmtestutils.fixtures import valid_pdf_bytes
 
 @pytest.fixture
 def cdp_client():
-    return CentralDigitalPlatformAPIClient('http://cdp-baseurl', 'api-key', True)
+    return CentralDigitalPlatformAPIClient("http://cdp-baseurl", "api-key", True)
 
 
 class TestCentralDigitalPlatformApiClient(object):
     def test_base_headers_are_set(self, cdp_client, rmock):
-        rmock.request(
-            "GET",
-            "http://cdp-baseurl/",
-            json={},
-            status_code=200)
+        rmock.request("GET", "http://cdp-baseurl/", json={}, status_code=200)
 
-        cdp_client._request('GET', '/')
+        cdp_client._request("GET", "/")
 
         assert rmock.last_request.headers.get("Content-type") == "application/json"
         assert rmock.last_request.headers.get("CDP-Api-Key") == "api-key"
@@ -47,11 +43,7 @@ class TestCentralDigitalPlatformApiClient(object):
 
 class TestSupplierInformationMethods(object):
     def test_get_supplier_submitted_information(self, cdp_client, rmock):
-        rmock.get(
-            "http://cdp-baseurl/share/data/123",
-            json={"supplierInformation": "result"},
-            status_code=200
-        )
+        rmock.get("http://cdp-baseurl/share/data/123", json={"supplierInformation": "result"}, status_code=200)
 
         result = cdp_client.get_supplier_submitted_information(123)
 
@@ -60,24 +52,16 @@ class TestSupplierInformationMethods(object):
 
     def test_get_supplier_submitted_information_raises_on_404(self, cdp_client, rmock):
         with pytest.raises(HTTPError):
-            rmock.get(
-                'http://cdp-baseurl/share/data/123',
-                json={'supplierInformation': 'result'},
-                status_code=404
-            )
+            rmock.get("http://cdp-baseurl/share/data/123", json={"supplierInformation": "result"}, status_code=404)
 
             cdp_client.get_supplier_submitted_information(123)
 
     def test_get_document_within_supplier_submitted_information(self, cdp_client, rmock):
-        rmock.get(
-            "http://documents-server/123456",
-            body=BytesIO(valid_pdf_bytes),
-            status_code=200
-        )
+        rmock.get("http://documents-server/123456", body=BytesIO(valid_pdf_bytes), status_code=200)
         rmock.get(
             "http://cdp-baseurl/share/data/123/document/456",
             headers={"location": "http://documents-server/123456"},
-            status_code=302
+            status_code=302,
         )
 
         result = cdp_client.get_document_within_supplier_submitted_information(123, 456)
@@ -85,17 +69,13 @@ class TestSupplierInformationMethods(object):
         assert result == valid_pdf_bytes
         assert rmock.call_count == 2
 
-        assert rmock.request_history[0].method == 'GET'
+        assert rmock.request_history[0].method == "GET"
         assert rmock.request_history[0].url == "http://cdp-baseurl/share/data/123/document/456"
         assert rmock.request_history[1].method
         assert rmock.request_history[1].url == "http://documents-server/123456"
 
     def test_get_supplier_submitted_information_as_file(self, cdp_client, rmock):
-        rmock.get(
-            "http://cdp-baseurl/share/data/123/file",
-            body=BytesIO(valid_pdf_bytes),
-            status_code=200
-        )
+        rmock.get("http://cdp-baseurl/share/data/123/file", body=BytesIO(valid_pdf_bytes), status_code=200)
 
         result = cdp_client.get_supplier_submitted_information_as_file(123)
 
@@ -105,11 +85,7 @@ class TestSupplierInformationMethods(object):
 
 class TestVerifySharedData:
     def test_verify_shared_data_is_latest_version(self, cdp_client, rmock):
-        rmock.post(
-            "http://cdp-baseurl/share/data/verify",
-            json={"is_latest": True},
-            status_code=200
-        )
+        rmock.post("http://cdp-baseurl/share/data/verify", json={"is_latest": True}, status_code=200)
         result = cdp_client.verify_shared_data_is_latest_version(123, 456)
 
         assert result == {"is_latest": True}
@@ -122,11 +98,7 @@ class TestVerifySharedData:
 
 class TestOrganisationMethods(object):
     def test_get_organisation_sharecodes(self, cdp_client, rmock):
-        rmock.get(
-            "http://cdp-baseurl/share/organisations/123/codes",
-            json={"sharecodes": "result"},
-            status_code=200
-        )
+        rmock.get("http://cdp-baseurl/share/organisations/123/codes", json={"sharecodes": "result"}, status_code=200)
 
         result = cdp_client.get_organisation_sharecodes(123)
 

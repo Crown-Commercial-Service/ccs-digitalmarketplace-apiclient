@@ -27,6 +27,7 @@ Changelog = "https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace-
 [project.optional-dependencies]
 dev = [
   'flake8',
+  'black',
   'mock',
   'mypy',
   'pytest',
@@ -45,3 +46,7 @@ version = {attr = "dmapiclient.__version__"}
 [tool.pytest.ini_options]
 addopts = "-p no:logging --cov=dmapiclient"
 testpaths = "tests"
+
+[tool.black]
+line-length = 120
+target-version = ['py311']

@@ -24,6 +24,7 @@ def make_iter_method(method_name, *model_names):
     :param method_name: The name of the find method to decorate
     :param model_names: The names of the possible models as they appear in the JSON response. The first found is used.
     """
+
     def iter_method(self, *args, **kwargs):
         result = getattr(self, method_name)(*args, **kwargs)
         # Filter the list of model names for those that are a key in the response, then take the first.
@@ -37,10 +38,10 @@ def make_iter_method(method_name, *model_names):
             yield model
 
         while True:
-            if 'next' not in result.get('links', {}):
+            if "next" not in result.get("links", {}):
                 return
 
-            result = self._get(result['links']['next'])
+            result = self._get(result["links"]["next"])
             for model in result[model_name]:
                 yield model
 
@@ -97,13 +98,24 @@ class BaseAPIClient(object):
 
     @property
     def nowait_timeout(self):
-        read_timeout = 1.e-3
+        read_timeout = 1.0e-3
         try:
             return self.timeout[0], read_timeout
         except (TypeError, LookupError):
             return self._timeout, read_timeout
 
-    def __init__(self, base_url=None, auth_token=None, enabled=True, timeout=(15, 45,), *, user=None):
+    def __init__(
+        self,
+        base_url=None,
+        auth_token=None,
+        enabled=True,
+        timeout=(
+            15,
+            45,
+        ),
+        *,
+        user=None,
+    ):
         self._base_url = base_url
         self._auth_token = auth_token
         self._user = user
@@ -120,20 +132,9 @@ class BaseAPIClient(object):
         else:
             return user
 
-    def _patch(
-        self,
-        url,
-        data,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
-    ):
+    def _patch(self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None):
         return self._request(
-            "PATCH",
-            url,
-            data=data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            "PATCH", url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
         )
 
     def _patch_with_updated_by(
@@ -143,31 +144,15 @@ class BaseAPIClient(object):
         *,
         user: Optional[str] = None,
         client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        response_type: ResponseType | None = None,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._patch(
-            url,
-            data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
-        )
+        return self._patch(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
 
-    def _put(
-        self,
-        url,
-        data,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
-    ):
+    def _put(self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None):
         return self._request(
-            "PUT",
-            url,
-            data=data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            "PUT", url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
         )
 
     def _put_with_updated_by(
@@ -177,47 +162,22 @@ class BaseAPIClient(object):
         *,
         user: Optional[str] = None,
         client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        response_type: ResponseType | None = None,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._put(
-            url,
-            data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
-        )
+        return self._put(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
 
     def _get(
-        self,
-        url,
-        params=None,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        self, url, params=None, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None
     ):
         return self._request(
-            "GET",
-            url,
-            params=params,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            "GET", url, params=params, client_wait_for_response=client_wait_for_response, response_type=response_type
         )
 
-    def _post(
-        self,
-        url,
-        data,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
-    ):
+    def _post(self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None):
         return self._request(
-            "POST",
-            url,
-            data=data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            "POST", url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
         )
 
     def _post_with_updated_by(
@@ -227,47 +187,31 @@ class BaseAPIClient(object):
         *,
         user: Optional[str] = None,
         client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        response_type: ResponseType | None = None,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._post(
-            url,
-            data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
-        )
+        return self._post(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
 
     def _delete(
-        self,
-        url,
-        data=None, *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        self, url, data=None, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None
     ):
         return self._request(
-            "DELETE",
-            url,
-            data=data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            "DELETE", url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
         )
 
     def _delete_with_updated_by(
         self,
         url,
-        data, *, user: Optional[str] = None,
+        data,
+        *,
+        user: Optional[str] = None,
         client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        response_type: ResponseType | None = None,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._delete(
-            url,
-            data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
-        )
+        return self._delete(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
 
     def _build_url(self, url, params):
         if not self._base_url:
@@ -300,8 +244,8 @@ class BaseAPIClient(object):
             raise_on_status=False,
         )
         adapter = HTTPAdapter(max_retries=retry)
-        session.mount('http://', adapter)
-        session.mount('https://', adapter)
+        session.mount("http://", adapter)
+        session.mount("https://", adapter)
         return session
 
     @staticmethod
@@ -348,7 +292,7 @@ class BaseAPIClient(object):
         params=None,
         *,
         client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        response_type: ResponseType | None = None,
     ):
         if not self._enabled:
             return None
@@ -357,13 +301,18 @@ class BaseAPIClient(object):
         ci_headers = self._get_headers()
 
         # determine our final outgoing span id - find the first of DM_SPAN_ID_HEADERS which is set to something truthy
-        child_span_id = next(
-            (
-                ci_headers[header_name] for header_name in (current_app.config.get("DM_SPAN_ID_HEADERS") or ())
-                if ci_headers.get(header_name)
-            ),
-            None,
-        ) if has_request_context() else None
+        child_span_id = (
+            next(
+                (
+                    ci_headers[header_name]
+                    for header_name in (current_app.config.get("DM_SPAN_ID_HEADERS") or ())
+                    if ci_headers.get(header_name)
+                ),
+                None,
+            )
+            if has_request_context()
+            else None
+        )
 
         common_log_extra = {
             **({"childSpanId": child_span_id} if child_span_id is not None else {}),
@@ -374,8 +323,8 @@ class BaseAPIClient(object):
             "API request {method} {url}",
             extra={
                 **common_log_extra,
-                'method': method,
-                'url': url,
+                "method": method,
+                "url": url,
             },
         )
 
@@ -402,10 +351,10 @@ class BaseAPIClient(object):
                     "API {api_method} request on {api_url} dispatched but ignoring response",
                     extra={
                         **common_log_extra,
-                        'api_method': method,
-                        'api_url': url,
-                        'api_time': elapsed_time,
-                        'api_time_incomplete': True,
+                        "api_method": method,
+                        "api_url": url,
+                        "api_time": elapsed_time,
+                        "api_time_incomplete": True,
                     },
                 )
                 return None
@@ -416,11 +365,11 @@ class BaseAPIClient(object):
                 "API {api_method} request on {api_url} failed with {api_status} '{api_error}'",
                 extra={
                     **common_log_extra,
-                    'api_method': method,
-                    'api_url': url,
-                    'api_status': api_error.status_code,
-                    'api_error': '{} raised {}'.format(api_error.message, str(e)),
-                    'api_time': elapsed_time,
+                    "api_method": method,
+                    "api_url": url,
+                    "api_status": api_error.status_code,
+                    "api_error": "{} raised {}".format(api_error.message, str(e)),
+                    "api_time": elapsed_time,
                 },
             )
             raise api_error from e
@@ -431,10 +380,10 @@ class BaseAPIClient(object):
                 "API {api_method} request on {api_url} finished in {api_time}",
                 extra={
                     **common_log_extra,
-                    'api_method': method,
-                    'api_url': url,
-                    'api_status': response.status_code,
-                    'api_time': elapsed_time,
+                    "api_method": method,
+                    "api_url": url,
+                    "api_status": response.status_code,
+                    "api_time": elapsed_time,
                 },
             )
 
@@ -443,16 +392,12 @@ class BaseAPIClient(object):
                 return response.json()
             except ValueError as e:
 
-                raise InvalidResponse(
-                    response,
-                    message="No JSON object could be decoded"
-                ) from e
+                raise InvalidResponse(response, message="No JSON object could be decoded") from e
         elif response_type == ResponseType.CONTENT:
             return response.content
         else:
             raise InvalidResponseType(
-                response,
-                message=f"Response type: '{response_type}' is not a valid response type"
+                response, message=f"Response type: '{response_type}' is not a valid response type"
             )
 
     def get_status(self):
