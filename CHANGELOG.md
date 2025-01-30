@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 31.0.0
+
+Make major changes for communications methods
+
 ## 30.0.0
 
 Add the Central Digital Platform (CDP) API client to the other API clients
