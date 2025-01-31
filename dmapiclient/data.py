@@ -1438,22 +1438,26 @@ class DataAPIClient(BaseAPIClient):
 
     def find_communications(
         self,
-        framework,
+        framework=None,
         supplier_id=None,
         latest_message_target=None,
-        archived=None,
-        page=None,
+        resolved=None,
+        resolution=None,
+        category=None,
         subject=None,
         supplier_name=None,
         message_text=None,
-        sort_by=None
+        sort_by=None,
+        page=None,
     ):
         params = {
             'page': page,
             'framework': framework,
             'supplier_id': supplier_id,
             'latest_message_target': latest_message_target,
-            'archived': archived,
+            'resolved': resolved,
+            'resolution': resolution,
+            'category': category,
             'subject': subject,
             'supplier_name': supplier_name,
             'message_text': message_text,
@@ -1479,10 +1483,13 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def archive_communication(self, communication_id, archived_by_user_id, user=None):
+    def resolve_communication(self, communication_id, resolved_by_user_id, resolution, user=None):
         return self._post_with_updated_by(
-            "/communications/{}/archive".format(communication_id),
-            data={"archivedByUserId": int(archived_by_user_id)},
+            "/communications/{}/resolve".format(communication_id),
+            data={
+                "resolvedByUserId": int(resolved_by_user_id),
+                "resolution": resolution
+            },
             user=user,
         )
 
@@ -1509,8 +1516,8 @@ class DataAPIClient(BaseAPIClient):
         self,
         supplier_id,
         framework_slug,
+        category,
         subject,
-        notification_emails,
         message,
         attachments=None,
         user=None
@@ -1524,8 +1531,8 @@ class DataAPIClient(BaseAPIClient):
                 "communications": {
                     "supplierId": supplier_id,
                     "frameworkSlug": framework_slug,
+                    "category": category,
                     "subject": subject,
-                    "notificationEmails": notification_emails,
                     "messages": message
                 },
             },

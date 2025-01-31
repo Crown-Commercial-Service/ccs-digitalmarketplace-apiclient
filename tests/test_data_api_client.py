@@ -3255,8 +3255,8 @@ class TestDataAPIClientIterMethods(object):
             data_client, rmock,
             method_name='find_communications_iter',
             model_name='communications',
-            url_path='communications?framework=g-cloud-6',
-            iter_kwargs={'framework': 'g-cloud-6'}
+            url_path='communications',
+            iter_kwargs={}
         )
 
     def test_find_communications_iter_additional_arguments(self, data_client, rmock):
@@ -3268,7 +3268,7 @@ class TestDataAPIClientIterMethods(object):
             },
             status_code=200)
 
-        result = data_client.find_communications_iter('g-cloud-6', supplier_id=123)
+        result = data_client.find_communications_iter(framework='g-cloud-6', supplier_id=123)
         results = list(result)
 
         assert len(results) == 2
@@ -3433,22 +3433,34 @@ class TestDataAPIClientIterMethods(object):
 class TestCommunicationsMethods(object):
     def test_find_communications(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/communications?framework=g-cloud-6",
+            "http://baseurl/communications",
             json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_communications('g-cloud-6')
+        result = data_client.find_communications()
 
         assert result == {"communications": "result"}
         assert rmock.called
 
     def test_find_communications_adds_page_parameter(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/communications?framework=g-cloud-6&page=2",
+            "http://baseurl/communications?page=2",
             json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_communications('g-cloud-6', page=2)
+        result = data_client.find_communications(page=2)
+
+        assert result == {"communications": "result"}
+        assert rmock.called
+
+    def test_find_communications_adds_framework_parameter(
+            self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/communications?framework=g-cloud-6",
+            json={"communications": "result"},
+            status_code=200)
+
+        result = data_client.find_communications(framework='g-cloud-6')
 
         assert result == {"communications": "result"}
         assert rmock.called
@@ -3456,79 +3468,103 @@ class TestCommunicationsMethods(object):
     def test_find_communications_adds_supplier_id_parameter(
             self, data_client, rmock):
         rmock.get(
-            "http://baseurl/communications?framework=g-cloud-6&supplier_id=1",
+            "http://baseurl/communications?supplier_id=1",
             json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_communications('g-cloud-6', supplier_id=1)
+        result = data_client.find_communications(supplier_id=1)
 
         assert result == {"communications": "result"}
         assert rmock.called
 
-    def test_find_communications_adds_archived_parameter(
+    def test_find_communications_adds_resolved_parameter(
             self, data_client, rmock):
         rmock.get(
-            "http://baseurl/communications?framework=g-cloud-6&archived=true",
+            "http://baseurl/communications?resolved=true",
             json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_communications('g-cloud-6', archived=True)
+        result = data_client.find_communications(resolved=True)
 
         assert result == {"communications": "result"}
         assert rmock.called
 
-    def test_find_communications_adds_supplier_id_and_archived_parameter(
+    def test_find_communications_adds_resolution_parameter(
             self, data_client, rmock):
         rmock.get(
-            "http://baseurl/communications?framework=g-cloud-6&supplier_id=1&archived=true",
+            "http://baseurl/communications?resolution=archived",
             json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_communications('g-cloud-6', supplier_id=1, archived=True)
+        result = data_client.find_communications(resolution="archived")
+
+        assert result == {"communications": "result"}
+        assert rmock.called
+
+    def test_find_communications_adds_supplier_id_and_resolved_parameter(
+            self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/communications?supplier_id=1&resolved=true",
+            json={"communications": "result"},
+            status_code=200)
+
+        result = data_client.find_communications(supplier_id=1, resolved=True)
+
+        assert result == {"communications": "result"}
+        assert rmock.called
+
+    def test_find_communications_adds_category_parameter(
+            self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/communications?category=Compliance",
+            json={"communications": "result"},
+            status_code=200)
+
+        result = data_client.find_communications(category="Compliance")
 
         assert result == {"communications": "result"}
         assert rmock.called
 
     def test_find_communications_adds_subject_parameter(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/communications?framework=g-cloud-6&subject=Default Subject",
+            "http://baseurl/communications?subject=Default Subject",
             json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_communications('g-cloud-6', subject='Default Subject')
+        result = data_client.find_communications(subject='Default Subject')
 
         assert result == {"communications": "result"}
         assert rmock.called
 
     def test_find_communications_adds_supplier_name_parameter(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/communications?framework=g-cloud-6&supplier_name=Supplier 1",
+            "http://baseurl/communications?supplier_name=Supplier 1",
             json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_communications('g-cloud-6', supplier_name="Supplier 1")
+        result = data_client.find_communications(supplier_name="Supplier 1")
 
         assert result == {"communications": "result"}
         assert rmock.called
 
     def test_find_communications_adds_message_text_parameter(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/communications?framework=g-cloud-6&message_text=This is",
+            "http://baseurl/communications?message_text=This is",
             json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_communications('g-cloud-6', message_text="This is")
+        result = data_client.find_communications(message_text="This is")
 
         assert result == {"communications": "result"}
         assert rmock.called
 
     def test_find_communications_adds_sort_by_parameter(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/communications?framework=g-cloud-6&sort_by=supplier_name%3Aasc",
+            "http://baseurl/communications?sort_by=supplier_name%3Aasc",
             json={"communications": "result"},
             status_code=200)
 
-        result = data_client.find_communications('g-cloud-6', sort_by="supplier_name:asc")
+        result = data_client.find_communications(sort_by="supplier_name:asc")
 
         assert result == {"communications": "result"}
         assert rmock.called
@@ -3569,16 +3605,17 @@ class TestCommunicationsMethods(object):
             'communications': {'foo': 'bar'}, 'updated_by': 'admin'
         }
 
-    def test_archive_communication(self, data_client, rmock):
+    def test_resolve_communication(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/communications/123/archive",
+            "http://baseurl/communications/123/resolve",
             json={"message": "done"},
             status_code=200,
         )
 
-        result = data_client.archive_communication(
+        result = data_client.resolve_communication(
             123,
             456,
+            'archived',
             "test@example.com"
         )
 
@@ -3586,7 +3623,8 @@ class TestCommunicationsMethods(object):
         assert rmock.called
         assert rmock.last_request.json() == {
             "updated_by": "test@example.com",
-            "archivedByUserId": 456
+            "resolvedByUserId": 456,
+            "resolution": 'archived',
         }
 
     def test_read_communication_message(self, data_client, rmock):
@@ -3749,10 +3787,7 @@ class TestCommunicationsMethods(object):
             json={"communications": {
                 'id': 123,
                 'subject': 'Subject text',
-                'notificationEmails': [
-                    'test+1@email.com',
-                    'test+2@email.com',
-                ],
+                'category': 'Compliance',
                 'supplierId': 0,
                 'supplierName': "Supplier 0",
                 'frameworkSlug': 'g-cloud-6',
@@ -3781,11 +3816,8 @@ class TestCommunicationsMethods(object):
         result = data_client.create_communication(
             0,
             'g-cloud-6',
+            'Compliance',
             'Subject text',
-            [
-                'test+1@email.com',
-                'test+2@email.com',
-            ],
             {
                 'text': 'Message text',
                 'sentByUserId': 123,
@@ -3797,10 +3829,7 @@ class TestCommunicationsMethods(object):
             "communications": {
                 'id': 123,
                 'subject': 'Subject text',
-                'notificationEmails': [
-                    'test+1@email.com',
-                    'test+2@email.com',
-                ],
+                'category': 'Compliance',
                 'supplierId': 0,
                 'supplierName': "Supplier 0",
                 'frameworkSlug': 'g-cloud-6',
@@ -3830,11 +3859,8 @@ class TestCommunicationsMethods(object):
             "communications": {
                 "supplierId": 0,
                 "frameworkSlug": 'g-cloud-6',
+                'category': 'Compliance',
                 "subject": 'Subject text',
-                'notificationEmails': [
-                    'test+1@email.com',
-                    'test+2@email.com',
-                ],
                 'messages': {
                     'text': 'Message text',
                     'sentByUserId': 123,
@@ -3848,10 +3874,7 @@ class TestCommunicationsMethods(object):
             json={"communications": {
                 'id': 123,
                 'subject': 'Subject text',
-                'notificationEmails': [
-                    'test+1@email.com',
-                    'test+2@email.com',
-                ],
+                'category': 'Compliance',
                 'supplierId': 0,
                 'supplierName': "Supplier 0",
                 'frameworkSlug': 'g-cloud-6',
@@ -3869,7 +3892,7 @@ class TestCommunicationsMethods(object):
                         'sentAt': '2024-03-14T00:00:00.000000Z',
                         'sentByUserId': 456,
                         'sentByUserEmail': 'test+456@digital.cabinet-office.gov.uk',
-                        'target': 'for_supplier',
+                        'target': 'for_admin',
                         'attachments': [
                             {
                                 "id": 1,
@@ -3891,11 +3914,8 @@ class TestCommunicationsMethods(object):
         result = data_client.create_communication(
             0,
             'g-cloud-6',
+            'Compliance',
             'Subject text',
-            [
-                'test+1@email.com',
-                'test+2@email.com',
-            ],
             {
                 'text': 'Message text',
                 'sentByUserId': 123,
@@ -3915,10 +3935,7 @@ class TestCommunicationsMethods(object):
             "communications": {
                 'id': 123,
                 'subject': 'Subject text',
-                'notificationEmails': [
-                    'test+1@email.com',
-                    'test+2@email.com',
-                ],
+                'category': 'Compliance',
                 'supplierId': 0,
                 'supplierName': "Supplier 0",
                 'frameworkSlug': 'g-cloud-6',
@@ -3936,7 +3953,7 @@ class TestCommunicationsMethods(object):
                         'sentAt': '2024-03-14T00:00:00.000000Z',
                         'sentByUserId': 456,
                         'sentByUserEmail': 'test+456@digital.cabinet-office.gov.uk',
-                        'target': 'for_supplier',
+                        'target': 'for_admin',
                         'attachments': [
                             {
                                 "id": 1,
@@ -3960,10 +3977,7 @@ class TestCommunicationsMethods(object):
                 "supplierId": 0,
                 "frameworkSlug": 'g-cloud-6',
                 "subject": 'Subject text',
-                'notificationEmails': [
-                    'test+1@email.com',
-                    'test+2@email.com',
-                ],
+                'category': 'Compliance',
                 'messages': {
                     'text': 'Message text',
                     'sentByUserId': 123,
