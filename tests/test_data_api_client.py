@@ -1020,6 +1020,18 @@ class TestSupplierMethods(object):
             'updated_by': 'user',
         }
 
+    def test_verify_central_digital_platform_organisation(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/central-digital-platform/verify-organisation/123456",
+            json={"message": "supplier-found"},
+            status_code=200
+        )
+
+        result = data_client.verify_central_digital_platform_organisation(123456)
+
+        assert result == {"message": "supplier-found"}
+        assert rmock.called
+
     def test_get_framework_interest(self, data_client, rmock):
         rmock.get(
             "http://baseurl/suppliers/123/frameworks/interest",
