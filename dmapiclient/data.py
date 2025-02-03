@@ -225,6 +225,11 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def verify_central_digital_platform_organisation(self, central_digital_platform_organisation_id):
+        return self._get(
+            f"/suppliers/central-digital-platform/verify-organisation/{central_digital_platform_organisation_id}"
+        )
+
     def get_framework_interest(self, supplier_id):
         return self._get(
             "/suppliers/{}/frameworks/interest".format(supplier_id)
