@@ -1544,6 +1544,11 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def get_framework_communication_categories(self, framework_slug):
+        return self._get(
+            f'/communications/{framework_slug}/categories'
+        )
+
     # System message
 
     def get_system_message(self, slug):
