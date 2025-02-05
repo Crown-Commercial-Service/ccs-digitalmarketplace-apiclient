@@ -4005,6 +4005,18 @@ class TestCommunicationsMethods(object):
             }
         }
 
+    def test_get_framework_communication_categories(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/communications/g-things-97/categories",
+            json={"communicationCategories": "result"},
+            status_code=200
+        )
+
+        result = data_client.get_framework_communication_categories('g-things-97')
+
+        assert result == {"communicationCategories": "result"}
+        assert rmock.called
+
 
 class TestSystemMessagesMethods(object):
     def test_get_system_message(self, data_client, rmock):
