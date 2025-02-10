@@ -33,7 +33,7 @@ dev = [
   'pytest-cov',
   'requests-mock',
   'types-requests',
-  'ccs-digitalmarketplace-test-utils==6.5.0',
+  'ccs-digitalmarketplace-test-utils==6.6.0',
 ]
 
 [tool.setuptools.dynamic]
