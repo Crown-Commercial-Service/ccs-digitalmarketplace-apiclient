@@ -960,6 +960,20 @@ class DataAPIClient(BaseAPIClient):
         return self._get(
             "/frameworks/{}/stats".format(framework_slug))
 
+    def update_framework_communication_category(self, framework_slug, data, user=None):
+        return self._post_with_updated_by(
+            f"/frameworks/{framework_slug}/communication-category",
+            data={"communicationCategories": data},
+            user=user
+        )
+
+    def delete_framework_communication_category(self, framework_slug, communication_category, user=None):
+        return self._delete_with_updated_by(
+            f"/frameworks/{framework_slug}/communication-category",
+            data={"communicationCategory": communication_category},
+            user=user
+        )
+
     # Buyer briefs
 
     def create_brief(self, framework_slug, lot_slug, user_id, data, updated_by=None, page_questions=None):

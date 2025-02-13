@@ -2197,6 +2197,46 @@ class TestFrameworkMethods(object):
             "updated_by": "Clem Fandango",
         }
 
+    def test_update_framework_communication_category(self, data_client, rmock):
+        rmock.post(
+            'http://baseurl/frameworks/g-cloud-11/communication-category',
+            json={'communicationCategories': {'key': 'value'}},
+            status_code=200)
+
+        result = data_client.update_framework_communication_category(
+            framework_slug='g-cloud-11',
+            data={'key': 'value'},
+            user='me@my.mine'
+        )
+
+        assert result == {'communicationCategories': {'key': 'value'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            "communicationCategories": {
+                'key': 'value'
+            },
+            "updated_by": "me@my.mine"
+        }
+
+    def test_delete_framework_communication_category(self, data_client, rmock):
+        rmock.delete(
+            'http://baseurl/frameworks/g-cloud-11/communication-category',
+            json={'message': 'done'},
+            status_code=200)
+
+        result = data_client.delete_framework_communication_category(
+            'g-cloud-11',
+            'Compliance',
+            user='me@my.mine'
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            "communicationCategory": "Compliance",
+            "updated_by": "me@my.mine"
+        }
+
 
 class TestBriefMethods(object):
     def test_create_brief(self, data_client, rmock):
