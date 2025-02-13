@@ -68,6 +68,9 @@ class AuditTypes(Enum):
     # Framework lifecycle
     create_framework = "create_framework"
     framework_update = "framework_update"
+    create_framework_communication_category = "create_framework_communication_category"
+    update_framework_communication_category = "update_framework_communication_category"
+    delete_framework_communication_category = "delete_framework_communication_category"
 
     # Admin actions
     snapshot_framework_stats = "snapshot_framework_stats"
