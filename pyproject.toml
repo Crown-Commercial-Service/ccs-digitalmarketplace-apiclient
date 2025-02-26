@@ -33,6 +33,7 @@ dev = [
   'pytest-cov',
   'requests-mock',
   'types-requests',
+  'pre-commit',
   'ccs-digitalmarketplace-test-utils==6.7.1',
 ]
 
