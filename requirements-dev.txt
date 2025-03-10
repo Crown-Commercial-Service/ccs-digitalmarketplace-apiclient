@@ -42,7 +42,7 @@ markupsafe==3.0.2
     #   werkzeug
 mccabe==0.7.0
     # via flake8
-mock==5.1.0
+mock==5.2.0
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 mypy==1.15.0
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
