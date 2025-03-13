@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 32.0.0
+
+Add the Spotlight API client to the other API clients
+
 ## 31.0.0
 
 Make major changes for communications methods
