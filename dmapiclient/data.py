@@ -280,6 +280,42 @@ class DataAPIClient(BaseAPIClient):
             user=user
         )
 
+    def get_supplier_fvra(self, supplier_id, framework_slug):
+        response = self._get(
+            "/suppliers/{}/frameworks/{}".format(supplier_id, framework_slug)
+        )
+        return {'fvra': response['frameworkInterest']['fvra']}
+
+    def set_supplier_fvra_result(
+        self,
+        supplier_id,
+        framework_slug,
+        fvra_route,
+        fvra_sift_passed,
+        fvra_consortium_duns,
+        user=None
+    ):
+        return self._put_with_updated_by(
+            "/suppliers/{}/frameworks/{}/set-fvra-result".format(supplier_id, framework_slug),
+            data={
+                "fvraFrozenResult": {
+                    'fvraRoute': fvra_route,
+                    'fvraSiftPassed': fvra_sift_passed,
+                    'fvraConsortiumDuns': fvra_consortium_duns
+                }
+            },
+            user=user
+        )
+
+    def update_supplier_fvra(self, supplier_id, framework_slug, fvra_update, user=None):
+        return self._patch_with_updated_by(
+            "/suppliers/{}/frameworks/{}/fvra".format(supplier_id, framework_slug),
+            data={
+                "fvra": fvra_update,
+            },
+            user=user
+        )
+
     def get_supplier_frameworks(self, supplier_id):
         return self._get(
             "/suppliers/{}/frameworks".format(supplier_id)
@@ -422,6 +458,7 @@ class DataAPIClient(BaseAPIClient):
         statuses=None,
         with_declarations=True,
         with_lot_questions_responses=True,
+        with_fvra=True,
         with_cdp_supplier_information=None,
     ):
         '''
@@ -433,6 +470,8 @@ class DataAPIClient(BaseAPIClient):
         :param with_declarations: whether to include declaration data in returned supplierFrameworks
         :param with_lot_questions_responses: whether to include lot questions responses data
                                              in returned supplierFrameworks
+        :param with_fvra: whether to include fvra data
+                          in returned supplierFrameworks
         :param with_cdp_supplier_information: whether to include CDP supplier information data
                                              in returned supplierFrameworks
         '''
@@ -445,6 +484,8 @@ class DataAPIClient(BaseAPIClient):
             params['with_declarations'] = bool(with_declarations)
         if with_lot_questions_responses is not True:
             params['with_lot_questions_responses'] = bool(with_lot_questions_responses)
+        if with_fvra is not True:
+            params['with_fvra'] = bool(with_fvra)
         if with_cdp_supplier_information is not None:
             params['with_cdp_supplier_information'] = bool(with_cdp_supplier_information)
         return self._get(

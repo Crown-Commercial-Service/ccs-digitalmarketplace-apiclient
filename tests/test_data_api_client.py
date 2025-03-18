@@ -1127,6 +1127,61 @@ class TestSupplierMethods(object):
             'updated_by': "user"
         }
 
+    def test_get_supplier_fvra(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/123/frameworks/g-cloud-7",
+            json={"frameworkInterest": {"fvra": {"question": "answer"}}},
+            status_code=200
+        )
+
+        result = data_client.get_supplier_fvra(123, 'g-cloud-7')
+
+        assert result == {'fvra': {'question': 'answer'}}
+        assert rmock.called
+
+    def test_set_supplier_fvra_result(self, data_client, rmock):
+        rmock.put(
+            "http://baseurl/suppliers/123/frameworks/g-cloud-7/set-fvra-result",
+            json={"fvra": {"status": "in_progress"}},
+            status_code=200
+        )
+
+        result = data_client.set_supplier_fvra_result(
+            123,
+            'g-cloud-7',
+            'fvra_default',
+            True,
+            [],
+            'user'
+        )
+
+        assert result == {'fvra': {'status': 'in_progress'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            "fvraFrozenResult": {
+                'fvraRoute': 'fvra_default',
+                'fvraSiftPassed': True,
+                'fvraConsortiumDuns': []
+            }
+        }
+
+    def test_update_supplier_fvra(self, data_client, rmock):
+        rmock.patch(
+            "http://baseurl/suppliers/123/frameworks/g-cloud-7/fvra",
+            json={"fvra": {"question": "answer"}},
+            status_code=200
+        )
+
+        result = data_client.update_supplier_fvra(123, 'g-cloud-7', {"question": "answer"}, "user")
+
+        assert result == {'fvra': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'fvra': {'question': 'answer'}
+        }
+
     def test_get_supplier_frameworks(self, data_client, rmock):
         rmock.get(
             "http://baseurl/suppliers/123/frameworks",
@@ -1405,6 +1460,17 @@ class TestSupplierMethods(object):
             status_code=200)
 
         result = data_client.find_framework_suppliers('g-cloud-7', with_lot_questions_responses=False)
+
+        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
+        assert rmock.called
+
+    def test_find_framework_suppliers_no_fvra(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/frameworks/g-cloud-7/suppliers?with_fvra=false',
+            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
+            status_code=200)
+
+        result = data_client.find_framework_suppliers('g-cloud-7', with_fvra=False)
 
         assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
         assert rmock.called
