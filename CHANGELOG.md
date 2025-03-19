@@ -2,9 +2,13 @@
 
 Records breaking changes from major version bumps
 
+## 32.2.0
+
+Add the Spotlight FVRA API client to the other API clients
+
 ## 32.0.0
 
-Add the Spotlight API client to the other API clients
+Add the Spotlight DUNS API client to the other API clients
 
 ## 31.0.0
 

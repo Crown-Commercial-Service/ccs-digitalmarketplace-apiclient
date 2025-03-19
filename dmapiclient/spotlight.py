@@ -7,7 +7,8 @@ from .base import BaseAPIClient, ResponseType
 from .errors import HTTPError, InvalidResponse
 
 API_VERSION = '2016-10-01'
-SP = '/triggers/manual/run'
+SP_DUNS = '/triggers/manual/run'
+SP_FVRA = '/triggers/Trigger/run'
 SV = '1.0'
 
 
@@ -26,6 +27,7 @@ class SpotlightAPIError:
 
 class SptlightURL(Enum):
     POST_IDENTITY_SEARCH = '/workflows/5319fad3d7e341a89183b32df72671ba/triggers/manual/paths/invoke'
+    POST_FINANCIALS_CHECK = '/workflows/9f848cc1409f441ca6bae23793ba7960/triggers/Trigger/paths/invoke'
 
 
 class BaseSpotlightAPIClient(BaseAPIClient):
@@ -33,7 +35,11 @@ class BaseSpotlightAPIClient(BaseAPIClient):
     def api_key(self):
         return self._api_key
 
-    def __init__(self, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
+    @property
+    def sp(self):
+        return self._sp
+
+    def __init__(self, sp, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
         super().__init__(
             base_url,
             None,
@@ -41,6 +47,7 @@ class BaseSpotlightAPIClient(BaseAPIClient):
             timeout
         )
         self._api_key = api_key
+        self._sp = sp
 
     def _get_headers(self):
         return requests.structures.CaseInsensitiveDict({
@@ -51,7 +58,7 @@ class BaseSpotlightAPIClient(BaseAPIClient):
     def _get_params(self):
         return {
             'api-version': API_VERSION,
-            'sp': SP,
+            'sp': self.sp,
             'sv': SV,
             'sig': self.api_key
         }
@@ -79,6 +86,15 @@ class BaseSpotlightAPIClient(BaseAPIClient):
 
 
 class SpotlightDunsAPIClient(BaseSpotlightAPIClient):
+    def __init__(self, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
+        super().__init__(
+            SP_DUNS,
+            base_url,
+            api_key,
+            enabled,
+            timeout
+        )
+
     def init_app(self, app):
         self._base_url = app.config['DM_SPOTLIGHT_DUNS_API_URL']
         self._api_key = app.config['DM_SPOTLIGHT_DUNS_API_KEY']
@@ -100,3 +116,41 @@ class SpotlightDunsAPIClient(BaseSpotlightAPIClient):
             spotlight_api_error = SpotlightAPIError(duns_number)
 
             raise HTTPError(spotlight_api_error, spotlight_api_error.message) from e
+
+
+class SpotlightFvraAPIClient(BaseSpotlightAPIClient):
+    def __init__(self, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
+        super().__init__(
+            SP_FVRA,
+            base_url,
+            api_key,
+            enabled,
+            timeout
+        )
+
+    def init_app(self, app):
+        self._base_url = app.config['DM_SPOTLIGHT_FVRA_API_URL']
+        self._api_key = app.config['DM_SPOTLIGHT_FVRA_API_KEY']
+
+    def get_financials_from_duns_number(self, duns_number):
+        organisation_metrics = self._post(
+            SptlightURL.POST_FINANCIALS_CHECK,
+            data={
+                "Account": [
+                    {
+                        "DunsNumber": duns_number,
+                        "OnDemandChecks": "true",
+                        "PartOfDailyChecks": "false"
+                    }
+                ]
+            }
+        )['ResultSets'][0]
+
+        if organisation_metrics.get("OrganisationName", "") == "":
+            spotlight_api_error = SpotlightAPIError(duns_number)
+
+            raise HTTPError(spotlight_api_error, spotlight_api_error.message)
+
+        return {
+            'organisationMetrics': organisation_metrics
+        }
