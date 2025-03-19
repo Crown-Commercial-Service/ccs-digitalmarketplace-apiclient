@@ -52,6 +52,8 @@ class AuditTypes(Enum):
     supplier_central_digital_platform_connection_revoked = "supplier_central_digital_platform_connection_revoked"
     supplier_central_digital_platform_data_updated = "supplier_central_digital_platform_data_updated"
     contact_update_from_central_digital_platform = "contact_update_from_central_digital_platform"
+    set_fvra_result = "set_fvra_result"
+    update_fvra_answers = "update_fvra_answers"
 
     # Framework agreements
     create_agreement = "create_agreement"
