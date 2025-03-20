@@ -291,8 +291,7 @@ class DataAPIClient(BaseAPIClient):
         supplier_id,
         framework_slug,
         fvra_route,
-        fvra_sift_passed,
-        fvra_consortium_duns,
+        fvra_results,
         user=None
     ):
         return self._put_with_updated_by(
@@ -300,8 +299,7 @@ class DataAPIClient(BaseAPIClient):
             data={
                 "fvraFrozenResult": {
                     'fvraRoute': fvra_route,
-                    'fvraSiftPassed': fvra_sift_passed,
-                    'fvraConsortiumDuns': fvra_consortium_duns
+                    'fvraResults': fvra_results,
                 }
             },
             user=user
