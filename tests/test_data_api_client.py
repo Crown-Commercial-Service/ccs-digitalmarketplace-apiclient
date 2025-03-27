@@ -1140,7 +1140,7 @@ class TestSupplierMethods(object):
         assert rmock.called
 
     def test_set_supplier_fvra_result(self, data_client, rmock):
-        rmock.put(
+        rmock.post(
             "http://baseurl/suppliers/123/frameworks/g-cloud-7/set-fvra-result",
             json={"fvra": {"status": "in_progress"}},
             status_code=200

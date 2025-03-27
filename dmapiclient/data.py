@@ -294,7 +294,7 @@ class DataAPIClient(BaseAPIClient):
         fvra_results,
         user=None
     ):
-        return self._put_with_updated_by(
+        return self._post_with_updated_by(
             "/suppliers/{}/frameworks/{}/set-fvra-result".format(supplier_id, framework_slug),
             data={
                 "fvraFrozenResult": {
