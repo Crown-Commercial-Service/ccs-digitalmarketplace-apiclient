@@ -146,11 +146,6 @@ class SpotlightFvraAPIClient(BaseSpotlightAPIClient):
             }
         )['ResultSets'][0]
 
-        if organisation_metrics.get("OrganisationName", "") == "":
-            spotlight_api_error = SpotlightAPIError(duns_number)
-
-            raise HTTPError(spotlight_api_error, spotlight_api_error.message)
-
         return {
             'organisationMetrics': organisation_metrics
         }

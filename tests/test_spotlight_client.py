@@ -143,22 +143,3 @@ class TestGetFinancialsFromDunsNumber:
                 }
             ]
         }
-
-    def test_get_financials_from_duns_number_not_found(self, spotlight_fvra_client, rmock):
-        rmock.post(
-            "http://spotlight-baseurl/workflows/9f848cc1409f441ca6bae23793ba7960/triggers/Trigger/paths/invoke"
-            "?api-version=2016-10-01&sp=%2Ftriggers%2FTrigger%2Frun&sv=1.0&sig=api-key",
-            json={
-                "ResultSets": [
-                    {
-                        "DUNS": "123456789",
-                        "OrganisationName": "",
-                    }
-                ]
-            },
-            status_code=200
-        )
-        try:
-            spotlight_fvra_client.get_financials_from_duns_number("123456789")
-        except HTTPError:
-            assert rmock.called
