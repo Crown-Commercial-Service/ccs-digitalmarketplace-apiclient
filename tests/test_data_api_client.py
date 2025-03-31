@@ -1151,6 +1151,9 @@ class TestSupplierMethods(object):
             'g-cloud-7',
             'fvra_default',
             {
+                'key': 'value'
+            },
+            {
                 'CheckDate': '2025-03-20T04:00:00',
                 'DUNS': '123456789',
                 'FVRAStatus': 'Pass'
@@ -1164,6 +1167,9 @@ class TestSupplierMethods(object):
             'updated_by': 'user',
             "fvraFrozenResult": {
                 'fvraRoute': 'fvra_default',
+                'fvraAdditionalDeclarationAnswers': {
+                    'key': 'value'
+                },
                 'fvraResults': {
                     'CheckDate': '2025-03-20T04:00:00',
                     'DUNS': '123456789',
