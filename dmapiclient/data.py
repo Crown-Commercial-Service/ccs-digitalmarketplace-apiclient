@@ -1551,6 +1551,13 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def undo_resolve_communication(self, communication_id, user=None):
+        return self._post_with_updated_by(
+            "/communications/{}/undo-resolve".format(communication_id),
+            data={},
+            user=user,
+        )
+
     def read_communication_message(self, communication_message_id, read_by_user_id, user=None):
         return self._post_with_updated_by(
             "/communications/messages/{}/read".format(communication_message_id),

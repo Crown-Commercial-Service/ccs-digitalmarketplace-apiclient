@@ -3751,6 +3751,24 @@ class TestCommunicationsMethods(object):
             "resolution": 'archived',
         }
 
+    def test_undo_resolve_communication(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/communications/123/undo-resolve",
+            json={"message": "done"},
+            status_code=200,
+        )
+
+        result = data_client.undo_resolve_communication(
+            123,
+            "test@example.com"
+        )
+
+        assert result == {"message": "done"}
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "test@example.com",
+        }
+
     def test_read_communication_message(self, data_client, rmock):
         rmock.post(
             "http://baseurl/communications/messages/123/read",
