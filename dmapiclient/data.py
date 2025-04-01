@@ -291,6 +291,7 @@ class DataAPIClient(BaseAPIClient):
         supplier_id,
         framework_slug,
         fvra_route,
+        fvra_additional_declaration_answers,
         fvra_results,
         user=None
     ):
@@ -299,6 +300,7 @@ class DataAPIClient(BaseAPIClient):
             data={
                 "fvraFrozenResult": {
                     'fvraRoute': fvra_route,
+                    'fvraAdditionalDeclarationAnswers': fvra_additional_declaration_answers,
                     'fvraResults': fvra_results,
                 }
             },
