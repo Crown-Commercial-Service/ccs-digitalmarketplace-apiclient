@@ -174,11 +174,18 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def create_central_digital_platform_connection(self, supplier_id, central_digital_platform_data, user=None):
+    def create_central_digital_platform_connection(
+        self,
+        supplier_id,
+        central_digital_platform_data,
+        trading_name,
+        user=None
+    ):
         return self._post_with_updated_by(
             f"/suppliers/{supplier_id}/central-digital-platform/create",
             data={
-                "centralDigitalPlatformData": central_digital_platform_data
+                "centralDigitalPlatformData": central_digital_platform_data,
+                "tradingName": trading_name,
             },
             user=user,
         )
