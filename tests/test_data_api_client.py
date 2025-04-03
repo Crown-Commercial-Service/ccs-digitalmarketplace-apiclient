@@ -909,6 +909,7 @@ class TestSupplierMethods(object):
             {
                 "supplierInformation": "value"
             },
+            'My trading name',
             'user'
         )
 
@@ -918,6 +919,7 @@ class TestSupplierMethods(object):
             'centralDigitalPlatformData': {
                 "supplierInformation": "value"
             },
+            'tradingName': 'My trading name',
             'updated_by': 'user',
         }
 
