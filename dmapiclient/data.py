@@ -328,9 +328,15 @@ class DataAPIClient(BaseAPIClient):
             "/suppliers/{}/frameworks".format(supplier_id)
         )
 
-    def get_supplier_framework_info(self, supplier_id, framework_slug):
+    def get_supplier_framework_info(self, supplier_id, framework_slug, with_cdp_supplier_information=None):
+        params = {}
+
+        if with_cdp_supplier_information is not None:
+            params['with_cdp_supplier_information'] = bool(with_cdp_supplier_information)
+
         return self._get(
-            "/suppliers/{}/frameworks/{}".format(supplier_id, framework_slug)
+            "/suppliers/{}/frameworks/{}".format(supplier_id, framework_slug),
+            params
         )
 
     def set_framework_result(self, supplier_id, framework_slug, is_on_framework, user=None):
