@@ -2,6 +2,11 @@
 
 Records breaking changes from major version bumps
 
+## 33.0.0
+
+Add new Spotlight FVRA Clients for warm up call and checking multiple DUNS
+Update the Spotlight FVRA API Client to be a single client which calls the different clients
+
 ## 32.2.0
 
 Add the Spotlight FVRA API client to the other API clients
