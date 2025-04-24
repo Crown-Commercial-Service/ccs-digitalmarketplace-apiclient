@@ -141,12 +141,13 @@ class _SpotlightFvraWarmUpAPIClient(BaseSpotlightAPIClient):
             timeout
         )
 
-    def inform_spotlight_of_duns_number_for_check(self, duns_number):
+    def inform_spotlight_of_duns_number_for_check(self, duns_number, organisation_name):
         response = self._post(
             SptlightURL.POST_FVRA_WARM_UP,
             data={
                 "Account": [
                     {
+                        "Name": organisation_name,
                         "DunsNumber": duns_number,
                         "OnDemandChecks": "true",
                         "PartOfDailyChecks": "false"
@@ -268,8 +269,11 @@ class SpotlightAPIClient:
     def find_organisation_from_duns_number(self, duns_number):
         return self._spotlight_duns_api_client.find_organisation_from_duns_number(duns_number)
 
-    def inform_spotlight_of_duns_number_for_check(self, duns_number):
-        return self._spotlight_warm_up_api_client.inform_spotlight_of_duns_number_for_check(duns_number)
+    def inform_spotlight_of_duns_number_for_check(self, duns_number, organisation_name):
+        return self._spotlight_warm_up_api_client.inform_spotlight_of_duns_number_for_check(
+            duns_number,
+            organisation_name
+        )
 
     def get_financials_from_duns_number(self, duns_number):
         return self._spotlight_fvra_single_check_api_client.get_financials_from_duns_number(duns_number)

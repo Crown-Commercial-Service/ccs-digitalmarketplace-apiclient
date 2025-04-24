@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 33.1.0
+
+Pass the organisation name when sending the Spotlight warmup request
+
 ## 33.0.0
 
 Add new Spotlight FVRA Clients for warm up call and checking multiple DUNS

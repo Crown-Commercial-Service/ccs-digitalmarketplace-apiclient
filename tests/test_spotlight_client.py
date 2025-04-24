@@ -142,13 +142,14 @@ class TestInformSpotlightOfDunsNumberForCheck:
             body=BytesIO(b"'Call received.'"),
             status_code=200
         )
-        result = spotlight_api_client.inform_spotlight_of_duns_number_for_check("123456789")
+        result = spotlight_api_client.inform_spotlight_of_duns_number_for_check("123456789", "Vandham")
 
         assert result == {"message": "done"}
         assert rmock.called
         assert rmock.last_request.json() == {
             "Account": [
                 {
+                    "Name": "Vandham",
                     "DunsNumber": "123456789",
                     "OnDemandChecks": "true",
                     "PartOfDailyChecks": "false"
@@ -164,7 +165,7 @@ class TestInformSpotlightOfDunsNumberForCheck:
             status_code=200
         )
         try:
-            spotlight_api_client.inform_spotlight_of_duns_number_for_check("123456789")
+            spotlight_api_client.inform_spotlight_of_duns_number_for_check("123456789", "Vandham")
         except HTTPError:
             assert rmock.called
 
