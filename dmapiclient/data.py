@@ -963,17 +963,20 @@ class DataAPIClient(BaseAPIClient):
     def get_framework(self, slug):
         return self._get("/frameworks/{}".format(slug))
 
-    def create_framework(self,
-                         slug,
-                         name,
-                         framework_family_slug,
-                         lots,
-                         has_direct_award,
-                         has_further_competition,
-                         user=None,
-                         *,
-                         status="coming",
-                         clarification_questions_open=False):
+    def create_framework(
+        self,
+        slug,
+        name,
+        framework_family_slug,
+        lots,
+        has_direct_award,
+        has_further_competition,
+        has_technical_award_certificate,
+        user=None,
+        *,
+        status="coming",
+        clarification_questions_open=False
+    ):
         framework_data = {
             "slug": slug,
             "name": name,
@@ -982,7 +985,8 @@ class DataAPIClient(BaseAPIClient):
             "clarificationQuestionsOpen": clarification_questions_open,
             "lots": lots,
             "hasDirectAward": has_direct_award,
-            "hasFurtherCompetition": has_further_competition
+            "hasFurtherCompetition": has_further_competition,
+            "hasTechnicalAwardCertificate": has_technical_award_certificate,
         }
 
         return self._post_with_updated_by(
