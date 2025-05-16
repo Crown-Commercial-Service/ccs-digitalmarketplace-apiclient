@@ -3579,6 +3579,18 @@ class TestDataAPIClientIterMethods(object):
 
         assert len(results) == 2
 
+    def test_find_technical_award_certificates_iter(self, data_client, rmock):
+        self._test_find_iter(
+            data_client, rmock,
+            method_name='find_technical_award_certificates_iter',
+            model_name='technicalAwardCertificates',
+            url_path='technical-award-certificates?framework=g-cloud-6&supplier_id=1234',
+            iter_kwargs={
+                'supplier_id': 1234,
+                'framework_slug': 'g-cloud-6'
+            }
+        )
+
 
 class TestCommunicationsMethods(object):
     def test_find_communications(self, data_client, rmock):
@@ -5194,3 +5206,27 @@ class TestEvaluatorFrameworkLotMethods(object):
             },
             'updated_by': 'user',
         }
+
+
+class TestTechnicalAwardCertificatesMethods(object):
+    def test_find_technical_award_certificates(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/technical-award-certificates?framework=g-cloud-6&supplier_id=1234",
+            json={"technicalAwardCertificates": "result"},
+            status_code=200)
+
+        result = data_client.find_technical_award_certificates(1234, 'g-cloud-6')
+
+        assert result == {"technicalAwardCertificates": "result"}
+        assert rmock.called
+
+    def test_find_technical_award_certificates_adds_page_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/technical-award-certificates?framework=g-cloud-6&supplier_id=1234&page=2",
+            json={"technicalAwardCertificates": "result"},
+            status_code=200)
+
+        result = data_client.find_technical_award_certificates(1234, 'g-cloud-6', page=2)
+
+        assert result == {"technicalAwardCertificates": "result"}
+        assert rmock.called

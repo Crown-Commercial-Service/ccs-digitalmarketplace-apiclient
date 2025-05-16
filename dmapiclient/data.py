@@ -2050,3 +2050,25 @@ class DataAPIClient(BaseAPIClient):
             },
             user=user,
         )
+
+    # Technical award questions
+
+    def find_technical_award_certificates(
+        self,
+        supplier_id,
+        framework_slug,
+        page=None,
+    ):
+        params = {
+            'framework': framework_slug,
+            'supplier_id': supplier_id,
+            'page': page,
+        }
+
+        return self._get("/technical-award-certificates", params=params)
+
+    find_technical_award_certificates_iter = make_iter_method(
+        'find_technical_award_certificates',
+        'technicalAwardCertificates'
+    )
+    find_technical_award_certificates_iter.__name__ = str("find_technical_award_certificates_iter")
