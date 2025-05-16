@@ -2181,7 +2181,15 @@ class TestFrameworkMethods(object):
         )
 
         result = data_client.create_framework(
-            "digital-things-2", "Digital Things", "digital-things", [], True, False, "user@email.com")
+            "digital-things-2",
+            "Digital Things",
+            "digital-things",
+            [],
+            True,
+            False,
+            True,
+            "user@email.com"
+        )
 
         assert result == {"frameworks": "result"}
         assert rmock.last_request.json() == {
@@ -2190,6 +2198,7 @@ class TestFrameworkMethods(object):
                 'framework': 'digital-things',
                 'hasDirectAward': True,
                 'hasFurtherCompetition': False,
+                'hasTechnicalAwardCertificate': True,
                 'lots': [],
                 'name': 'Digital Things',
                 'slug': 'digital-things-2',
