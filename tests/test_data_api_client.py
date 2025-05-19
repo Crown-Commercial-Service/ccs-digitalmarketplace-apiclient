@@ -5231,6 +5231,18 @@ class TestTechnicalAwardCertificatesMethods(object):
         assert result == {"technicalAwardCertificates": "result"}
         assert rmock.called
 
+    def test_get_technical_award_certificate(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/technical-award-certificates/1234",
+            json={"tac": "data"},
+            status_code=200
+        )
+
+        result = data_client.get_technical_award_certificate(1234)
+
+        assert result == {"tac": "data"}
+        assert rmock.called
+
     def test_update_technical_award_certificate(self, data_client, rmock):
         rmock.patch(
             "http://baseurl/technical-award-certificates/1234",
