@@ -2092,3 +2092,17 @@ class DataAPIClient(BaseAPIClient):
             data=data,
             user=user,
         )
+
+    def send_technical_award_certificate(
+        self,
+        technical_award_certificate_id,
+        passcode,
+        user=None,
+    ):
+        return self._post_with_updated_by(
+            f"/technical-award-certificates/{technical_award_certificate_id}/send",
+            data={
+                'passcode': passcode
+            },
+            user=user,
+        )

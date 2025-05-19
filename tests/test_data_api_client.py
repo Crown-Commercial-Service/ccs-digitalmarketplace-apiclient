@@ -5268,3 +5268,19 @@ class TestTechnicalAwardCertificatesMethods(object):
             'technicalAwardCertificates': {'question': 'answer'},
             'page_questions': ['question']
         }
+
+    def test_send_technical_award_certificate(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/technical-award-certificates/1234/send",
+            json={"message": "done", "authenticationId": "random-value"},
+            status_code=200
+        )
+
+        result = data_client.send_technical_award_certificate(1234, "123456", "user")
+
+        assert result == {"message": "done", "authenticationId": "random-value"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'passcode': "123456"
+        }
