@@ -5284,3 +5284,22 @@ class TestTechnicalAwardCertificatesMethods(object):
             'updated_by': 'user',
             'passcode': "123456"
         }
+
+    def test_authenticate_technical_award_certificate(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/technical-award-certificates/auth",
+            json={"authorization": True},
+            status_code=200
+        )
+
+        result = data_client.authenticate_technical_award_certificate("1234", "123456", "user")
+
+        assert result == {"authorization": True}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'authTechnicalAwardCertificates': {
+                'authenticationId': "1234",
+                'passcode': "123456",
+            }
+        }

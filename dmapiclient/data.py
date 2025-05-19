@@ -2106,3 +2106,20 @@ class DataAPIClient(BaseAPIClient):
             },
             user=user,
         )
+
+    def authenticate_technical_award_certificate(
+        self,
+        authentication_id,
+        passcode,
+        user=None,
+    ):
+        return self._post_with_updated_by(
+            "/technical-award-certificates/auth",
+            data={
+                'authTechnicalAwardCertificates': {
+                    'authenticationId': authentication_id,
+                    'passcode': passcode,
+                }
+            },
+            user=user,
+        )
