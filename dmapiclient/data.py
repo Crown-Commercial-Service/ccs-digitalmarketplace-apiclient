@@ -2073,6 +2073,9 @@ class DataAPIClient(BaseAPIClient):
     )
     find_technical_award_certificates_iter.__name__ = str("find_technical_award_certificates_iter")
 
+    def get_technical_award_certificate(self, technical_award_certificate_id):
+        return self._get(f"/technical-award-certificates/{technical_award_certificate_id}")
+
     def update_technical_award_certificate(
         self,
         technical_award_certificate_id,
