@@ -130,7 +130,7 @@ class AuditTypes(Enum):
 
     # Technical award certificate
     create_technical_award_certificate = "create_technical_award_certificate"
-    update_technical_award_certificate = "update_technical_award_certificate"
+    update_technical_award_certificate_answers = "update_technical_award_certificate_answers"
     send_technical_award_certificate = "send_technical_award_certificate"
     undo_send_technical_award_certificate = "undo_send_technical_award_certificate"
     approve_technical_award_certificate = "approve_technical_award_certificate"
