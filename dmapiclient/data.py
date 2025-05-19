@@ -2072,3 +2072,23 @@ class DataAPIClient(BaseAPIClient):
         'technicalAwardCertificates'
     )
     find_technical_award_certificates_iter.__name__ = str("find_technical_award_certificates_iter")
+
+    def update_technical_award_certificate(
+        self,
+        technical_award_certificate_id,
+        technical_award_certificate,
+        user=None,
+        page_questions=None
+    ):
+        data = {
+            "technicalAwardCertificates": technical_award_certificate,
+        }
+
+        if page_questions is not None:
+            data['page_questions'] = page_questions
+
+        return self._patch_with_updated_by(
+            f"/technical-award-certificates/{technical_award_certificate_id}",
+            data=data,
+            user=user,
+        )

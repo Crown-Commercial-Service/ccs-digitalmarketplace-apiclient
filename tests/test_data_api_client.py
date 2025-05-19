@@ -5230,3 +5230,41 @@ class TestTechnicalAwardCertificatesMethods(object):
 
         assert result == {"technicalAwardCertificates": "result"}
         assert rmock.called
+
+    def test_update_technical_award_certificate(self, data_client, rmock):
+        rmock.patch(
+            "http://baseurl/technical-award-certificates/1234",
+            json={"technicalAwardCertificates": {"question": "answer"}},
+            status_code=200
+        )
+
+        result = data_client.update_technical_award_certificate(1234, {"question": "answer"}, "user")
+
+        assert result == {'technicalAwardCertificates': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'technicalAwardCertificates': {'question': 'answer'}
+        }
+
+    def test_update_technical_award_certificate_with_page_questions(self, data_client, rmock):
+        rmock.patch(
+            "http://baseurl/technical-award-certificates/1234",
+            json={"technicalAwardCertificates": {"question": "answer"}},
+            status_code=200
+        )
+
+        result = data_client.update_technical_award_certificate(
+            1234,
+            {"question": "answer"},
+            "user",
+            ["question"]
+        )
+
+        assert result == {'technicalAwardCertificates': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'technicalAwardCertificates': {'question': 'answer'},
+            'page_questions': ['question']
+        }
