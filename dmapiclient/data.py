@@ -2127,6 +2127,17 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def undo_send_technical_award_certificate(
+        self,
+        technical_award_certificate_id,
+        user=None,
+    ):
+        return self._post_with_updated_by(
+            f"/technical-award-certificates/{technical_award_certificate_id}/undo-send",
+            data={},
+            user=user,
+        )
+
     def approve_technical_award_certificate(
         self,
         technical_award_certificate_id,
