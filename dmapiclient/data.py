@@ -2076,6 +2076,23 @@ class DataAPIClient(BaseAPIClient):
     def get_technical_award_certificate(self, technical_award_certificate_id):
         return self._get(f"/technical-award-certificates/{technical_award_certificate_id}")
 
+    def authenticate_technical_award_certificate(
+        self,
+        authentication_id,
+        passcode,
+        user=None,
+    ):
+        return self._post_with_updated_by(
+            "/technical-award-certificates/auth",
+            data={
+                'authTechnicalAwardCertificates': {
+                    'authenticationId': authentication_id,
+                    'passcode': passcode,
+                }
+            },
+            user=user,
+        )
+
     def update_technical_award_certificate(
         self,
         technical_award_certificate_id,
@@ -2110,19 +2127,16 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def authenticate_technical_award_certificate(
+    def approve_technical_award_certificate(
         self,
-        authentication_id,
-        passcode,
+        technical_award_certificate_id,
+        electronic_signiture,
         user=None,
     ):
         return self._post_with_updated_by(
-            "/technical-award-certificates/auth",
+            f"/technical-award-certificates/{technical_award_certificate_id}/approve",
             data={
-                'authTechnicalAwardCertificates': {
-                    'authenticationId': authentication_id,
-                    'passcode': passcode,
-                }
+                'electronicSigniture': electronic_signiture
             },
             user=user,
         )

@@ -5243,6 +5243,25 @@ class TestTechnicalAwardCertificatesMethods(object):
         assert result == {"tac": "data"}
         assert rmock.called
 
+    def test_authenticate_technical_award_certificate(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/technical-award-certificates/auth",
+            json={"authorization": True},
+            status_code=200
+        )
+
+        result = data_client.authenticate_technical_award_certificate("1234", "123456", "user")
+
+        assert result == {"authorization": True}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'authTechnicalAwardCertificates': {
+                'authenticationId': "1234",
+                'passcode': "123456",
+            }
+        }
+
     def test_update_technical_award_certificate(self, data_client, rmock):
         rmock.patch(
             "http://baseurl/technical-award-certificates/1234",
@@ -5297,21 +5316,18 @@ class TestTechnicalAwardCertificatesMethods(object):
             'passcode': "123456"
         }
 
-    def test_authenticate_technical_award_certificate(self, data_client, rmock):
+    def test_approve_technical_award_certificate(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/technical-award-certificates/auth",
-            json={"authorization": True},
+            "http://baseurl/technical-award-certificates/1234/approve",
+            json={"message": "done"},
             status_code=200
         )
 
-        result = data_client.authenticate_technical_award_certificate("1234", "123456", "user")
+        result = data_client.approve_technical_award_certificate(1234, "Elma", "user")
 
-        assert result == {"authorization": True}
+        assert result == {"message": "done"}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
-            'authTechnicalAwardCertificates': {
-                'authenticationId': "1234",
-                'passcode': "123456",
-            }
+            'electronicSigniture': "Elma"
         }
