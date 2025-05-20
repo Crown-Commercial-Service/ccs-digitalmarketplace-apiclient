@@ -5316,6 +5316,21 @@ class TestTechnicalAwardCertificatesMethods(object):
             'passcode': "123456"
         }
 
+    def test_undo_send_technical_award_certificate(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/technical-award-certificates/1234/undo-send",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.undo_send_technical_award_certificate(1234, "user")
+
+        assert result == {"message": "done"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+        }
+
     def test_approve_technical_award_certificate(self, data_client, rmock):
         rmock.post(
             "http://baseurl/technical-award-certificates/1234/approve",
