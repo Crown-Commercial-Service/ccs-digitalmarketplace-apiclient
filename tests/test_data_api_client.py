@@ -5366,7 +5366,7 @@ class TestTechnicalAwardCertificatesMethods(object):
                 "lotSlug": 91011,
             }
         }
-        
+
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
