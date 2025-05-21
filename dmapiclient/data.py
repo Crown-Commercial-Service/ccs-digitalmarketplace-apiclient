@@ -2151,3 +2151,16 @@ class DataAPIClient(BaseAPIClient):
             },
             user=user,
         )
+
+    def create_technical_award_certificate(
+        self,
+        technical_award_certificate,
+        user=None,
+    ):
+        return self._post_with_updated_by(
+            "/technical-award-certificates",
+            data={
+                "technicalAwardCertificates": technical_award_certificate,
+            },
+            user=user,
+        )
