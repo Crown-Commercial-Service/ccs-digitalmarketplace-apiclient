@@ -2198,7 +2198,7 @@ class TestFrameworkMethods(object):
                 'framework': 'digital-things',
                 'hasDirectAward': True,
                 'hasFurtherCompetition': False,
-                'hasTechnicalAwardCertificate': True,
+                'hasTechnicalAbilityCertificate': True,
                 'lots': [],
                 'name': 'Digital Things',
                 'slug': 'digital-things-2',
@@ -3579,11 +3579,11 @@ class TestDataAPIClientIterMethods(object):
 
         assert len(results) == 2
 
-    def test_find_technical_award_certificates_iter(self, data_client, rmock):
+    def test_find_technical_ability_certificates_iter(self, data_client, rmock):
         self._test_find_iter(
             data_client, rmock,
-            method_name='find_technical_award_certificates_iter',
-            model_name='technicalAwardCertificates',
+            method_name='find_technical_ability_certificates_iter',
+            model_name='technicalAbilityCertificates',
             url_path='technical-award-certificates?framework=g-cloud-6&supplier_id=1234',
             iter_kwargs={
                 'supplier_id': 1234,
@@ -5208,38 +5208,38 @@ class TestEvaluatorFrameworkLotMethods(object):
         }
 
 
-class TestTechnicalAwardCertificatesMethods(object):
-    def test_find_technical_award_certificates(self, data_client, rmock):
+class TestTechnicalAbilityCertificatesMethods(object):
+    def test_find_technical_ability_certificates(self, data_client, rmock):
         rmock.get(
             "http://baseurl/technical-award-certificates?framework=g-cloud-6&supplier_id=1234",
-            json={"technicalAwardCertificates": "result"},
+            json={"technicalAbilityCertificates": "result"},
             status_code=200)
 
-        result = data_client.find_technical_award_certificates(1234, 'g-cloud-6')
+        result = data_client.find_technical_ability_certificates(1234, 'g-cloud-6')
 
-        assert result == {"technicalAwardCertificates": "result"}
+        assert result == {"technicalAbilityCertificates": "result"}
         assert rmock.called
 
-    def test_find_technical_award_certificates_adds_page_parameter(self, data_client, rmock):
+    def test_find_technical_ability_certificates_adds_page_parameter(self, data_client, rmock):
         rmock.get(
             "http://baseurl/technical-award-certificates?framework=g-cloud-6&supplier_id=1234&page=2",
-            json={"technicalAwardCertificates": "result"},
+            json={"technicalAbilityCertificates": "result"},
             status_code=200)
 
-        result = data_client.find_technical_award_certificates(1234, 'g-cloud-6', page=2)
+        result = data_client.find_technical_ability_certificates(1234, 'g-cloud-6', page=2)
 
-        assert result == {"technicalAwardCertificates": "result"}
+        assert result == {"technicalAbilityCertificates": "result"}
         assert rmock.called
 
-    def test_create_technical_award_certificates(self, data_client, rmock):
+    def test_create_technical_ability_certificates(self, data_client, rmock):
         rmock.post(
             "http://baseurl/technical-award-certificates",
-            json={"technicalAwardCertificates": {"question": "answer"}},
+            json={"technicalAbilityCertificates": {"question": "answer"}},
             status_code=201)
 
-        result = data_client.create_technical_award_certificate(1234, 'g-cloud-6', 'g-lot', "user")
+        result = data_client.create_technical_ability_certificate(1234, 'g-cloud-6', 'g-lot', "user")
 
-        assert result == {'technicalAwardCertificates': {'question': 'answer'}}
+        assert result == {'technicalAbilityCertificates': {'question': 'answer'}}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'supplierId': 1234,
@@ -5248,99 +5248,98 @@ class TestTechnicalAwardCertificatesMethods(object):
             'updated_by': 'user',
         }
 
-    def test_get_technical_award_certificate(self, data_client, rmock):
+    def test_get_technical_ability_certificate(self, data_client, rmock):
         rmock.get(
             "http://baseurl/technical-award-certificates/1234",
             json={"tac": "data"},
             status_code=200
         )
 
-        result = data_client.get_technical_award_certificate(1234)
+        result = data_client.get_technical_ability_certificate(1234)
 
         assert result == {"tac": "data"}
         assert rmock.called
 
-    def test_authenticate_technical_award_certificate(self, data_client, rmock):
+    def test_authenticate_technical_ability_certificate(self, data_client, rmock):
         rmock.post(
             "http://baseurl/technical-award-certificates/auth",
             json={"authorization": True},
             status_code=200
         )
 
-        result = data_client.authenticate_technical_award_certificate("1234", "123456", "user")
+        result = data_client.authenticate_technical_ability_certificate("1234", "123456", "user")
 
         assert result == {"authorization": True}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
-            'authTechnicalAwardCertificates': {
+            'authTechnicalAbilityCertificates': {
                 'authenticationId': "1234",
                 'passcode': "123456",
             }
         }
 
-    def test_update_technical_award_certificate(self, data_client, rmock):
+    def test_update_technical_ability_certificate(self, data_client, rmock):
         rmock.patch(
             "http://baseurl/technical-award-certificates/1234",
-            json={"technicalAwardCertificates": {"question": "answer"}},
+            json={"technicalAbilityCertificates": {"question": "answer"}},
             status_code=200
         )
 
-        result = data_client.update_technical_award_certificate(1234, {"question": "answer"}, "user")
+        result = data_client.update_technical_ability_certificate(1234, {"question": "answer"}, "user")
 
-        assert result == {'technicalAwardCertificates': {'question': 'answer'}}
+        assert result == {'technicalAbilityCertificates': {'question': 'answer'}}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
-            'technicalAwardCertificates': {'question': 'answer'}
+            'technicalAbilityCertificates': {'question': 'answer'}
         }
 
-    def test_update_technical_award_certificate_with_page_questions(self, data_client, rmock):
+    def test_update_technical_ability_certificate_with_page_questions(self, data_client, rmock):
         rmock.patch(
             "http://baseurl/technical-award-certificates/1234",
-            json={"technicalAwardCertificates": {"question": "answer"}},
+            json={"technicalAbilityCertificates": {"question": "answer"}},
             status_code=200
         )
 
-        result = data_client.update_technical_award_certificate(
+        result = data_client.update_technical_ability_certificate(
             1234,
             {"question": "answer"},
             "user",
             ["question"]
         )
 
-        assert result == {'technicalAwardCertificates': {'question': 'answer'}}
+        assert result == {'technicalAbilityCertificates': {'question': 'answer'}}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
-            'technicalAwardCertificates': {'question': 'answer'},
+            'technicalAbilityCertificates': {'question': 'answer'},
             'page_questions': ['question']
         }
 
-    def test_send_technical_award_certificate(self, data_client, rmock):
+    def test_send_technical_ability_certificate(self, data_client, rmock):
         rmock.post(
             "http://baseurl/technical-award-certificates/1234/send",
-            json={"message": "done", "authenticationId": "random-value"},
+            json={"message": "done", "authenticationId": "random-value", "passcode": "123456"},
             status_code=200
         )
 
-        result = data_client.send_technical_award_certificate(1234, "123456", "user")
+        result = data_client.send_technical_ability_certificate(1234, "user")
 
-        assert result == {"message": "done", "authenticationId": "random-value"}
+        assert result == {"message": "done", "authenticationId": "random-value", "passcode": "123456"}
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
-            'passcode': "123456"
         }
 
-    def test_undo_send_technical_award_certificate(self, data_client, rmock):
+    def test_undo_send_technical_ability_certificate(self, data_client, rmock):
         rmock.post(
             "http://baseurl/technical-award-certificates/1234/undo-send",
             json={"message": "done"},
             status_code=200
         )
 
-        result = data_client.undo_send_technical_award_certificate(1234, "user")
+        result = data_client.undo_send_technical_ability_certificate(1234, "user")
 
         assert result == {"message": "done"}
         assert rmock.called
@@ -5348,14 +5347,14 @@ class TestTechnicalAwardCertificatesMethods(object):
             'updated_by': 'user',
         }
 
-    def test_approve_technical_award_certificate(self, data_client, rmock):
+    def test_approve_technical_ability_certificate(self, data_client, rmock):
         rmock.post(
             "http://baseurl/technical-award-certificates/1234/approve",
             json={"message": "done"},
             status_code=200
         )
 
-        result = data_client.approve_technical_award_certificate(1234, "Elma", "user")
+        result = data_client.approve_technical_ability_certificate(1234, "Elma", "user")
 
         assert result == {"message": "done"}
         assert rmock.called
