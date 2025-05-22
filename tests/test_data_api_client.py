@@ -5346,3 +5346,29 @@ class TestTechnicalAwardCertificatesMethods(object):
             'updated_by': 'user',
             'electronicSigniture': "Elma"
         }
+
+    def test_create_technical_award_certificate(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/technical-award-certificates",
+            json={"technicalAwardCertificates": {"supplierId": 1234, "frameworkId": 5678, "lotSlug": 91011}},
+            status_code=201
+        )
+
+        result = data_client.create_technical_award_certificate(
+            {"supplierId": 1234, "frameworkId": 5678, "lotSlug": 91011},
+            "user"
+        )
+
+        assert result == {
+            "technicalAwardCertificates": {
+                "supplierId": 1234,
+                "frameworkId": 5678,
+                "lotSlug": 91011,
+            }
+        }
+
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'technicalAwardCertificates': {'supplierId': 1234, 'frameworkId': 5678, 'lotSlug': 91011}
+        }
