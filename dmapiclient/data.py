@@ -2073,6 +2073,17 @@ class DataAPIClient(BaseAPIClient):
     )
     find_technical_award_certificates_iter.__name__ = str("find_technical_award_certificates_iter")
 
+    def create_technical_award_certificate(self, supplier_id, framework_slug, lot_slug, user=None):
+        return self._post_with_updated_by(
+            "/technical-award-certificates",
+            data={
+                "supplierId": supplier_id,
+                "frameworkSlug": framework_slug,
+                "lotSlug": lot_slug,
+            },
+            user=user,
+        )
+
     def get_technical_award_certificate(self, technical_award_certificate_id):
         return self._get(f"/technical-award-certificates/{technical_award_certificate_id}")
 
@@ -2148,19 +2159,6 @@ class DataAPIClient(BaseAPIClient):
             f"/technical-award-certificates/{technical_award_certificate_id}/approve",
             data={
                 'electronicSigniture': electronic_signiture
-            },
-            user=user,
-        )
-
-    def create_technical_award_certificate(
-        self,
-        technical_award_certificate,
-        user=None,
-    ):
-        return self._post_with_updated_by(
-            "/technical-award-certificates",
-            data={
-                "technicalAwardCertificates": technical_award_certificate,
             },
             user=user,
         )
