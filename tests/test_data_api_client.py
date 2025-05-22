@@ -3584,7 +3584,7 @@ class TestDataAPIClientIterMethods(object):
             data_client, rmock,
             method_name='find_technical_ability_certificates_iter',
             model_name='technicalAbilityCertificates',
-            url_path='technical-award-certificates?framework=g-cloud-6&supplier_id=1234',
+            url_path='technical-ability-certificates?framework=g-cloud-6&supplier_id=1234',
             iter_kwargs={
                 'supplier_id': 1234,
                 'framework_slug': 'g-cloud-6'
@@ -5211,7 +5211,7 @@ class TestEvaluatorFrameworkLotMethods(object):
 class TestTechnicalAbilityCertificatesMethods(object):
     def test_find_technical_ability_certificates(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/technical-award-certificates?framework=g-cloud-6&supplier_id=1234",
+            "http://baseurl/technical-ability-certificates?framework=g-cloud-6&supplier_id=1234",
             json={"technicalAbilityCertificates": "result"},
             status_code=200)
 
@@ -5222,7 +5222,7 @@ class TestTechnicalAbilityCertificatesMethods(object):
 
     def test_find_technical_ability_certificates_adds_page_parameter(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/technical-award-certificates?framework=g-cloud-6&supplier_id=1234&page=2",
+            "http://baseurl/technical-ability-certificates?framework=g-cloud-6&supplier_id=1234&page=2",
             json={"technicalAbilityCertificates": "result"},
             status_code=200)
 
@@ -5233,7 +5233,7 @@ class TestTechnicalAbilityCertificatesMethods(object):
 
     def test_create_technical_ability_certificates(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/technical-award-certificates",
+            "http://baseurl/technical-ability-certificates",
             json={"technicalAbilityCertificates": {"question": "answer"}},
             status_code=201)
 
@@ -5250,7 +5250,7 @@ class TestTechnicalAbilityCertificatesMethods(object):
 
     def test_get_technical_ability_certificate(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/technical-award-certificates/1234",
+            "http://baseurl/technical-ability-certificates/1234",
             json={"tac": "data"},
             status_code=200
         )
@@ -5262,7 +5262,7 @@ class TestTechnicalAbilityCertificatesMethods(object):
 
     def test_authenticate_technical_ability_certificate(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/technical-award-certificates/auth",
+            "http://baseurl/technical-ability-certificates/auth",
             json={"authorization": True},
             status_code=200
         )
@@ -5281,7 +5281,7 @@ class TestTechnicalAbilityCertificatesMethods(object):
 
     def test_update_technical_ability_certificate(self, data_client, rmock):
         rmock.patch(
-            "http://baseurl/technical-award-certificates/1234",
+            "http://baseurl/technical-ability-certificates/1234",
             json={"technicalAbilityCertificates": {"question": "answer"}},
             status_code=200
         )
@@ -5297,7 +5297,7 @@ class TestTechnicalAbilityCertificatesMethods(object):
 
     def test_update_technical_ability_certificate_with_page_questions(self, data_client, rmock):
         rmock.patch(
-            "http://baseurl/technical-award-certificates/1234",
+            "http://baseurl/technical-ability-certificates/1234",
             json={"technicalAbilityCertificates": {"question": "answer"}},
             status_code=200
         )
@@ -5319,7 +5319,7 @@ class TestTechnicalAbilityCertificatesMethods(object):
 
     def test_send_technical_ability_certificate(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/technical-award-certificates/1234/send",
+            "http://baseurl/technical-ability-certificates/1234/send",
             json={"message": "done", "authenticationId": "random-value", "passcode": "123456"},
             status_code=200
         )
@@ -5334,7 +5334,7 @@ class TestTechnicalAbilityCertificatesMethods(object):
 
     def test_undo_send_technical_ability_certificate(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/technical-award-certificates/1234/undo-send",
+            "http://baseurl/technical-ability-certificates/1234/undo-send",
             json={"message": "done"},
             status_code=200
         )
@@ -5349,7 +5349,7 @@ class TestTechnicalAbilityCertificatesMethods(object):
 
     def test_approve_technical_ability_certificate(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/technical-award-certificates/1234/approve",
+            "http://baseurl/technical-ability-certificates/1234/approve",
             json={"message": "done"},
             status_code=200
         )

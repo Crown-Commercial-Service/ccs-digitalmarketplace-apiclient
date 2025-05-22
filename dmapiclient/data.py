@@ -2065,7 +2065,7 @@ class DataAPIClient(BaseAPIClient):
             'page': page,
         }
 
-        return self._get("/technical-award-certificates", params=params)
+        return self._get("/technical-ability-certificates", params=params)
 
     find_technical_ability_certificates_iter = make_iter_method(
         'find_technical_ability_certificates',
@@ -2075,7 +2075,7 @@ class DataAPIClient(BaseAPIClient):
 
     def create_technical_ability_certificate(self, supplier_id, framework_slug, lot_slug, user=None):
         return self._post_with_updated_by(
-            "/technical-award-certificates",
+            "/technical-ability-certificates",
             data={
                 "supplierId": supplier_id,
                 "frameworkSlug": framework_slug,
@@ -2085,7 +2085,7 @@ class DataAPIClient(BaseAPIClient):
         )
 
     def get_technical_ability_certificate(self, technical_ability_certificate_id):
-        return self._get(f"/technical-award-certificates/{technical_ability_certificate_id}")
+        return self._get(f"/technical-ability-certificates/{technical_ability_certificate_id}")
 
     def authenticate_technical_ability_certificate(
         self,
@@ -2094,7 +2094,7 @@ class DataAPIClient(BaseAPIClient):
         user=None,
     ):
         return self._post_with_updated_by(
-            "/technical-award-certificates/auth",
+            "/technical-ability-certificates/auth",
             data={
                 'authTechnicalAbilityCertificates': {
                     'authenticationId': authentication_id,
@@ -2119,7 +2119,7 @@ class DataAPIClient(BaseAPIClient):
             data['page_questions'] = page_questions
 
         return self._patch_with_updated_by(
-            f"/technical-award-certificates/{technical_ability_certificate_id}",
+            f"/technical-ability-certificates/{technical_ability_certificate_id}",
             data=data,
             user=user,
         )
@@ -2130,7 +2130,7 @@ class DataAPIClient(BaseAPIClient):
         user=None,
     ):
         return self._post_with_updated_by(
-            f"/technical-award-certificates/{technical_ability_certificate_id}/send",
+            f"/technical-ability-certificates/{technical_ability_certificate_id}/send",
             data={},
             user=user,
         )
@@ -2141,7 +2141,7 @@ class DataAPIClient(BaseAPIClient):
         user=None,
     ):
         return self._post_with_updated_by(
-            f"/technical-award-certificates/{technical_ability_certificate_id}/undo-send",
+            f"/technical-ability-certificates/{technical_ability_certificate_id}/undo-send",
             data={},
             user=user,
         )
@@ -2153,7 +2153,7 @@ class DataAPIClient(BaseAPIClient):
         user=None,
     ):
         return self._post_with_updated_by(
-            f"/technical-award-certificates/{technical_ability_certificate_id}/approve",
+            f"/technical-ability-certificates/{technical_ability_certificate_id}/approve",
             data={
                 'electronicSigniture': electronic_signiture
             },
