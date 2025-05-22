@@ -971,7 +971,7 @@ class DataAPIClient(BaseAPIClient):
         lots,
         has_direct_award,
         has_further_competition,
-        has_technical_award_certificate,
+        has_technical_ability_certificate,
         user=None,
         *,
         status="coming",
@@ -986,7 +986,7 @@ class DataAPIClient(BaseAPIClient):
             "lots": lots,
             "hasDirectAward": has_direct_award,
             "hasFurtherCompetition": has_further_competition,
-            "hasTechnicalAwardCertificate": has_technical_award_certificate,
+            "hasTechnicalAbilityCertificate": has_technical_ability_certificate,
         }
 
         return self._post_with_updated_by(
@@ -2053,7 +2053,7 @@ class DataAPIClient(BaseAPIClient):
 
     # Technical award questions
 
-    def find_technical_award_certificates(
+    def find_technical_ability_certificates(
         self,
         supplier_id,
         framework_slug,
@@ -2067,13 +2067,13 @@ class DataAPIClient(BaseAPIClient):
 
         return self._get("/technical-award-certificates", params=params)
 
-    find_technical_award_certificates_iter = make_iter_method(
-        'find_technical_award_certificates',
-        'technicalAwardCertificates'
+    find_technical_ability_certificates_iter = make_iter_method(
+        'find_technical_ability_certificates',
+        'technicalAbilityCertificates'
     )
-    find_technical_award_certificates_iter.__name__ = str("find_technical_award_certificates_iter")
+    find_technical_ability_certificates_iter.__name__ = str("find_technical_ability_certificates_iter")
 
-    def create_technical_award_certificate(self, supplier_id, framework_slug, lot_slug, user=None):
+    def create_technical_ability_certificate(self, supplier_id, framework_slug, lot_slug, user=None):
         return self._post_with_updated_by(
             "/technical-award-certificates",
             data={
@@ -2084,10 +2084,10 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def get_technical_award_certificate(self, technical_award_certificate_id):
-        return self._get(f"/technical-award-certificates/{technical_award_certificate_id}")
+    def get_technical_ability_certificate(self, technical_ability_certificate_id):
+        return self._get(f"/technical-award-certificates/{technical_ability_certificate_id}")
 
-    def authenticate_technical_award_certificate(
+    def authenticate_technical_ability_certificate(
         self,
         authentication_id,
         passcode,
@@ -2096,7 +2096,7 @@ class DataAPIClient(BaseAPIClient):
         return self._post_with_updated_by(
             "/technical-award-certificates/auth",
             data={
-                'authTechnicalAwardCertificates': {
+                'authTechnicalAbilityCertificates': {
                     'authenticationId': authentication_id,
                     'passcode': passcode,
                 }
@@ -2104,59 +2104,56 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def update_technical_award_certificate(
+    def update_technical_ability_certificate(
         self,
-        technical_award_certificate_id,
-        technical_award_certificate,
+        technical_ability_certificate_id,
+        technical_ability_certificate,
         user=None,
         page_questions=None
     ):
         data = {
-            "technicalAwardCertificates": technical_award_certificate,
+            "technicalAbilityCertificates": technical_ability_certificate,
         }
 
         if page_questions is not None:
             data['page_questions'] = page_questions
 
         return self._patch_with_updated_by(
-            f"/technical-award-certificates/{technical_award_certificate_id}",
+            f"/technical-award-certificates/{technical_ability_certificate_id}",
             data=data,
             user=user,
         )
 
-    def send_technical_award_certificate(
+    def send_technical_ability_certificate(
         self,
-        technical_award_certificate_id,
-        passcode,
+        technical_ability_certificate_id,
         user=None,
     ):
         return self._post_with_updated_by(
-            f"/technical-award-certificates/{technical_award_certificate_id}/send",
-            data={
-                'passcode': passcode
-            },
-            user=user,
-        )
-
-    def undo_send_technical_award_certificate(
-        self,
-        technical_award_certificate_id,
-        user=None,
-    ):
-        return self._post_with_updated_by(
-            f"/technical-award-certificates/{technical_award_certificate_id}/undo-send",
+            f"/technical-award-certificates/{technical_ability_certificate_id}/send",
             data={},
             user=user,
         )
 
-    def approve_technical_award_certificate(
+    def undo_send_technical_ability_certificate(
         self,
-        technical_award_certificate_id,
+        technical_ability_certificate_id,
+        user=None,
+    ):
+        return self._post_with_updated_by(
+            f"/technical-award-certificates/{technical_ability_certificate_id}/undo-send",
+            data={},
+            user=user,
+        )
+
+    def approve_technical_ability_certificate(
+        self,
+        technical_ability_certificate_id,
         electronic_signiture,
         user=None,
     ):
         return self._post_with_updated_by(
-            f"/technical-award-certificates/{technical_award_certificate_id}/approve",
+            f"/technical-award-certificates/{technical_ability_certificate_id}/approve",
             data={
                 'electronicSigniture': electronic_signiture
             },
