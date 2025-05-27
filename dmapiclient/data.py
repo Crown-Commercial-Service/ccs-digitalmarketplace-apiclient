@@ -470,6 +470,7 @@ class DataAPIClient(BaseAPIClient):
         agreement_returned=None,
         statuses=None,
         with_declarations=True,
+        with_technical_ability_certificates=True,
         with_lot_questions_responses=True,
         with_fvra=True,
         with_cdp_supplier_information=None,
@@ -495,6 +496,8 @@ class DataAPIClient(BaseAPIClient):
             params['status'] = statuses
         if with_declarations is not True:
             params['with_declarations'] = bool(with_declarations)
+        if with_technical_ability_certificates is not True:
+            params['with_technical_ability_certificates'] = bool(with_technical_ability_certificates)
         if with_lot_questions_responses is not True:
             params['with_lot_questions_responses'] = bool(with_lot_questions_responses)
         if with_fvra is not True:
