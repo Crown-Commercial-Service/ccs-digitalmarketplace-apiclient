@@ -1476,6 +1476,17 @@ class TestSupplierMethods(object):
         assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
         assert rmock.called
 
+    def test_find_framework_suppliers_no_tac(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/frameworks/g-cloud-7/suppliers?with_technical_ability_certificates=false',
+            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
+            status_code=200)
+
+        result = data_client.find_framework_suppliers('g-cloud-7', with_technical_ability_certificates=False)
+
+        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
+        assert rmock.called
+
     def test_find_framework_suppliers_no_lot_responses(self, data_client, rmock):
         rmock.get(
             'http://baseurl/frameworks/g-cloud-7/suppliers?with_lot_questions_responses=false',
