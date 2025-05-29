@@ -5343,14 +5343,14 @@ class TestTechnicalAbilityCertificatesMethods(object):
             'updated_by': 'user',
         }
 
-    def test_undo_send_technical_ability_certificate(self, data_client, rmock):
+    def test_revert_technical_ability_certificate_to_in_progress(self, data_client, rmock):
         rmock.post(
-            "http://baseurl/technical-ability-certificates/1234/undo-send",
+            "http://baseurl/technical-ability-certificates/1234/revert-to-in-progress",
             json={"message": "done"},
             status_code=200
         )
 
-        result = data_client.undo_send_technical_ability_certificate(1234, "user")
+        result = data_client.revert_technical_ability_certificate_to_in_progress(1234, "user")
 
         assert result == {"message": "done"}
         assert rmock.called

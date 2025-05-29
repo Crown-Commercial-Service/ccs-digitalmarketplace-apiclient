@@ -2138,13 +2138,13 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def undo_send_technical_ability_certificate(
+    def revert_technical_ability_certificate_to_in_progress(
         self,
         technical_ability_certificate_id,
         user=None,
     ):
         return self._post_with_updated_by(
-            f"/technical-ability-certificates/{technical_ability_certificate_id}/undo-send",
+            f"/technical-ability-certificates/{technical_ability_certificate_id}/revert-to-in-progress",
             data={},
             user=user,
         )
