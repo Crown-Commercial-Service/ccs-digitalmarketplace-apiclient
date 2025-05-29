@@ -2198,6 +2198,7 @@ class TestFrameworkMethods(object):
             [],
             True,
             False,
+            False,
             True,
             "user@email.com"
         )
@@ -2209,6 +2210,7 @@ class TestFrameworkMethods(object):
                 'framework': 'digital-things',
                 'hasDirectAward': True,
                 'hasFurtherCompetition': False,
+                'hasEvaluation': False,
                 'hasTechnicalAbilityCertificate': True,
                 'lots': [],
                 'name': 'Digital Things',

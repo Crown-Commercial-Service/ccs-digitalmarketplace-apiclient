@@ -974,6 +974,7 @@ class DataAPIClient(BaseAPIClient):
         lots,
         has_direct_award,
         has_further_competition,
+        has_evaluation,
         has_technical_ability_certificate,
         user=None,
         *,
@@ -989,6 +990,7 @@ class DataAPIClient(BaseAPIClient):
             "lots": lots,
             "hasDirectAward": has_direct_award,
             "hasFurtherCompetition": has_further_competition,
+            "hasEvaluation": has_evaluation,
             "hasTechnicalAbilityCertificate": has_technical_ability_certificate,
         }
 
