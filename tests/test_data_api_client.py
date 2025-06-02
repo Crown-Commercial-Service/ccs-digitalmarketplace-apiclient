@@ -5304,7 +5304,6 @@ class TestTechnicalAbilityCertificatesMethods(object):
         assert result == {"signable": True}
         assert rmock.called
         assert rmock.request_history[0].json() == {
-            'updated_by': 'user',
             'verifyTechnicalAbilityCertificates': {
                 'authenticationId': "1234",
             }

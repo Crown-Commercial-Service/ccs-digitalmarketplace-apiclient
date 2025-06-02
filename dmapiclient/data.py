@@ -2114,7 +2114,7 @@ class DataAPIClient(BaseAPIClient):
         authentication_id,
     ):
         return self._post(
-            "/technical-ability-certificates/auth",
+            "/technical-ability-certificates/verify-can-be-signed",
             data={
                 'verifyTechnicalAbilityCertificates': {
                     'authenticationId': authentication_id,
