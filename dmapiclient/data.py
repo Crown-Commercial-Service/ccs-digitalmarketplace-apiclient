@@ -2109,6 +2109,19 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def verify_technical_ability_certificate_can_be_signed(
+        self,
+        authentication_id,
+    ):
+        return self._post(
+            "/technical-ability-certificates/auth",
+            data={
+                'verifyTechnicalAbilityCertificates': {
+                    'authenticationId': authentication_id,
+                }
+            }
+        )
+
     def update_technical_ability_certificate(
         self,
         technical_ability_certificate_id,

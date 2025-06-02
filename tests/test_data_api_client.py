@@ -5292,6 +5292,24 @@ class TestTechnicalAbilityCertificatesMethods(object):
             }
         }
 
+    def verify_technical_ability_certificate_can_be_signed(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/technical-ability-certificates/verify-can-be-signed",
+            json={"signable": True},
+            status_code=200
+        )
+
+        result = data_client.verify_technical_ability_certificate_can_be_signed("1234")
+
+        assert result == {"signable": True}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'verifyTechnicalAbilityCertificates': {
+                'authenticationId': "1234",
+            }
+        }
+
     def test_update_technical_ability_certificate(self, data_client, rmock):
         rmock.patch(
             "http://baseurl/technical-ability-certificates/1234",
