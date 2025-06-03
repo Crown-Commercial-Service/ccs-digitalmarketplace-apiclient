@@ -5390,5 +5390,5 @@ class TestTechnicalAbilityCertificatesMethods(object):
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
-            'electronicSigniture': "Elma"
+            'electronicSignature': "Elma"
         }
