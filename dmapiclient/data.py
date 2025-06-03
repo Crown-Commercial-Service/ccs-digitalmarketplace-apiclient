@@ -2167,13 +2167,13 @@ class DataAPIClient(BaseAPIClient):
     def approve_technical_ability_certificate(
         self,
         technical_ability_certificate_id,
-        electronic_signiture,
+        electronic_signature,
         user=None,
     ):
         return self._post_with_updated_by(
             f"/technical-ability-certificates/{technical_ability_certificate_id}/approve",
             data={
-                'electronicSigniture': electronic_signiture
+                'electronicSignature': electronic_signature
             },
             user=user,
         )
