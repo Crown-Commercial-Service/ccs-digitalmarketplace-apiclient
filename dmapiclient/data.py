@@ -983,6 +983,7 @@ class DataAPIClient(BaseAPIClient):
         has_further_competition,
         has_evaluation,
         has_technical_ability_certificate,
+        has_lot_pricing,
         user=None,
         *,
         status="coming",
@@ -999,6 +1000,7 @@ class DataAPIClient(BaseAPIClient):
             "hasFurtherCompetition": has_further_competition,
             "hasEvaluation": has_evaluation,
             "hasTechnicalAbilityCertificate": has_technical_ability_certificate,
+            "hasLotPricing": has_lot_pricing,
         }
 
         return self._post_with_updated_by(
