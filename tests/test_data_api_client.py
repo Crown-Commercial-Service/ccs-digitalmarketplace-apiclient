@@ -1498,6 +1498,17 @@ class TestSupplierMethods(object):
         assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
         assert rmock.called
 
+    def test_find_framework_suppliers_no_lot_pricings(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/frameworks/g-cloud-7/suppliers?with_lot_pricings=false',
+            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
+            status_code=200)
+
+        result = data_client.find_framework_suppliers('g-cloud-7', with_lot_pricings=False)
+
+        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
+        assert rmock.called
+
     def test_find_framework_suppliers_no_fvra(self, data_client, rmock):
         rmock.get(
             'http://baseurl/frameworks/g-cloud-7/suppliers?with_fvra=false',
@@ -3604,6 +3615,18 @@ class TestDataAPIClientIterMethods(object):
             }
         )
 
+    def test_find_lot_pricings_iter(self, data_client, rmock):
+        self._test_find_iter(
+            data_client, rmock,
+            method_name='find_lot_pricings_iter',
+            model_name='lotPricings',
+            url_path='lot-pricings?framework=g-cloud-6&supplier_id=1234',
+            iter_kwargs={
+                'supplier_id': 1234,
+                'framework_slug': 'g-cloud-6'
+            }
+        )
+
 
 class TestCommunicationsMethods(object):
     def test_find_communications(self, data_client, rmock):
@@ -5391,4 +5414,118 @@ class TestTechnicalAbilityCertificatesMethods(object):
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
             'electronicSignature': "Elma"
+        }
+
+
+class TestLotPricingsMethods(object):
+    def test_find_lot_pricings(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-pricings?framework=g-cloud-6&supplier_id=1234",
+            json={"lotPricings": "result"},
+            status_code=200)
+
+        result = data_client.find_lot_pricings(1234, 'g-cloud-6')
+
+        assert result == {"lotPricings": "result"}
+        assert rmock.called
+
+    def test_find_lot_pricings_adds_page_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-pricings?framework=g-cloud-6&supplier_id=1234&page=2",
+            json={"lotPricings": "result"},
+            status_code=200)
+
+        result = data_client.find_lot_pricings(1234, 'g-cloud-6', page=2)
+
+        assert result == {"lotPricings": "result"}
+        assert rmock.called
+
+    def test_create_lot_pricing(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/lot-pricings",
+            json={"lotPricings": {"question": "answer"}},
+            status_code=201)
+
+        result = data_client.create_lot_pricing(1234, 'g-cloud-6', 'g-lot', "user")
+
+        assert result == {'lotPricings': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'supplierId': 1234,
+            'frameworkSlug': 'g-cloud-6',
+            'lotSlug': 'g-lot',
+            'updated_by': 'user',
+        }
+
+    def test_get_lot_pricing(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-pricings/1234",
+            json={"lotPricings": "result"},
+            status_code=200)
+
+        result = data_client.get_lot_pricing(1234)
+
+        assert result == {"lotPricings": "result"}
+        assert rmock.called
+
+    def test_get_lot_pricing_should_return_404(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-pricings/1234",
+            status_code=404)
+
+        try:
+            data_client.get_lot_pricing(1234)
+        except HTTPError:
+            assert rmock.called
+
+    def test_update_lot_pricing(self, data_client, rmock):
+        rmock.patch(
+            "http://baseurl/lot-pricings/1234",
+            json={"lotPricings": {"question": "answer"}},
+            status_code=200
+        )
+
+        result = data_client.update_lot_pricing(1234, {"question": "answer"}, "user")
+
+        assert result == {'lotPricings': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'lotPricings': {'question': 'answer'}
+        }
+
+    def test_update_lot_pricing_with_page_questions(self, data_client, rmock):
+        rmock.patch(
+            "http://baseurl/lot-pricings/1234",
+            json={"lotPricings": {"question": "answer"}},
+            status_code=200
+        )
+
+        result = data_client.update_lot_pricing(
+            1234,
+            {"question": "answer"},
+            "user",
+            ["question"]
+        )
+
+        assert result == {'lotPricings': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'lotPricings': {'question': 'answer'},
+            'page_questions': ['question']
+        }
+
+    def test_complete_lot_pricing(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/lot-pricings/1234/complete",
+            json={"message": "done"},
+            status_code=200)
+
+        result = data_client.complete_lot_pricing(1234, "user")
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
         }

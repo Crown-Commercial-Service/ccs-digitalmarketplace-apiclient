@@ -472,6 +472,7 @@ class DataAPIClient(BaseAPIClient):
         with_declarations=True,
         with_technical_ability_certificates=True,
         with_lot_questions_responses=True,
+        with_lot_pricings=True,
         with_fvra=True,
         with_cdp_supplier_information=None,
     ):
@@ -482,8 +483,12 @@ class DataAPIClient(BaseAPIClient):
         :param statuses: A comma-separated list of the statuses of framework agreements that should be returned.
                          Valid statuses are: signed, on-hold, approved and countersigned.
         :param with_declarations: whether to include declaration data in returned supplierFrameworks
+        :param with_technical_ability_certificates: whether to include TAC data
+                                                    in returned supplierFrameworks
         :param with_lot_questions_responses: whether to include lot questions responses data
                                              in returned supplierFrameworks
+        :param with_lot_pricings: whether to include lot pricings data
+                                  in returned supplierFrameworks
         :param with_fvra: whether to include fvra data
                           in returned supplierFrameworks
         :param with_cdp_supplier_information: whether to include CDP supplier information data
@@ -500,6 +505,8 @@ class DataAPIClient(BaseAPIClient):
             params['with_technical_ability_certificates'] = bool(with_technical_ability_certificates)
         if with_lot_questions_responses is not True:
             params['with_lot_questions_responses'] = bool(with_lot_questions_responses)
+        if with_lot_pricings is not True:
+            params['with_lot_pricings'] = bool(with_lot_pricings)
         if with_fvra is not True:
             params['with_fvra'] = bool(with_fvra)
         if with_cdp_supplier_information is not None:
@@ -2175,5 +2182,72 @@ class DataAPIClient(BaseAPIClient):
             data={
                 'electronicSignature': electronic_signature
             },
+            user=user,
+        )
+
+    # Lot pricing
+
+    def find_lot_pricings(
+        self,
+        supplier_id,
+        framework_slug,
+        page=None,
+    ):
+        params = {
+            'framework': framework_slug,
+            'supplier_id': supplier_id,
+            'page': page,
+        }
+
+        return self._get("/lot-pricings", params=params)
+
+    find_lot_pricings_iter = make_iter_method(
+        'find_lot_pricings',
+        'lotPricings'
+    )
+    find_lot_pricings_iter.__name__ = str("find_lot_pricings_iter")
+
+    def create_lot_pricing(self, supplier_id, framework_slug, lot_slug, user=None):
+        return self._post_with_updated_by(
+            "/lot-pricings",
+            data={
+                "supplierId": supplier_id,
+                "frameworkSlug": framework_slug,
+                "lotSlug": lot_slug,
+            },
+            user=user,
+        )
+
+    def get_lot_pricing(self, lot_pricing_id):
+        return self._get(f"/lot-pricings/{lot_pricing_id}")
+
+    def update_lot_pricing(
+        self,
+        lot_pricing_id,
+        lot_pricing,
+        user=None,
+        page_questions=None
+    ):
+        data = {
+            "lotPricings": lot_pricing,
+        }
+
+        if page_questions is not None:
+            data['page_questions'] = page_questions
+
+        return self._patch_with_updated_by(
+            f"/lot-pricings/{lot_pricing_id}",
+            data=data,
+            user=user,
+        )
+
+    def complete_lot_pricing(
+        self,
+        lot_pricing_id,
+        user=None,
+    ):
+        return self._post_with_updated_by(
+            f"/lot-pricings/{lot_pricing_id}/complete",
+            data={},
             user=user,
         )

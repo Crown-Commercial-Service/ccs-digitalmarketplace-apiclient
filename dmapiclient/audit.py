@@ -136,6 +136,11 @@ class AuditTypes(Enum):
     approve_technical_ability_certificate = "approve_technical_ability_certificate"
     technical_ability_certificate_auth_failed = "technical_ability_certificate_auth_failed"
 
+    # Lot questions responses
+    create_lot_pricing = "create_lot_pricing"
+    update_lot_pricing_answers = "update_lot_pricing_answers"
+    complete_lot_pricing = "complete_lot_pricing"
+
     @staticmethod
     def is_valid_audit_type(test_audit_type):
 
