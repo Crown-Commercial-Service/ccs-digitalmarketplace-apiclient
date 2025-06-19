@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 34.0.0
+
+Update calls to supplier frameworks to not include data from joined tables by default
+
 ## 33.1.0
 
 Pass the organisation name when sending the Spotlight warmup request

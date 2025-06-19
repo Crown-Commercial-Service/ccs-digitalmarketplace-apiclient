@@ -1216,6 +1216,33 @@ class TestSupplierMethods(object):
         assert result == {"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}}
         assert rmock.called
 
+    def test_get_supplier_framework_info_with_technical_ability_certificates(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/123/frameworks/g-cloud-7?with_technical_ability_certificates=True",
+            json={"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}},
+            status_code=200)
+        result = data_client.get_supplier_framework_info(123, 'g-cloud-7', with_technical_ability_certificates=True)
+        assert result == {"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}}
+        assert rmock.called
+
+    def test_get_supplier_framework_info_with_lot_questions_responses(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/123/frameworks/g-cloud-7?with_lot_questions_responses=True",
+            json={"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}},
+            status_code=200)
+        result = data_client.get_supplier_framework_info(123, 'g-cloud-7', with_lot_questions_responses=True)
+        assert result == {"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}}
+        assert rmock.called
+
+    def test_get_supplier_framework_info_with_lot_pricings(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/123/frameworks/g-cloud-7?with_lot_pricings=True",
+            json={"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}},
+            status_code=200)
+        result = data_client.get_supplier_framework_info(123, 'g-cloud-7', with_lot_pricings=True)
+        assert result == {"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}}
+        assert rmock.called
+
     def test_get_supplier_framework_info_with_cdp(self, data_client, rmock):
         rmock.get(
             "http://baseurl/suppliers/123/frameworks/g-cloud-7?with_cdp_supplier_information=True",
@@ -1476,39 +1503,6 @@ class TestSupplierMethods(object):
         assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
         assert rmock.called
 
-    def test_find_framework_suppliers_no_tac(self, data_client, rmock):
-        rmock.get(
-            'http://baseurl/frameworks/g-cloud-7/suppliers?with_technical_ability_certificates=false',
-            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
-            status_code=200)
-
-        result = data_client.find_framework_suppliers('g-cloud-7', with_technical_ability_certificates=False)
-
-        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
-        assert rmock.called
-
-    def test_find_framework_suppliers_no_lot_responses(self, data_client, rmock):
-        rmock.get(
-            'http://baseurl/frameworks/g-cloud-7/suppliers?with_lot_questions_responses=false',
-            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
-            status_code=200)
-
-        result = data_client.find_framework_suppliers('g-cloud-7', with_lot_questions_responses=False)
-
-        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
-        assert rmock.called
-
-    def test_find_framework_suppliers_no_lot_pricings(self, data_client, rmock):
-        rmock.get(
-            'http://baseurl/frameworks/g-cloud-7/suppliers?with_lot_pricings=false',
-            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
-            status_code=200)
-
-        result = data_client.find_framework_suppliers('g-cloud-7', with_lot_pricings=False)
-
-        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
-        assert rmock.called
-
     def test_find_framework_suppliers_no_fvra(self, data_client, rmock):
         rmock.get(
             'http://baseurl/frameworks/g-cloud-7/suppliers?with_fvra=false',
@@ -1516,6 +1510,39 @@ class TestSupplierMethods(object):
             status_code=200)
 
         result = data_client.find_framework_suppliers('g-cloud-7', with_fvra=False)
+
+        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
+        assert rmock.called
+
+    def test_find_framework_suppliers_with_tac(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/frameworks/g-cloud-7/suppliers?with_technical_ability_certificates=true',
+            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
+            status_code=200)
+
+        result = data_client.find_framework_suppliers('g-cloud-7', with_technical_ability_certificates=True)
+
+        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
+        assert rmock.called
+
+    def test_find_framework_suppliers_with_lot_responses(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/frameworks/g-cloud-7/suppliers?with_lot_questions_responses=true',
+            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
+            status_code=200)
+
+        result = data_client.find_framework_suppliers('g-cloud-7', with_lot_questions_responses=True)
+
+        assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
+        assert rmock.called
+
+    def test_find_framework_suppliers_with_lot_pricings(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/frameworks/g-cloud-7/suppliers?with_lot_pricings=true',
+            json={'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]},
+            status_code=200)
+
+        result = data_client.find_framework_suppliers('g-cloud-7', with_lot_pricings=True)
 
         assert result == {'supplierFrameworks': [{"agreementReturned": False}, {"agreementReturned": True}]}
         assert rmock.called
