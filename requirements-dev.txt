@@ -67,7 +67,7 @@ pyflakes==3.3.2
     # via flake8
 pygments==2.19.1
     # via pytest
-pytest==8.4.0
+pytest==8.4.1
     # via
     #   ccs-digitalmarketplace-apiclient (pyproject.toml)
     #   pytest-cov
