@@ -7,7 +7,7 @@ from flask import request
 import requests
 import requests_mock
 import pytest
-import mock
+from unittest import mock
 import io
 
 from dmtestutils.comparisons import RestrictedAny
