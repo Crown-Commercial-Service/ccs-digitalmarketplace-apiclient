@@ -26,14 +26,13 @@ Changelog = "https://github.com/Crown-Commercial-Service/ccs-digitalmarketplace-
 
 [project.optional-dependencies]
 dev = [
-  'flake8',
-  'mock',
-  'mypy',
-  'pytest',
-  'pytest-cov',
-  'requests-mock',
+  'flake8==7.3.0',
+  'mypy==1.16.1',
+  'pytest==8.4.1',
+  'pytest-cov==6.2.1',
+  'requests-mock==1.12.1',
   'types-requests',
-  'pre-commit',
+  'pre-commit==4.2.0',
   'ccs-digitalmarketplace-test-utils==6.23.0',
 ]
 

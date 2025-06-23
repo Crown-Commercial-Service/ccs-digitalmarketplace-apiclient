@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from flask import json
 import pytest
-import mock
+from unittest import mock
 
 from dmapiclient import DataAPIClient
 from dmapiclient import APIError, HTTPError

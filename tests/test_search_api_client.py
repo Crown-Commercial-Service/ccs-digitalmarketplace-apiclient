@@ -3,7 +3,7 @@ import os
 
 from flask import json
 import pytest
-import mock
+from unittest import mock
 
 from dmapiclient import SearchAPIClient
 from dmapiclient import APIError, HTTPError

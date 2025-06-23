@@ -1,5 +1,5 @@
 import pytest
-import mock
+from unittest import mock
 from io import BytesIO
 from werkzeug.exceptions import NotFound
 
