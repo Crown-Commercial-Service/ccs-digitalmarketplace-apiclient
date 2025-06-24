@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 34.1.0
+
+Update the calls to export suppliers and users
+
 ## 34.0.0
 
 Update calls to supplier frameworks to not include data from joined tables by default
