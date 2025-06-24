@@ -600,7 +600,7 @@ class TestUserMethods(object):
 
     def test_can_export_users(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/users/export/g-cloud-7",
+            "http://baseurl/users/export?framework=g-cloud-7",
             json={"users": "result"},
             status_code=200)
         result = data_client.export_users('g-cloud-7')
@@ -1611,7 +1611,7 @@ class TestSupplierMethods(object):
 
     def test_can_export_suppliers(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/suppliers/export/g-cloud-9",
+            "http://baseurl/suppliers/export?framework=g-cloud-9",
             json={"suppliers": "result"},
             status_code=200)
         result = data_client.export_suppliers('g-cloud-9')
@@ -3422,7 +3422,7 @@ class TestDataAPIClientIterMethods(object):
             data_client, rmock,
             method_name='export_users_iter',
             model_name='users',
-            url_path='users/export/g-cloud-9',
+            url_path='users/export?framework=g-cloud-9',
             iter_kwargs={'framework_slug': 'g-cloud-9'}
         )
 
@@ -3431,7 +3431,7 @@ class TestDataAPIClientIterMethods(object):
             data_client, rmock,
             method_name='export_suppliers_iter',
             model_name='suppliers',
-            url_path='suppliers/export/g-cloud-9',
+            url_path='suppliers/export?framework=g-cloud-9',
             iter_kwargs={'framework_slug': 'g-cloud-9'}
         )
 

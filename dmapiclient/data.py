@@ -567,10 +567,13 @@ class DataAPIClient(BaseAPIClient):
             }
         )
 
-    def export_suppliers(self, framework_slug):
-        return self._get(
-            "/suppliers/export/{}".format(framework_slug)
-        )
+    def export_suppliers(self, framework_slug, page=None):
+        params = {
+            'page': page,
+            'framework': framework_slug,
+        }
+
+        return self._get("/suppliers/export", params=params)
 
     export_suppliers_iter = make_iter_method('export_suppliers', 'suppliers')
     export_suppliers_iter.__name__ = str("export_suppliers_iter")
@@ -741,10 +744,13 @@ class DataAPIClient(BaseAPIClient):
     def remove_user_personal_data(self, user_id, user=None):
         return self._post_with_updated_by("/users/{}/remove-personal-data".format(user_id), data={}, user=user)
 
-    def export_users(self, framework_slug):
-        return self._get(
-            "/users/export/{}".format(framework_slug)
-        )
+    def export_users(self, framework_slug, page=None):
+        params = {
+            'page': page,
+            'framework': framework_slug,
+        }
+
+        return self._get("/users/export", params=params)
 
     export_users_iter = make_iter_method('export_users', 'users')
     export_users_iter.__name__ = str("export_users_iter")
