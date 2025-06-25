@@ -2,6 +2,11 @@
 
 Records breaking changes from major version bumps
 
+## 34.2.0
+
+Revert partial update of the calls to export suppliers and users
+Allow optional lot parts to be called with `get_supplier_frameworks`
+
 ## 34.1.0
 
 Update the calls to export suppliers and users

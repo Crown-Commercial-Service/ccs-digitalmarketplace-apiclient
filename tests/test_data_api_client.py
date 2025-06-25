@@ -600,7 +600,7 @@ class TestUserMethods(object):
 
     def test_can_export_users(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/users/export?framework=g-cloud-7",
+            "http://baseurl/users/export/g-cloud-7",
             json={"users": "result"},
             status_code=200)
         result = data_client.export_users('g-cloud-7')
@@ -1057,24 +1057,6 @@ class TestSupplierMethods(object):
         assert rmock.called
         assert rmock.request_history[0].json() == {'updated_by': 'g-15-user'}
 
-    def test_find_supplier_declarations(self, data_client, rmock):
-        rmock.get(
-            "http://baseurl/suppliers/123/frameworks",
-            json={"frameworkInterest": [
-                {"declaration": {"question": "answer"}},
-                {"declaration": {"question": "answer"}},
-            ]},
-            status_code=200
-        )
-
-        result = data_client.find_supplier_declarations(123)
-
-        assert result == {"frameworkInterest": [
-            {"declaration": {"question": "answer"}},
-            {"declaration": {"question": "answer"}},
-        ]}
-        assert rmock.called
-
     def test_get_supplier_declaration(self, data_client, rmock):
         rmock.get(
             "http://baseurl/suppliers/123/frameworks/g-cloud-7",
@@ -1204,6 +1186,33 @@ class TestSupplierMethods(object):
 
         result = data_client.get_supplier_frameworks(123)
 
+        assert result == {"frameworkInterest": [{"declaration": {"status": "started"}}]}
+        assert rmock.called
+
+    def test_get_supplier_frameworks_with_technical_ability_certificates(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/123/frameworks?with_technical_ability_certificates=True",
+            json={"frameworkInterest": [{"declaration": {"status": "started"}}]},
+            status_code=200)
+        result = data_client.get_supplier_frameworks(123, with_technical_ability_certificates=True)
+        assert result == {"frameworkInterest": [{"declaration": {"status": "started"}}]}
+        assert rmock.called
+
+    def test_get_supplier_frameworks_with_lot_questions_responses(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/123/frameworks?with_lot_questions_responses=True",
+            json={"frameworkInterest": [{"declaration": {"status": "started"}}]},
+            status_code=200)
+        result = data_client.get_supplier_frameworks(123, with_lot_questions_responses=True)
+        assert result == {"frameworkInterest": [{"declaration": {"status": "started"}}]}
+        assert rmock.called
+
+    def test_get_supplier_frameworks_with_lot_pricings(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/123/frameworks?with_lot_pricings=True",
+            json={"frameworkInterest": [{"declaration": {"status": "started"}}]},
+            status_code=200)
+        result = data_client.get_supplier_frameworks(123, with_lot_pricings=True)
         assert result == {"frameworkInterest": [{"declaration": {"status": "started"}}]}
         assert rmock.called
 
@@ -1611,7 +1620,7 @@ class TestSupplierMethods(object):
 
     def test_can_export_suppliers(self, data_client, rmock):
         rmock.get(
-            "http://baseurl/suppliers/export?framework=g-cloud-9",
+            "http://baseurl/suppliers/export/g-cloud-9",
             json={"suppliers": "result"},
             status_code=200)
         result = data_client.export_suppliers('g-cloud-9')
@@ -3422,7 +3431,7 @@ class TestDataAPIClientIterMethods(object):
             data_client, rmock,
             method_name='export_users_iter',
             model_name='users',
-            url_path='users/export?framework=g-cloud-9',
+            url_path='users/export/g-cloud-9',
             iter_kwargs={'framework_slug': 'g-cloud-9'}
         )
 
@@ -3431,7 +3440,7 @@ class TestDataAPIClientIterMethods(object):
             data_client, rmock,
             method_name='export_suppliers_iter',
             model_name='suppliers',
-            url_path='suppliers/export?framework=g-cloud-9',
+            url_path='suppliers/export/g-cloud-9',
             iter_kwargs={'framework_slug': 'g-cloud-9'}
         )
 
