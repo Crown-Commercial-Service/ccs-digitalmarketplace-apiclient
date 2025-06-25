@@ -250,11 +250,6 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def find_supplier_declarations(self, supplier_id):
-        return self._get(
-            "/suppliers/{}/frameworks".format(supplier_id)
-        )
-
     def get_supplier_declaration(self, supplier_id, framework_slug):
         response = self._get(
             "/suppliers/{}/frameworks/{}".format(supplier_id, framework_slug)
@@ -323,9 +318,25 @@ class DataAPIClient(BaseAPIClient):
             user=user
         )
 
-    def get_supplier_frameworks(self, supplier_id):
+    def get_supplier_frameworks(
+        self,
+        supplier_id,
+        with_technical_ability_certificates=None,
+        with_lot_questions_responses=None,
+        with_lot_pricings=None,
+    ):
+        params = {}
+
+        if with_technical_ability_certificates is not None:
+            params['with_technical_ability_certificates'] = bool(with_technical_ability_certificates)
+        if with_lot_questions_responses is not None:
+            params['with_lot_questions_responses'] = bool(with_lot_questions_responses)
+        if with_lot_pricings is not None:
+            params['with_lot_pricings'] = bool(with_lot_pricings)
+
         return self._get(
-            "/suppliers/{}/frameworks".format(supplier_id)
+            "/suppliers/{}/frameworks".format(supplier_id),
+            params
         )
 
     def get_supplier_framework_info(
@@ -570,10 +581,9 @@ class DataAPIClient(BaseAPIClient):
     def export_suppliers(self, framework_slug, page=None):
         params = {
             'page': page,
-            'framework': framework_slug,
         }
 
-        return self._get("/suppliers/export", params=params)
+        return self._get(f"/suppliers/export/{framework_slug}", params=params)
 
     export_suppliers_iter = make_iter_method('export_suppliers', 'suppliers')
     export_suppliers_iter.__name__ = str("export_suppliers_iter")
@@ -747,10 +757,9 @@ class DataAPIClient(BaseAPIClient):
     def export_users(self, framework_slug, page=None):
         params = {
             'page': page,
-            'framework': framework_slug,
         }
 
-        return self._get("/users/export", params=params)
+        return self._get(f"/users/export/{framework_slug}", params=params)
 
     export_users_iter = make_iter_method('export_users', 'users')
     export_users_iter.__name__ = str("export_users_iter")
