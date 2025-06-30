@@ -33,7 +33,7 @@ dev = [
   'requests-mock==1.12.1',
   'types-requests',
   'pre-commit==4.2.0',
-  'ccs-digitalmarketplace-test-utils==6.23.0',
+  'ccs-digitalmarketplace-test-utils==6.23.1',
 ]
 
 [tool.setuptools.dynamic]
