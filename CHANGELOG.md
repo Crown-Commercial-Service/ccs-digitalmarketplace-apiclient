@@ -2,6 +2,11 @@
 
 Records breaking changes from major version bumps
 
+## 35.0.0
+
+Add the tasks API client for the background jobs
+Add endpoints for logging tasks in the audit logs
+
 ## 34.2.0
 
 Revert partial update of the calls to export suppliers and users
