@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 35.0.1
+
+Remove endpoints for logging tasks in the audit logs
+
 ## 35.0.0
 
 Add the tasks API client for the background jobs
