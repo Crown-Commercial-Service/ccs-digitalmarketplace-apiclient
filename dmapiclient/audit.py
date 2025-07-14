@@ -141,6 +141,11 @@ class AuditTypes(Enum):
     update_lot_pricing_answers = "update_lot_pricing_answers"
     complete_lot_pricing = "complete_lot_pricing"
 
+    # Tasks
+    register_task_creation = "register_task_creation"
+    register_task_success = "register_task_success"
+    register_task_failure = "register_task_failure"
+
     @staticmethod
     def is_valid_audit_type(test_audit_type):
 

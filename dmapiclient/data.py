@@ -2282,3 +2282,21 @@ class DataAPIClient(BaseAPIClient):
             data={},
             user=user,
         )
+
+    # Tasks (Background jobs)
+
+    def register_task_creation(self, task_id, task_name, user=None):
+        return self._post_with_updated_by(
+            f"/tasks/{task_id}/register-creation",
+            data={
+                "taskName": task_name,
+            },
+            user=user
+        )
+
+    def register_task_result(self, task_id, task_result):
+        return self._post(
+            f"/tasks/{task_id}/register-result",
+            data={
+                "taskResult": task_result,
+            })

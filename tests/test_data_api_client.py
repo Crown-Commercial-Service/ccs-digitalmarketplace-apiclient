@@ -5567,3 +5567,36 @@ class TestLotPricingsMethods(object):
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
         }
+
+
+class TestRegisterTaskMethods:
+    def test_register_task_creation(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/tasks/1234/register-creation",
+            json={"message": "done"},
+            status_code=200,
+        )
+
+        result = data_client.register_task_creation(1234, "the_task", user="user")
+
+        assert result == {"message": "done"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'taskName': "the_task"
+        }
+
+    def test_register_task_result(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/tasks/1234/register-result",
+            json={"message": "done"},
+            status_code=200,
+        )
+
+        result = data_client.register_task_result(1234, "success")
+
+        assert result == {"message": "done"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'taskResult': "success"
+        }
