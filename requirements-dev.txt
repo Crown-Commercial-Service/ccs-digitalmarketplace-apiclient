@@ -8,7 +8,7 @@ blinker==1.9.0
     # via flask
 ccs-digitalmarketplace-test-utils==6.23.1
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
-certifi==2025.7.14
+certifi==2025.8.3
     # via requests
 cfgv==3.4.0
     # via pre-commit
