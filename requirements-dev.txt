@@ -59,7 +59,7 @@ pluggy==1.6.0
     # via
     #   pytest
     #   pytest-cov
-pre-commit==4.2.0
+pre-commit==4.3.0
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 pycodestyle==2.14.0
     # via flake8
