@@ -2,6 +2,11 @@
 
 Records breaking changes from major version bumps
 
+## 36.0.0
+
+Major changes to the way lot question models (Evaluation, TAC and Lot Pricing) work
+Add modes to the API client to limit watch endpoints can be called
+
 ## 35.0.1
 
 Remove endpoints for logging tasks in the audit logs
