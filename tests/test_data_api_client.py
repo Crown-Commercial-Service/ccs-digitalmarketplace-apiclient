@@ -5123,6 +5123,25 @@ class TestEvaluatorFrameworkLotMethods(object):
         assert result == {"evaluatorFrameworkLotSections": "result"}
         assert rmock.called
 
+    def test_update_evaluator_framework_lot_section_status(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/evaluations/evaluator-framework-lot-sections/1234/status/locked",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.update_evaluator_framework_lot_section_status(
+            1234,
+            'locked',
+            'user'
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+        }
+
     def test_find_evaluator_framework_lot_section_evaluations(self, data_client, rmock):
         rmock.get(
             "http://baseurl/evaluations/evaluator-framework-lot-section-evaluations?"

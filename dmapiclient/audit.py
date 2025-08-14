@@ -118,6 +118,7 @@ class AuditTypes(Enum):
     update_evaluator_framework_lot_assignment_status = "update_evaluator_framework_lot_assignment_status"
     create_evaluator_framework_lot = "create_evaluator_framework_lot"
     update_evaluator_framework_lot_status = "update_evaluator_framework_lot_status"
+    update_evaluator_framework_lot_section_status = "update_evaluator_framework_lot_section_status"
     create_evaluator_framework_lot_section = "create_evaluator_framework_lot_section"
     update_evaluator_framework_lot_section_assignment_status = \
         "update_evaluator_framework_lot_section_assignment_status"

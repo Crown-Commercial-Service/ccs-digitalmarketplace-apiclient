@@ -2019,6 +2019,18 @@ class DataAPIClient(BaseAPIClient):
             params=params
         )
 
+    def update_evaluator_framework_lot_section_status(
+        self,
+        evaluator_framework_lot_section_id,
+        status,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            f"/evaluations/evaluator-framework-lot-sections/{evaluator_framework_lot_section_id}/status/{status}",
+            data={},
+            user=user,
+        )
+
     def find_evaluator_framework_lot_section_evaluations(
         self,
         framework,
