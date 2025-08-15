@@ -60,6 +60,12 @@ class ResponseType(Enum):
     CONTENT = 2
 
 
+class APIClientMode(Enum):
+    READ_WRITE = 0
+    READ_ONLY = 1
+    READ_WRITE_WITH_CONFIRMATION = 2
+
+
 class BaseAPIClient(object):
     _RETRIES = 5
     _RETRIES_BACKOFF_FACTOR = 0.3
@@ -88,6 +94,10 @@ class BaseAPIClient(object):
         return self._auth_token
 
     @property
+    def mode(self):
+        return self._mode
+
+    @property
     def enabled(self):
         return self._enabled
 
@@ -103,9 +113,19 @@ class BaseAPIClient(object):
         except (TypeError, LookupError):
             return self._timeout, read_timeout
 
-    def __init__(self, base_url=None, auth_token=None, enabled=True, timeout=(15, 45,), *, user=None):
+    def __init__(
+        self,
+        base_url=None,
+        auth_token=None,
+        enabled=True,
+        timeout=(15, 45,),
+        mode=APIClientMode.READ_WRITE,
+        *,
+        user=None
+    ):
         self._base_url = base_url
         self._auth_token = auth_token
+        self._mode = mode
         self._user = user
         self._enabled = enabled
         self._timeout = timeout
@@ -340,7 +360,7 @@ class BaseAPIClient(object):
         # going to be for any certain header name
         return requests.structures.CaseInsensitiveDict(headers)
 
-    def _request(
+    def _request( # noqa C901
         self,
         method,
         url,
@@ -352,6 +372,32 @@ class BaseAPIClient(object):
     ):
         if not self._enabled:
             return None
+
+        if method != 'GET':
+            if self.mode == APIClientMode.READ_ONLY:
+                logger.log(
+                    logging.WARNING,
+                    "'{url}' is not a read-only endpoint of the '{class_name}'",
+                    extra={
+                        "url": url,
+                        "class_name": self.__class__.__name__
+                    }
+                )
+                return None
+
+            if self.mode == APIClientMode.READ_WRITE_WITH_CONFIRMATION:
+                resp = input(
+                    "\n"
+                    "About to update data\n"
+                    "Proceed? [yes/no]: "
+                ).strip().lower()
+
+                if resp != "yes":
+                    logger.log(
+                        logging.WARNING,
+                        "Execution cancelled by user"
+                    )
+                    return None
 
         url = self._build_url(url, params)
         ci_headers = self._get_headers()
