@@ -1890,11 +1890,16 @@ class DataAPIClient(BaseAPIClient):
         lot=None,
         user_id=None,
         assigned=True,
-        locked=None,
+        section_locks=None,
         with_sections=None,
         with_evaluations=None,
         page=None,
     ):
+
+        allowed = {"all_locked", "all_unlocked", "partially_locked"}
+        if section_locks is not None and section_locks not in allowed:
+            raise ValueError(f"section_locks must be one of {allowed}, got {section_locks!r}")
+
         params = {
             'framework': framework,
             'lot': lot,
@@ -1903,7 +1908,7 @@ class DataAPIClient(BaseAPIClient):
             'user_id': user_id,
             'with_sections': with_sections,
             'with_evaluations': with_evaluations,
-            'locked': locked,
+            'section_locks': section_locks,
         }
 
         return self._get("/evaluations/evaluator-framework-lots", params=params)
