@@ -544,10 +544,10 @@ class DataAPIClient(BaseAPIClient):
     find_framework_suppliers_iter = make_iter_method('find_framework_suppliers', 'supplierFrameworks')
     find_framework_suppliers_iter.__name__ = str("find_framework_suppliers_iter")
 
-    def find_supplier_framework_applications_by_lot(
+    def find_supplier_framework_applications_by_route(
         self,
         framework_slug,
-        lot_slug,
+        route,
         evaluation_status=None,
         section_slug=None,
         evaluator_framework_lot_id=None,
@@ -556,7 +556,7 @@ class DataAPIClient(BaseAPIClient):
         return self._get(
             f"/frameworks/{framework_slug}/suppliers/applications",
             params={
-                'lot': lot_slug,
+                'route': route,
                 'evaluation_status': evaluation_status,
                 'section_slug': section_slug,
                 'evaluator_framework_lot_id': evaluator_framework_lot_id,
@@ -564,11 +564,13 @@ class DataAPIClient(BaseAPIClient):
             }
         )
 
-    find_supplier_framework_applications_by_lot_iter = make_iter_method(
-        'find_supplier_framework_applications_by_lot',
+    find_supplier_framework_applications_by_route_iter = make_iter_method(
+        'find_supplier_framework_applications_by_route',
         'supplierFrameworks'
     )
-    find_supplier_framework_applications_by_lot_iter.__name__ = str("find_supplier_framework_applications_by_lot_iter")
+    find_supplier_framework_applications_by_route_iter.__name__ = str(
+        "find_supplier_framework_applications_by_route_iter"
+    )
 
     def verify_supplier_framework_application(self, framework_slug, supplier_id, lot_slug=None):
         return self._get(
@@ -1010,9 +1012,10 @@ class DataAPIClient(BaseAPIClient):
         lots,
         has_direct_award,
         has_further_competition,
-        has_evaluation,
-        has_technical_ability_certificate,
-        has_lot_pricing,
+        fvra_settings,
+        evaluation_settings,
+        technical_ability_certificate_settings,
+        lot_pricing_settings,
         user=None,
         *,
         status="coming",
@@ -1027,9 +1030,10 @@ class DataAPIClient(BaseAPIClient):
             "lots": lots,
             "hasDirectAward": has_direct_award,
             "hasFurtherCompetition": has_further_competition,
-            "hasEvaluation": has_evaluation,
-            "hasTechnicalAbilityCertificate": has_technical_ability_certificate,
-            "hasLotPricing": has_lot_pricing,
+            "fvraSettings": fvra_settings,
+            "evaluationSettings": evaluation_settings,
+            "technicalAbilityCertificateSettings": technical_ability_certificate_settings,
+            "lotPricingSettings": lot_pricing_settings,
         }
 
         return self._post_with_updated_by(
@@ -1743,34 +1747,34 @@ class DataAPIClient(BaseAPIClient):
     find_lot_questions_responses_iter = make_iter_method('find_lot_questions_responses', 'lotQuestionsResponses')
     find_lot_questions_responses_iter.__name__ = str("find_lot_questions_responses_iter")
 
-    def find_lot_questions_responses_applicants_for_framework_lot(
+    def find_lot_questions_responses_applicants_for_framework_route(
         self,
         framework_slug,
-        lot_slug,
+        route,
         with_evaluations=None,
         page=None,
     ):
         params = {
             'framework': framework_slug,
-            'lot': lot_slug,
+            'route': route,
             'with_evaluations': with_evaluations,
             'page': page,
         }
 
         return self._get("/lot-questions-responses/applications", params=params)
 
-    find_lot_questions_responses_applicants_for_framework_lot_iter = \
-        make_iter_method('find_lot_questions_responses_applicants_for_framework_lot', 'lotQuestionsResponses')
-    find_lot_questions_responses_applicants_for_framework_lot_iter.__name__ = \
-        str("find_lot_questions_responses_applicants_for_framework_lot_iter")
+    find_lot_questions_responses_applicants_for_framework_route_iter = \
+        make_iter_method('find_lot_questions_responses_applicants_for_framework_route', 'lotQuestionsResponses')
+    find_lot_questions_responses_applicants_for_framework_route_iter.__name__ = \
+        str("find_lot_questions_responses_applicants_for_framework_route_iter")
 
-    def create_lot_questions_response(self, supplier_id, framework_slug, lot_slug, user=None):
+    def create_lot_questions_response(self, supplier_id, framework_slug, route, user=None):
         return self._post_with_updated_by(
             "/lot-questions-responses",
             data={
                 "supplierId": supplier_id,
                 "frameworkSlug": framework_slug,
-                "lotSlug": lot_slug,
+                "route": route,
             },
             user=user,
         )
@@ -1783,9 +1787,9 @@ class DataAPIClient(BaseAPIClient):
             }
         )
 
-    def get_lot_questions_response_by_framework_lot_suppler(self, framework_slug, lot_slug, supplier_id):
+    def get_lot_questions_response_by_framework_route_suppler(self, framework_slug, route, supplier_id):
         return self._get(
-            f"/lot-questions-responses/frameworks/{framework_slug}/lots/{lot_slug}/suppliers/{supplier_id}"
+            f"/lot-questions-responses/frameworks/{framework_slug}/routes/{route}/suppliers/{supplier_id}"
         )
 
     def update_lot_questions_response(
@@ -1818,13 +1822,13 @@ class DataAPIClient(BaseAPIClient):
     def find_lot_questions_response_section_evaluations(
         self,
         framework,
-        lot,
+        route,
         section_slug=None,
         page=None,
     ):
         params = {
             'framework': framework,
-            'lot': lot,
+            'route': route,
             'section_slug': section_slug,
             'page': page
         }
@@ -1887,7 +1891,7 @@ class DataAPIClient(BaseAPIClient):
     def find_evaluator_framework_lots(
         self,
         framework=None,
-        lot=None,
+        route=None,
         user_id=None,
         assigned=True,
         section_locks=None,
@@ -1902,7 +1906,7 @@ class DataAPIClient(BaseAPIClient):
 
         params = {
             'framework': framework,
-            'lot': lot,
+            'route': route,
             'assigned': bool(assigned),
             'page': page,
             'user_id': user_id,
@@ -1919,7 +1923,7 @@ class DataAPIClient(BaseAPIClient):
     def update_assigned_evaluators_for_framework_lot(
         self,
         framework,
-        lot,
+        route,
         users,
         user=None
     ):
@@ -1928,7 +1932,7 @@ class DataAPIClient(BaseAPIClient):
             data={
                 'evaluatorFrameworkLots': {
                     'frameworkSlug': framework,
-                    "lotSlug": lot,
+                    "route": route,
                     'users': users,
                 }
             },
@@ -1963,7 +1967,7 @@ class DataAPIClient(BaseAPIClient):
     def find_evaluator_framework_lot_sections(
         self,
         framework,
-        lot,
+        route,
         assigned=True,
         section_slug=None,
         locked=None,
@@ -1972,7 +1976,7 @@ class DataAPIClient(BaseAPIClient):
     ):
         params = {
             'framework': framework,
-            'lot': lot,
+            'route': route,
             'assigned': bool(assigned),
             'section_slug': section_slug,
             'locked': locked,
@@ -1991,7 +1995,7 @@ class DataAPIClient(BaseAPIClient):
     def update_assigned_sections_for_evaluator_framework_lot(
         self,
         framework,
-        lot,
+        route,
         section_slug,
         evaluator_framework_lots,
         user=None
@@ -2002,7 +2006,7 @@ class DataAPIClient(BaseAPIClient):
                 'evaluatorFrameworkLotSections': {
                     'evaluatorFrameworkLots': evaluator_framework_lots,
                     'frameworkSlug': framework,
-                    "lotSlug": lot,
+                    "route": route,
                     'sectionSlug': section_slug,
                 }
             },
@@ -2039,7 +2043,7 @@ class DataAPIClient(BaseAPIClient):
     def find_evaluator_framework_lot_section_evaluations(
         self,
         framework,
-        lot,
+        route,
         section_slug=None,
         evaluator_framework_lot_id=None,
         supplier_id=None,
@@ -2047,7 +2051,7 @@ class DataAPIClient(BaseAPIClient):
     ):
         params = {
             'framework': framework,
-            'lot': lot,
+            'route': route,
             'section_slug': section_slug,
             'evaluator_framework_lot_id': evaluator_framework_lot_id,
             'supplier_id': supplier_id,
@@ -2133,13 +2137,13 @@ class DataAPIClient(BaseAPIClient):
     )
     find_technical_ability_certificates_iter.__name__ = str("find_technical_ability_certificates_iter")
 
-    def create_technical_ability_certificate(self, supplier_id, framework_slug, lot_slug, user=None):
+    def create_technical_ability_certificate(self, supplier_id, framework_slug, route, user=None):
         return self._post_with_updated_by(
             "/technical-ability-certificates",
             data={
                 "supplierId": supplier_id,
                 "frameworkSlug": framework_slug,
-                "lotSlug": lot_slug,
+                "route": route,
             },
             user=user,
         )
@@ -2255,13 +2259,13 @@ class DataAPIClient(BaseAPIClient):
     )
     find_lot_pricings_iter.__name__ = str("find_lot_pricings_iter")
 
-    def create_lot_pricing(self, supplier_id, framework_slug, lot_slug, user=None):
+    def create_lot_pricing(self, supplier_id, framework_slug, route, user=None):
         return self._post_with_updated_by(
             "/lot-pricings",
             data={
                 "supplierId": supplier_id,
                 "frameworkSlug": framework_slug,
-                "lotSlug": lot_slug,
+                "route": route,
             },
             user=user,
         )

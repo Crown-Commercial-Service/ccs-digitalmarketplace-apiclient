@@ -1,9 +1,10 @@
-__version__ = '35.0.2'
+__version__ = '36.0.1'
 
 from .errors import APIError, HTTPError, InvalidResponse, InvalidResponseType  # noqa
 from .errors import REQUEST_ERROR_STATUS_CODE, REQUEST_ERROR_MESSAGE  # noqa
 
 from .antivirus import AntivirusAPIClient  # noqa
+from .base import APIClientMode  # noqa
 from .central_digital_platform import CentralDigitalPlatformAPIClient  # noqa
 from .data import DataAPIClient  # noqa
 from .search import SearchAPIClient  # noqa

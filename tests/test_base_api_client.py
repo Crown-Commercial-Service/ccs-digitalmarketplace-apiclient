@@ -12,7 +12,7 @@ import io
 
 from dmtestutils.comparisons import RestrictedAny
 
-from dmapiclient.base import BaseAPIClient, ResponseType
+from dmapiclient.base import BaseAPIClient, ResponseType, APIClientMode
 from dmapiclient import HTTPError, InvalidResponse, InvalidResponseType
 from dmapiclient.errors import REQUEST_ERROR_STATUS_CODE
 from dmapiclient.exceptions import ImproperlyConfigured
@@ -30,6 +30,16 @@ def raw_rmock():
 @pytest.fixture
 def base_client():
     return BaseAPIClient('http://baseurl', 'auth-token', True)
+
+
+@pytest.fixture
+def base_client_read_only():
+    return BaseAPIClient('http://baseurl', 'auth-token', True, mode=APIClientMode.READ_ONLY)
+
+
+@pytest.fixture
+def base_client_confirm():
+    return BaseAPIClient('http://baseurl', 'auth-token', True, mode=APIClientMode.READ_WRITE_WITH_CONFIRMATION)
 
 
 @contextmanager
@@ -474,6 +484,202 @@ class TestBaseApiClient(object):
 
         assert rmock.called
         assert tuple(req.timeout for req in rmock.request_history) == (base_client.nowait_timeout,)
+
+        assert mock_logger.log.call_args_list == [
+            mock.call(logging.DEBUG, "API request {method} {url}", extra={
+                "method": "POST",
+                "url": "http://baseurl/services/10000",
+            }),
+            mock.call(logging.INFO, "API {api_method} request on {api_url} finished in {api_time}", extra={
+                "api_method": "POST",
+                "api_url": "http://baseurl/services/10000",
+                "api_time": mock.ANY,
+                "api_status": 200,
+            }),
+        ]
+
+    @mock.patch("dmapiclient.base.logger")
+    def test_get_requests_called_in_read_only_mode(
+        self,
+        mock_logger,
+        base_client_read_only,
+        rmock,
+        app,
+    ):
+        rmock.get("http://baseurl/services/10000", json={"services": {"id": "10000"}}, status_code=200)
+
+        retval = base_client_read_only._request(
+            "GET",
+            "/services/10000",
+            client_wait_for_response=False,
+        )
+
+        assert retval == {"services": {"id": "10000"}}
+
+        assert rmock.called
+
+        assert mock_logger.log.call_args_list == [
+            mock.call(logging.DEBUG, "API request {method} {url}", extra={
+                "method": "GET",
+                "url": "http://baseurl/services/10000",
+            }),
+            mock.call(logging.INFO, "API {api_method} request on {api_url} finished in {api_time}", extra={
+                "api_method": "GET",
+                "api_url": "http://baseurl/services/10000",
+                "api_time": mock.ANY,
+                "api_status": 200,
+            }),
+        ]
+
+    @mock.patch("dmapiclient.base.logger")
+    def test_non_get_requests_not_called_in_read_only_mode(
+        self,
+        mock_logger,
+        base_client_read_only,
+        rmock,
+        app,
+    ):
+        rmock.post("http://baseurl/services/10000", json={"services": {"id": "10000"}}, status_code=200)
+
+        return_value = base_client_read_only._request(
+            "POST",
+            "/services/10000",
+            {"serviceName": "Postcard"},
+        )
+
+        assert not return_value
+
+        assert not rmock.called
+
+        assert mock_logger.log.call_args_list == [
+            mock.call(
+                logging.WARNING,
+                "'{url}' is not a read-only endpoint of the '{class_name}'",
+                extra={
+                    "url": "/services/10000",
+                    "class_name": 'BaseAPIClient'
+                }
+            ),
+        ]
+
+    @mock.patch("dmapiclient.base.logger")
+    @mock.patch("dmapiclient.base.input")
+    def test_get_requests_called_without_confirmation(
+        self,
+        mock_input,
+        mock_logger,
+        base_client_confirm,
+        rmock,
+        app,
+    ):
+        rmock.get("http://baseurl/services/10000", json={"services": {"id": "10000"}}, status_code=200)
+
+        retval = base_client_confirm._request(
+            "GET",
+            "/services/10000",
+            client_wait_for_response=False,
+        )
+
+        assert retval == {"services": {"id": "10000"}}
+
+        assert rmock.called
+        assert not mock_input.called
+
+        assert mock_logger.log.call_args_list == [
+            mock.call(logging.DEBUG, "API request {method} {url}", extra={
+                "method": "GET",
+                "url": "http://baseurl/services/10000",
+            }),
+            mock.call(logging.INFO, "API {api_method} request on {api_url} finished in {api_time}", extra={
+                "api_method": "GET",
+                "api_url": "http://baseurl/services/10000",
+                "api_time": mock.ANY,
+                "api_status": 200,
+            }),
+        ]
+
+    @mock.patch("dmapiclient.base.logger")
+    @mock.patch("dmapiclient.base.input")
+    @pytest.mark.parametrize(
+        "input_text",
+        (
+            "no",
+            "No",
+            "NO",
+            "n",
+            "y",
+            "Something else"
+        )
+    )
+    def test_non_get_requests_not_called_when_confirmation_no(
+        self,
+        mock_input,
+        mock_logger,
+        base_client_confirm,
+        rmock,
+        app,
+        input_text,
+    ):
+        rmock.post("http://baseurl/services/10000", json={"services": {"id": "10000"}}, status_code=200)
+        mock_input.return_value = input_text
+
+        return_value = base_client_confirm._request(
+            "POST",
+            "/services/10000",
+            {"serviceName": "Postcard"},
+        )
+
+        assert not return_value
+
+        assert not rmock.called
+
+        assert mock_input.call_args_list == [
+            mock.call("\nAbout to update data\nProceed? [yes/no]: "),
+        ]
+
+        assert mock_logger.log.call_args_list == [
+            mock.call(
+                logging.WARNING,
+                "Execution cancelled by user",
+            ),
+        ]
+
+    @mock.patch("dmapiclient.base.logger")
+    @mock.patch("dmapiclient.base.input")
+    @pytest.mark.parametrize(
+        "input_text",
+        (
+            "yes",
+            "YES",
+            "YeS",
+        )
+    )
+    def test_non_get_requests_not_called_when_confirmation_yes(
+        self,
+        mock_input,
+        mock_logger,
+        base_client_confirm,
+        rmock,
+        app,
+        input_text,
+    ):
+        mock_input.return_value = input_text
+        rmock.post("http://baseurl/services/10000", json={"services": {"id": "10000"}}, status_code=200)
+
+        retval = base_client_confirm._request(
+            "POST",
+            "/services/10000",
+            {"serviceName": "Postcard"},
+            client_wait_for_response=False,
+        )
+
+        assert retval == {"services": {"id": "10000"}}
+
+        assert rmock.called
+
+        assert mock_input.call_args_list == [
+            mock.call("\nAbout to update data\nProceed? [yes/no]: "),
+        ]
 
         assert mock_logger.log.call_args_list == [
             mock.call(logging.DEBUG, "API request {method} {url}", extra={
