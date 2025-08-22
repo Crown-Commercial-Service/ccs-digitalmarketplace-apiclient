@@ -4883,11 +4883,12 @@ class TestEvaluatorFrameworkLotMethods(object):
     def test_find_evaluator_framework_lot_adds_locked_parameter(self, data_client, rmock):
         rmock.get(
             "http://baseurl/evaluations/evaluator-framework-lots?"
-            "framework=g-cloud-6&route=g-things&assigned=True&locked=True",
+            "framework=g-cloud-6&route=g-things&assigned=True&section_locks=all_locked",
             json={"evaluatorFrameworkLotSections": "result"},
             status_code=200)
 
-        result = data_client.find_evaluator_framework_lots('g-cloud-6', 'g-things', locked=True)
+        result = data_client.find_evaluator_framework_lots('g-cloud-6', 'g-things',
+                                                           section_locks="all_locked")
 
         assert result == {"evaluatorFrameworkLotSections": "result"}
         assert rmock.called
