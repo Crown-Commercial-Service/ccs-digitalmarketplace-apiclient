@@ -2,6 +2,14 @@
 
 Records breaking changes from major version bumps
 
+## 36.0.2
+
+Refactor the evaluation lot section a bit
+
+## 36.0.1
+
+Update to evaluation lot section to be locked
+
 ## 36.0.0
 
 Major changes to the way lot question models (Evaluation, TAC and Lot Pricing) work

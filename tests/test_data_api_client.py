@@ -4880,19 +4880,6 @@ class TestEvaluatorFrameworkLotMethods(object):
         assert result == {"evaluatorFrameworkLots": "result"}
         assert rmock.called
 
-    def test_find_evaluator_framework_lot_adds_locked_parameter(self, data_client, rmock):
-        rmock.get(
-            "http://baseurl/evaluations/evaluator-framework-lots?"
-            "framework=g-cloud-6&route=g-things&assigned=True&section_locks=all_locked",
-            json={"evaluatorFrameworkLotSections": "result"},
-            status_code=200)
-
-        result = data_client.find_evaluator_framework_lots('g-cloud-6', 'g-things',
-                                                           section_locks="all_locked")
-
-        assert result == {"evaluatorFrameworkLotSections": "result"}
-        assert rmock.called
-
     def test_find_evaluator_framework_lot_adds_with_sections_parameter(self, data_client, rmock):
         rmock.get(
             "http://baseurl/evaluations/evaluator-framework-lots?"
@@ -4978,25 +4965,6 @@ class TestEvaluatorFrameworkLotMethods(object):
                     456
                 ],
             },
-            'updated_by': 'user',
-        }
-
-    def test_update_evaluator_framework_lot_status(self, data_client, rmock):
-        rmock.post(
-            "http://baseurl/evaluations/evaluator-framework-lots/1234/status/locked",
-            json={"message": "done"},
-            status_code=200
-        )
-
-        result = data_client.update_evaluator_framework_lot_status(
-            1234,
-            'locked',
-            'user'
-        )
-
-        assert result == {'message': 'done'}
-        assert rmock.called
-        assert rmock.request_history[0].json() == {
             'updated_by': 'user',
         }
 
@@ -5102,6 +5070,25 @@ class TestEvaluatorFrameworkLotMethods(object):
                 'route': 'g-lot',
                 'sectionSlug': 'section-slug',
             },
+            'updated_by': 'user',
+        }
+
+    def test_update_evaluator_framework_lot_section_status(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/evaluations/evaluator-framework-lot-sections/1234/status/locked",
+            json={"message": "done"},
+            status_code=200
+        )
+
+        result = data_client.update_evaluator_framework_lot_section_status(
+            1234,
+            'locked',
+            'user'
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
             'updated_by': 'user',
         }
 
