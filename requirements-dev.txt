@@ -83,7 +83,7 @@ requests-mock==1.12.1
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 types-requests==2.32.4.20250809
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
-typing-extensions==4.14.1
+typing-extensions==4.15.0
     # via mypy
 urllib3==2.5.0
     # via
