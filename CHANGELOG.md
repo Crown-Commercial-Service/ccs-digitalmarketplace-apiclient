@@ -2,6 +2,11 @@
 
 Records breaking changes from major version bumps
 
+## 37.0.0
+
+**BREAKING:** Rename `SpotlightAPIClient` to `DataInsightsAPIClient` as not all methods on it are specifically for spotlight
+Add the `get_cyber_essentials_certificate` for getting Cyber Essentials certificates from the cert number
+
 ## 36.0.2
 
 Refactor the evaluation lot section a bit

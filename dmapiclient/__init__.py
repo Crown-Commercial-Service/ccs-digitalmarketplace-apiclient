@@ -1,4 +1,4 @@
-__version__ = '36.0.2'
+__version__ = '37.0.0'
 
 from .errors import APIError, HTTPError, InvalidResponse, InvalidResponseType  # noqa
 from .errors import REQUEST_ERROR_STATUS_CODE, REQUEST_ERROR_MESSAGE  # noqa
@@ -8,5 +8,5 @@ from .base import APIClientMode  # noqa
 from .central_digital_platform import CentralDigitalPlatformAPIClient  # noqa
 from .data import DataAPIClient  # noqa
 from .search import SearchAPIClient  # noqa
-from .spotlight import SpotlightAPIClient  # noqa
+from .data_insights import DataInsightsAPIClient  # noqa
 from .tasks import TasksAPIClient  # noqa
