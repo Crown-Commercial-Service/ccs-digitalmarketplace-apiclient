@@ -13,7 +13,7 @@ SP_IASME = '/triggers/manual/run'
 SV = '1.0'
 
 
-class DataInsightsAPIError:
+class DataInsightsAPIError(Exception):
     def __init__(self, number, message):
         self.message = message.format(number=number)
 
