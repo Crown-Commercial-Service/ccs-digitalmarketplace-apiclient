@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.0.1
+
+Make sure the `DataInsightsAPIError` inherit from the `Exception` class
+
 ## 37.0.0
 
 **BREAKING:** Rename `SpotlightAPIClient` to `DataInsightsAPIClient` as not all methods on it are specifically for spotlight
