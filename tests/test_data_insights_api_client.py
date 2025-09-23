@@ -142,8 +142,11 @@ class TestFindOrganisationFromDunsNumber:
         )
         try:
             data_insights_api_client.find_organisation_from_duns_number("123456789")
-        except HTTPError:
+        except HTTPError as e:
             assert rmock.called
+
+            assert e.status_code == 404
+            assert e.message == "Could not find organisation with Duns Number 123456789"
 
 
 class TestInformSpotlightOfDunsNumberForCheck:
@@ -178,8 +181,11 @@ class TestInformSpotlightOfDunsNumberForCheck:
         )
         try:
             data_insights_api_client.inform_spotlight_of_duns_number_for_check("123456789", "Vandham")
-        except HTTPError:
+        except HTTPError as e:
             assert rmock.called
+
+            assert e.status_code == 500
+            assert e.message == "Could not initiate warm up with Duns Number 123456789"
 
 
 class TestGetFinancialsFromDunsNumber:
@@ -302,5 +308,8 @@ class TestGetCyberEssentialsCertificate:
         )
         try:
             data_insights_api_client.get_cyber_essentials_certificate("123456789")
-        except HTTPError:
+        except HTTPError as e:
             assert rmock.called
+
+            assert e.status_code == 404
+            assert e.message == "Could not find cyber essentials certificate with number 123456789"

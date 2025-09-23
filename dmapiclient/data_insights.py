@@ -13,7 +13,7 @@ SP_IASME = '/triggers/manual/run'
 SV = '1.0'
 
 
-class DataInsightsAPIError(Exception):
+class DataInsightsAPIErrorResponse:
     def __init__(self, number, message):
         self.message = message.format(number=number)
 
@@ -23,21 +23,21 @@ class DataInsightsAPIError(Exception):
         }
 
 
-class SpotlightDunsAPIError(DataInsightsAPIError):
+class SpotlightDunsAPIErrorResponse(DataInsightsAPIErrorResponse):
     status_code = 404
 
     def __init__(self, duns_number):
         super().__init__(duns_number, 'Could not find organisation with Duns Number {number}')
 
 
-class SpotlightWarmUpAPIError(DataInsightsAPIError):
+class SpotlightWarmUpAPIErrorResponse(DataInsightsAPIErrorResponse):
     status_code = 500
 
     def __init__(self, duns_number):
         super().__init__(duns_number, 'Could not initiate warm up with Duns Number {number}')
 
 
-class IasmeCyberEssentialsAPIError(DataInsightsAPIError):
+class IasmeCyberEssentialsAPIErrorResponse(DataInsightsAPIErrorResponse):
     status_code = 404
 
     def __init__(self, cyber_essentials_certificate_number):
@@ -156,7 +156,7 @@ class _SpotlightDunsAPIClient(BaseDataInsightsAPIClient):
                 )['searchOrganisation'][0]
             }
         except InvalidResponse as e:
-            spotlight_api_error = SpotlightDunsAPIError(duns_number)
+            spotlight_api_error = SpotlightDunsAPIErrorResponse(duns_number)
 
             raise HTTPError(spotlight_api_error, spotlight_api_error.message) from e
 
@@ -192,7 +192,7 @@ class _SpotlightFvraWarmUpAPIClient(BaseDataInsightsAPIClient):
                 "message": "done"
             }
 
-        spotlight_api_error = SpotlightWarmUpAPIError(duns_number)
+        spotlight_api_error = SpotlightWarmUpAPIErrorResponse(duns_number)
 
         raise HTTPError(spotlight_api_error, spotlight_api_error.message)
 
@@ -279,7 +279,7 @@ class _IasmeCyberEssentialsAPIClient(BaseDataInsightsAPIClient):
             }
         except HTTPError as e:
             if e.status_code == 404:
-                iasme_api_error = IasmeCyberEssentialsAPIError(cyber_essentials_certificate_number)
+                iasme_api_error = IasmeCyberEssentialsAPIErrorResponse(cyber_essentials_certificate_number)
 
                 raise HTTPError(iasme_api_error, iasme_api_error.message) from e
 
