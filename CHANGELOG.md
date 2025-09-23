@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.1.0
+
+Update the API to expect a 404 if the certificate is not found
+
 ## 37.0.1
 
 Make sure the `DataInsightsAPIError` inherit from the `Exception` class

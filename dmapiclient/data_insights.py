@@ -278,7 +278,7 @@ class _IasmeCyberEssentialsAPIClient(BaseDataInsightsAPIClient):
                 'cyberEssentialsCertificateDetails': cyber_essentials_certificate_details
             }
         except HTTPError as e:
-            if e.status_code == 400:
+            if e.status_code == 404:
                 iasme_api_error = IasmeCyberEssentialsAPIError(cyber_essentials_certificate_number)
 
                 raise HTTPError(iasme_api_error, iasme_api_error.message) from e
