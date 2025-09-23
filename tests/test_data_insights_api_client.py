@@ -298,7 +298,7 @@ class TestGetCyberEssentialsCertificate:
             "http://data-insights-baseurl/workflows/d92a8b97421e4552845c9e6dc0aca5e2/triggers/manual/paths/invoke"
             "/%5Batt%5D.%5BIASMECyberSecurityCertification%5D/?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun"
             "&sv=1.0&sig=api-key&Filter=CertificateNumber+eq+%27123456789%27",
-            status_code=400
+            status_code=404
         )
         try:
             data_insights_api_client.get_cyber_essentials_certificate("123456789")
