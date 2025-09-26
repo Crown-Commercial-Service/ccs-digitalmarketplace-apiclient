@@ -1,6 +1,9 @@
 # CCS Digital Marketplace API clients changelog
 
 Records breaking changes from major version bumps
+## 37.1.2
+
+Fix allow `update_draft_service` and `update_lot_questions_response` to validate only using validate_only arg 
 
 ## 37.1.1
 
