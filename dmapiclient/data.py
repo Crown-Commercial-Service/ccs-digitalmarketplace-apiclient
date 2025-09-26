@@ -878,7 +878,15 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def update_draft_service(self, draft_id, service, user=None, page_questions=None, ignored_fields=None):
+    def update_draft_service(
+        self,
+        draft_id,
+        service,
+        user=None,
+        page_questions=None,
+        ignored_fields=None,
+        validate_only: bool = False,
+    ):
         data = {
             "services": service,
         }
@@ -889,7 +897,11 @@ class DataAPIClient(BaseAPIClient):
         if ignored_fields is not None:
             data['ignored_fields'] = ignored_fields
 
-        return self._post_with_updated_by("/draft-services/{}".format(draft_id), data=data, user=user)
+        url = f"/draft-services/{draft_id}"
+        if validate_only:
+            url += "?validate_only=true"
+
+        return self._post_with_updated_by(url, data=data, user=user)
 
     def complete_draft_service(self, draft_id, user=None):
         return self._post_with_updated_by(
@@ -1797,7 +1809,8 @@ class DataAPIClient(BaseAPIClient):
         lot_questions_response_id,
         lot_questions_response,
         user=None,
-        page_questions=None
+        page_questions=None,
+        validate_only: bool = False,
     ):
         data = {
             "lotQuestionsResponses": lot_questions_response,
@@ -1806,8 +1819,12 @@ class DataAPIClient(BaseAPIClient):
         if page_questions is not None:
             data['page_questions'] = page_questions
 
+        url = f"/lot-questions-responses/{lot_questions_response_id}"
+        if validate_only:
+            url += "?validate_only=true"
+
         return self._patch_with_updated_by(
-            f"/lot-questions-responses/{lot_questions_response_id}",
+            url,
             data=data,
             user=user,
         )
