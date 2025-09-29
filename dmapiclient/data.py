@@ -891,6 +891,19 @@ class DataAPIClient(BaseAPIClient):
 
         return self._post_with_updated_by("/draft-services/{}".format(draft_id), data=data, user=user)
 
+    def validate_draft_service(self, draft_id, service, page_questions=None, ignored_fields=None):
+        data = {
+            "services": service,
+        }
+
+        if page_questions is not None:
+            data['page_questions'] = page_questions
+
+        if ignored_fields is not None:
+            data['ignored_fields'] = ignored_fields
+
+        return self._post("/draft-services/{}/validate".format(draft_id), data=data)
+
     def complete_draft_service(self, draft_id, user=None):
         return self._post_with_updated_by(
             "/draft-services/{}/complete".format(draft_id),
@@ -1810,6 +1823,24 @@ class DataAPIClient(BaseAPIClient):
             f"/lot-questions-responses/{lot_questions_response_id}",
             data=data,
             user=user,
+        )
+
+    def validate_lot_questions_response(
+        self,
+        lot_questions_response_id,
+        lot_questions_response,
+        page_questions=None
+    ):
+        data = {
+            "lotQuestionsResponses": lot_questions_response,
+        }
+
+        if page_questions is not None:
+            data['page_questions'] = page_questions
+
+        return self._post(
+            f"/lot-questions-responses/{lot_questions_response_id}/validate",
+            data=data,
         )
 
     def complete_lot_questions_response(self, lot_questions_response_id, user=None):

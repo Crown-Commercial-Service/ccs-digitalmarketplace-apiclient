@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.2.0
+
+Add API methods for validating data in the API
+
 ## 37.1.1
 
 Fix issue with the error response codes for the DataInsightsAPI
