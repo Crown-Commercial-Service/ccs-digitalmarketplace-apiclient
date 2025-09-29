@@ -1940,6 +1940,86 @@ class TestDraftServiceMethods(object):
             'ignored_fields': ['question2', 'question3']
         }
 
+    def test_validate_draft_service(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/draft-services/2/validate",
+            json={"done": "it"},
+            status_code=200,
+        )
+
+        result = data_client.validate_draft_service(
+            2, {"field": "value"},
+        )
+
+        assert result == {"done": "it"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'services': {
+                "field": "value"
+            },
+        }
+
+    def test_validate_draft_service_with_page_questions(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/draft-services/2/validate",
+            json={"done": "it"},
+            status_code=200,
+        )
+
+        result = data_client.validate_draft_service(
+            2, {"field": "value"}, ['question1', 'question2']
+        )
+
+        assert result == {"done": "it"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'services': {
+                "field": "value"
+            },
+            'page_questions': ['question1', 'question2']
+        }
+
+    def test_validate_draft_service_with_ignored_fields(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/draft-services/2/validate",
+            json={"done": "it"},
+            status_code=200,
+        )
+
+        result = data_client.validate_draft_service(
+            2, {"field": "value"}, None, ['question2', 'question3']
+        )
+
+        assert result == {"done": "it"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'services': {
+                "field": "value"
+            },
+            'ignored_fields': ['question2', 'question3']
+        }
+
+    def test_validate_draft_service_with_page_questions_and_ignored_fields(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/draft-services/2/validate",
+            json={"done": "it"},
+            status_code=200,
+        )
+
+        result = data_client.validate_draft_service(
+            2, {"field": "value"}, ['question1', 'question2'], ['question2', 'question3']
+        )
+
+        assert result == {"done": "it"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'services': {
+                "field": "value"
+            },
+            'page_questions': ['question1', 'question2'],
+            'ignored_fields': ['question2', 'question3']
+        }
+
     def test_publish_draft_service(self, data_client, rmock):
         rmock.post(
             "http://baseurl/draft-services/2/publish",
@@ -4678,6 +4758,41 @@ class TestLotQuestionsResponsesMethods(object):
         assert rmock.called
         assert rmock.request_history[0].json() == {
             'updated_by': 'user',
+            'lotQuestionsResponses': {'question': 'answer'},
+            'page_questions': ['question']
+        }
+
+    def test_validate_lot_questions_response(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/lot-questions-responses/1234/validate",
+            json={"lotQuestionsResponses": {"question": "answer"}},
+            status_code=200
+        )
+
+        result = data_client.validate_lot_questions_response(1234, {"question": "answer"})
+
+        assert result == {'lotQuestionsResponses': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'lotQuestionsResponses': {'question': 'answer'}
+        }
+
+    def test_validate_lot_questions_response_with_page_questions(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/lot-questions-responses/1234/validate",
+            json={"lotQuestionsResponses": {"question": "answer"}},
+            status_code=200
+        )
+
+        result = data_client.validate_lot_questions_response(
+            1234,
+            {"question": "answer"},
+            ["question"]
+        )
+
+        assert result == {'lotQuestionsResponses': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
             'lotQuestionsResponses': {'question': 'answer'},
             'page_questions': ['question']
         }
