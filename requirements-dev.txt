@@ -20,7 +20,7 @@ coverage[toml]==7.10.7
     # via pytest-cov
 distlib==0.4.0
     # via virtualenv
-filelock==3.19.1
+filelock==3.20.0
     # via virtualenv
 flake8==7.3.0
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
