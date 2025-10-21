@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.2.1
+
+Add API methods setting and updating supplier framework evaluation scores
+
 ## 37.2.0
 
 Add API methods for validating data in the API
