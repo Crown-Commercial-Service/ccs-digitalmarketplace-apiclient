@@ -274,6 +274,28 @@ class DataAPIClient(BaseAPIClient):
             user=user
         )
 
+    def set_supplier_evaluation_scores(self, supplier_id, framework_slug,
+                                       lot_slug, evaluation_scores, user=None):
+        return self._put_with_updated_by(
+            "/suppliers/{}/frameworks/{}/evaluation-scores".format(supplier_id, framework_slug),
+            data={
+                "lotSlug": lot_slug,
+                "evaluationScores": evaluation_scores,
+            },
+            user=user
+        )
+
+    def update_supplier_evaluation_scores(self, supplier_id, framework_slug,
+                                          lot_slug, evaluation_scores, user=None):
+        return self._patch_with_updated_by(
+            "/suppliers/{}/frameworks/{}/evaluation-scores".format(supplier_id, framework_slug),
+            data={
+                "lotSlug": lot_slug,
+                "evaluationScores": evaluation_scores,
+            },
+            user=user
+        )
+
     def remove_supplier_declaration(self, supplier_id, framework_slug, user=None):
         return self._post_with_updated_by(
             "/suppliers/{}/frameworks/{}/declaration".format(
