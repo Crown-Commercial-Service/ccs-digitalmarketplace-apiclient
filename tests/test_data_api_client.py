@@ -1295,6 +1295,15 @@ class TestSupplierMethods(object):
         assert result == {"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}}
         assert rmock.called
 
+    def test_get_supplier_framework_info_with_evaluation_scores(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/123/frameworks/g-cloud-7?with_evaluation_scores=True",
+            json={"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}},
+            status_code=200)
+        result = data_client.get_supplier_framework_info(123, 'g-cloud-7', with_evaluation_scores=True)
+        assert result == {"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}}
+        assert rmock.called
+
     def test_set_framework_result(self, data_client, rmock):
         rmock.post(
             "http://baseurl/suppliers/123/frameworks/g-cloud-7",

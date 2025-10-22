@@ -369,6 +369,7 @@ class DataAPIClient(BaseAPIClient):
         with_lot_questions_responses=None,
         with_lot_pricings=None,
         with_cdp_supplier_information=None,
+        with_evaluation_scores=None,
     ):
         params = {}
 
@@ -380,6 +381,8 @@ class DataAPIClient(BaseAPIClient):
             params['with_lot_pricings'] = bool(with_lot_pricings)
         if with_cdp_supplier_information is not None:
             params['with_cdp_supplier_information'] = bool(with_cdp_supplier_information)
+        if with_evaluation_scores is not None:
+            params['with_evaluation_scores'] = bool(with_evaluation_scores)
 
         return self._get(
             "/suppliers/{}/frameworks/{}".format(supplier_id, framework_slug),
