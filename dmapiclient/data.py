@@ -274,6 +274,28 @@ class DataAPIClient(BaseAPIClient):
             user=user
         )
 
+    def set_supplier_evaluation_scores(self, supplier_id, framework_slug,
+                                       lot_slug, evaluation_scores, user=None):
+        return self._put_with_updated_by(
+            "/suppliers/{}/frameworks/{}/evaluation-scores".format(supplier_id, framework_slug),
+            data={
+                "lotSlug": lot_slug,
+                "evaluationScores": evaluation_scores,
+            },
+            user=user
+        )
+
+    def update_supplier_evaluation_scores(self, supplier_id, framework_slug,
+                                          lot_slug, evaluation_scores, user=None):
+        return self._patch_with_updated_by(
+            "/suppliers/{}/frameworks/{}/evaluation-scores".format(supplier_id, framework_slug),
+            data={
+                "lotSlug": lot_slug,
+                "evaluationScores": evaluation_scores,
+            },
+            user=user
+        )
+
     def remove_supplier_declaration(self, supplier_id, framework_slug, user=None):
         return self._post_with_updated_by(
             "/suppliers/{}/frameworks/{}/declaration".format(
@@ -347,6 +369,7 @@ class DataAPIClient(BaseAPIClient):
         with_lot_questions_responses=None,
         with_lot_pricings=None,
         with_cdp_supplier_information=None,
+        with_evaluation_scores=None,
     ):
         params = {}
 
@@ -358,6 +381,8 @@ class DataAPIClient(BaseAPIClient):
             params['with_lot_pricings'] = bool(with_lot_pricings)
         if with_cdp_supplier_information is not None:
             params['with_cdp_supplier_information'] = bool(with_cdp_supplier_information)
+        if with_evaluation_scores is not None:
+            params['with_evaluation_scores'] = bool(with_evaluation_scores)
 
         return self._get(
             "/suppliers/{}/frameworks/{}".format(supplier_id, framework_slug),

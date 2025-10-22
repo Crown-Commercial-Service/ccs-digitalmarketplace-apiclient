@@ -1096,6 +1096,40 @@ class TestSupplierMethods(object):
             'updated_by': 'user',
             'declaration': {'question': 'answer'}}
 
+    def test_set_supplier_evaluation_scores(self, data_client, rmock):
+        rmock.put(
+            "http://baseurl/suppliers/123/frameworks/g-cloud-7/evaluation-scores",
+            json={'evaluationScores': {'some_lot_a': {'a': 2}}},
+            status_code=200
+        )
+
+        result = data_client.set_supplier_evaluation_scores(123, 'g-cloud-7', 'some_lot_a', {'a': 2}, "user")
+
+        assert result == {'evaluationScores': {'some_lot_a': {'a': 2}}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            "lotSlug": 'some_lot_a',
+            "evaluationScores": {'a': 2},
+        }
+
+    def test_update_supplier_evaluation_scores(self, data_client, rmock):
+        rmock.patch(
+            "http://baseurl/suppliers/123/frameworks/g-cloud-7/evaluation-scores",
+            json={'evaluationScores': {'some_lot_a': {'a': 2}}},
+            status_code=200
+        )
+
+        result = data_client.update_supplier_evaluation_scores(123, 'g-cloud-7', 'some_lot_a', {'a': 2}, "user")
+
+        assert result == {'evaluationScores': {'some_lot_a': {'a': 2}}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            "lotSlug": 'some_lot_a',
+            "evaluationScores": {'a': 2},
+        }
+
     def test_remove_supplier_declaration(self, data_client, rmock):
         rmock.post(
             "http://baseurl/suppliers/123/frameworks/g-cloud-7/declaration",
@@ -1258,6 +1292,15 @@ class TestSupplierMethods(object):
             json={"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}},
             status_code=200)
         result = data_client.get_supplier_framework_info(123, 'g-cloud-7', with_cdp_supplier_information=True)
+        assert result == {"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}}
+        assert rmock.called
+
+    def test_get_supplier_framework_info_with_evaluation_scores(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/suppliers/123/frameworks/g-cloud-7?with_evaluation_scores=True",
+            json={"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}},
+            status_code=200)
+        result = data_client.get_supplier_framework_info(123, 'g-cloud-7', with_evaluation_scores=True)
         assert result == {"frameworkInterest": {"supplierId": 123, "frameworkId": 2, "onFramework": False}}
         assert rmock.called
 

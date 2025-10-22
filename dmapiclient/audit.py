@@ -54,6 +54,8 @@ class AuditTypes(Enum):
     contact_update_from_central_digital_platform = "contact_update_from_central_digital_platform"
     set_fvra_result = "set_fvra_result"
     update_fvra_answers = "update_fvra_answers"
+    set_evaluation_scores = 'set_evaluation_scores'
+    update_evaluation_scores = 'update_evaluation_scores'
 
     # Framework agreements
     create_agreement = "create_agreement"
