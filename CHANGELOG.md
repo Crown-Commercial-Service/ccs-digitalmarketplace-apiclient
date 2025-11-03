@@ -2,9 +2,13 @@
 
 Records breaking changes from major version bumps
 
+## 37.4.0
+
+Add support for Python 3.14 (πthon)
+
 ## 37.3.0
 
-Add API methods for setting and updating supplier framework evaluation scores 
+Add API methods for setting and updating supplier framework evaluation scores
 Updated get supplier framework method to allow fetching evaluation scores
 
 ## 37.2.0
