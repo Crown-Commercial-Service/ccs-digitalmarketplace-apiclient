@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.4.1
+
+Fix python requirements in `pyproject.toml`
+
 ## 37.4.0
 
 Add support for Python 3.14 (πthon)
