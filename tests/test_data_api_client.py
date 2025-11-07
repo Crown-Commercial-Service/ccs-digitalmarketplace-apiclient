@@ -3622,6 +3622,18 @@ class TestDataAPIClientIterMethods(object):
             }
         )
 
+    def test_find_lot_questions_responses_by_framework_lot_route_iter(self, data_client, rmock):
+        self._test_find_iter(
+            data_client, rmock,
+            method_name='find_lot_questions_responses_by_framework_lot_route_iter',
+            model_name='lotQuestionsResponses',
+            url_path='lot-questions-responses?framework=g-cloud-6&route=the-route',
+            iter_kwargs={
+                'framework_slug': 'g-cloud-6',
+                'route': 'the-route'
+            }
+        )
+
     def test_find_lot_questions_responses_applicants_for_framework_route_iter(self, data_client, rmock):
         self._test_find_iter(
             data_client, rmock,
@@ -3787,6 +3799,18 @@ class TestDataAPIClientIterMethods(object):
             iter_kwargs={
                 'supplier_id': 1234,
                 'framework_slug': 'g-cloud-6'
+            }
+        )
+
+    def test_find_lot_pricings_by_framework_lot_route_iter(self, data_client, rmock):
+        self._test_find_iter(
+            data_client, rmock,
+            method_name='find_lot_pricings_by_framework_lot_route_iter',
+            model_name='lotPricings',
+            url_path='lot-pricings?framework=g-cloud-6&route=the-route',
+            iter_kwargs={
+                'framework_slug': 'g-cloud-6',
+                'route': 'the-route'
             }
         )
 
@@ -4641,6 +4665,28 @@ class TestLotQuestionsResponsesMethods(object):
             status_code=200)
 
         result = data_client.find_lot_questions_responses(1234, 'g-cloud-6', page=2)
+
+        assert result == {"lotQuestionsResponses": "result"}
+        assert rmock.called
+
+    def test_find_lot_questions_responses_by_framework_lot_route(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-questions-responses?framework=g-cloud-6&route=the-route",
+            json={"lotQuestionsResponses": "result"},
+            status_code=200)
+
+        result = data_client.find_lot_questions_responses_by_framework_lot_route('g-cloud-6', 'the-route')
+
+        assert result == {"lotQuestionsResponses": "result"}
+        assert rmock.called
+
+    def test_find_lot_questions_responses_by_framework_lot_route_adds_page_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-questions-responses?framework=g-cloud-6&route=the-route&page=2",
+            json={"lotQuestionsResponses": "result"},
+            status_code=200)
+
+        result = data_client.find_lot_questions_responses_by_framework_lot_route('g-cloud-6', 'the-route', page=2)
 
         assert result == {"lotQuestionsResponses": "result"}
         assert rmock.called
@@ -5623,6 +5669,28 @@ class TestLotPricingsMethods(object):
             status_code=200)
 
         result = data_client.find_lot_pricings(1234, 'g-cloud-6', page=2)
+
+        assert result == {"lotPricings": "result"}
+        assert rmock.called
+
+    def test_find_lot_pricings_by_framework_lot_route(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-pricings?framework=g-cloud-6&route=the-route",
+            json={"lotPricings": "result"},
+            status_code=200)
+
+        result = data_client.find_lot_pricings_by_framework_lot_route('g-cloud-6', 'the-route')
+
+        assert result == {"lotPricings": "result"}
+        assert rmock.called
+
+    def test_find_lot_pricings_by_framework_lot_route_adds_page_parameter(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/lot-pricings?framework=g-cloud-6&route=the-route&page=2",
+            json={"lotPricings": "result"},
+            status_code=200)
+
+        result = data_client.find_lot_pricings_by_framework_lot_route('g-cloud-6', 'the-route', page=2)
 
         assert result == {"lotPricings": "result"}
         assert rmock.called
