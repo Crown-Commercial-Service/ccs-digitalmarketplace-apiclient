@@ -274,8 +274,7 @@ class DataAPIClient(BaseAPIClient):
             user=user
         )
 
-    def set_supplier_evaluation_scores(self, supplier_id, framework_slug,
-                                       lot_slug, evaluation_scores, user=None):
+    def set_supplier_evaluation_scores(self, supplier_id, framework_slug, lot_slug, evaluation_scores, user=None):
         return self._put_with_updated_by(
             "/suppliers/{}/frameworks/{}/evaluation-scores".format(supplier_id, framework_slug),
             data={
@@ -285,8 +284,7 @@ class DataAPIClient(BaseAPIClient):
             user=user
         )
 
-    def update_supplier_evaluation_scores(self, supplier_id, framework_slug,
-                                          lot_slug, evaluation_scores, user=None):
+    def update_supplier_evaluation_scores(self, supplier_id, framework_slug, lot_slug, evaluation_scores, user=None):
         return self._patch_with_updated_by(
             "/suppliers/{}/frameworks/{}/evaluation-scores".format(supplier_id, framework_slug),
             data={
@@ -1785,6 +1783,28 @@ class DataAPIClient(BaseAPIClient):
     find_lot_questions_responses_iter = make_iter_method('find_lot_questions_responses', 'lotQuestionsResponses')
     find_lot_questions_responses_iter.__name__ = str("find_lot_questions_responses_iter")
 
+    def find_lot_questions_responses_by_framework_lot_route(
+        self,
+        framework_slug,
+        route,
+        page=None,
+    ):
+        params = {
+            'framework': framework_slug,
+            'route': route,
+            'page': page,
+        }
+
+        return self._get("/lot-questions-responses", params=params)
+
+    find_lot_questions_responses_by_framework_lot_route_iter = make_iter_method(
+        'find_lot_questions_responses_by_framework_lot_route',
+        'lotQuestionsResponses'
+    )
+    find_lot_questions_responses_by_framework_lot_route_iter.__name__ = str(
+        "find_lot_questions_responses_by_framework_lot_route_iter"
+    )
+
     def find_lot_questions_responses_applicants_for_framework_route(
         self,
         framework_slug,
@@ -2295,6 +2315,26 @@ class DataAPIClient(BaseAPIClient):
         'lotPricings'
     )
     find_lot_pricings_iter.__name__ = str("find_lot_pricings_iter")
+
+    def find_lot_pricings_by_framework_lot_route(
+        self,
+        framework_slug,
+        route,
+        page=None,
+    ):
+        params = {
+            'framework': framework_slug,
+            'route': route,
+            'page': page,
+        }
+
+        return self._get("/lot-pricings", params=params)
+
+    find_lot_pricings_by_framework_lot_route_iter = make_iter_method(
+        'find_lot_pricings_by_framework_lot_route',
+        'lotPricings'
+    )
+    find_lot_pricings_by_framework_lot_route_iter.__name__ = str("find_lot_pricings_by_framework_lot_route_iter")
 
     def create_lot_pricing(self, supplier_id, framework_slug, route, user=None):
         return self._post_with_updated_by(
