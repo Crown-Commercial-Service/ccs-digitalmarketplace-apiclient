@@ -972,10 +972,14 @@ class DataAPIClient(BaseAPIClient):
     def get_archived_service(self, archived_service_id):
         return self._get("/archived-services/{}".format(archived_service_id))
 
-    def get_service(self, service_id):
+    def get_service(self, service_id, with_pending_data=None):
         try:
             return self._get(
-                "/services/{}".format(service_id))
+                "/services/{}".format(service_id),
+                params={
+                    'with_pending_data': with_pending_data
+                }
+            )
         except HTTPError as e:
             if e.status_code != 404:
                 raise
@@ -1012,6 +1016,32 @@ class DataAPIClient(BaseAPIClient):
             ),
             data={
                 "services": service,
+            },
+            user=user,
+        )
+
+    def update_pending_service(self, service_id, service, user=None):
+        return self._post_with_updated_by(
+            f"/pending-services/{service_id}",
+            data={
+                "services": service,
+            },
+            user=user,
+        )
+
+    def approve_pending_service(self, service_id, user=None):
+        return self._post_with_updated_by(
+            f"/pending-services/{service_id}/approve",
+            data={},
+            user=user,
+        )
+
+    def reject_pending_service(self, service_id, reason_code, reason_text, user=None):
+        return self._post_with_updated_by(
+            f"/pending-services/{service_id}/reject",
+            data={
+                "reasonCode": reason_code,
+                "reasonText": reason_text,
             },
             user=user,
         )

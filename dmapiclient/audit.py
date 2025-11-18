@@ -24,6 +24,8 @@ class AuditTypes(Enum):
     # Live service lifecycle events
     import_service = "import_service"
     update_service = "update_service"
+    update_pending_service = "update_pending_service"
+    reject_pending_service = "reject_pending_service"
     update_service_admin = "update_service_admin"
     update_service_status = "update_service_status"
     update_service_supplier = "update_service_supplier"
