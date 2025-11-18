@@ -2237,6 +2237,17 @@ class TestAuditEventMethods(object):
         assert result == {"audit-event": "result"}
         assert rmock.called
 
+    def test_find_audit_events_with_data_framework_slug(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/audit-events?data-framework-slug=g-thing",
+            json={"audit-event": "result"},
+            status_code=200)
+
+        result = data_client.find_audit_events(data_framework_slug='g-thing')
+
+        assert result == {"audit-event": "result"}
+        assert rmock.called
+
     def test_find_audit_events_with_all_params(self, data_client, rmock):
         url = (
             "http://baseurl/audit-events?object-type=foo&object-id=34&acknowledged=all&latest_first=True"
