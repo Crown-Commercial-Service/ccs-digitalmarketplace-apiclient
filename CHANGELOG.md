@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.7.0
+
+Add data filter for framework slug on find_audits
+
 ## 37.6.0
 
 Add new routes for making temporary edits to services
