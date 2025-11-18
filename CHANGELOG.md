@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.6.0
+
+Add new routes for making temporary edits to services
+
 ## 37.5.0
 
 Add new routes to help with evaluations

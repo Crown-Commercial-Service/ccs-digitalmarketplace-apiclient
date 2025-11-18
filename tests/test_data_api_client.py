@@ -72,6 +72,17 @@ class TestServiceMethods(object):
         assert result == {"services": "result"}
         assert rmock.called
 
+    def test_get_service_with_pending_data(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/services/123?with_pending_data=True",
+            json={"services": "result"},
+            status_code=200)
+
+        result = data_client.get_service(123, with_pending_data=True)
+
+        assert result == {"services": "result"}
+        assert rmock.called
+
     def test_get_service(self, data_client, rmock):
         rmock.get(
             "http://baseurl/services/123",
@@ -165,6 +176,56 @@ class TestServiceMethods(object):
 
         assert result == {"services": "result"}
         assert rmock.called
+
+    def test_update_pending_service(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/pending-services/123?",
+            json={"services": "result"},
+            status_code=200,
+        )
+
+        result = data_client.update_pending_service(123, {"foo": "bar"}, "testuser@example.com")
+
+        assert result == {"services": "result"}
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "services": {
+                "foo": "bar"
+            },
+            "updated_by": "testuser@example.com"
+        }
+
+    def test_approve_pending_service(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/pending-services/123/approve",
+            json={"services": "result"},
+            status_code=200,
+        )
+
+        result = data_client.approve_pending_service(123, "testuser@example.com")
+
+        assert result == {"services": "result"}
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "updated_by": "testuser@example.com"
+        }
+
+    def test_reject_pending_service(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/pending-services/123/reject",
+            json={"services": "result"},
+            status_code=200,
+        )
+
+        result = data_client.reject_pending_service(123, "reason_code", "reason_text", "testuser@example.com")
+
+        assert result == {"services": "result"}
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            "reasonCode": "reason_code",
+            "reasonText": "reason_text",
+            "updated_by": "testuser@example.com"
+        }
 
     @pytest.mark.parametrize("wait_for_index_call_arg,wait_for_index_req_arg", (
         (False, "false"),
