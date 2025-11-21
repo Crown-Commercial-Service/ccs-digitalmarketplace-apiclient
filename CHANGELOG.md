@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.8.0
+
+Add audit type of `approve_pending_service`
+
 ## 37.7.0
 
 Add data filter for framework slug on find_audits
