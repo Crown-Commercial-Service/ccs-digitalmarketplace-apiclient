@@ -1038,11 +1038,10 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def reject_pending_service(self, service_id, reason_code, reason_text, user=None):
+    def reject_pending_service(self, service_id, reason_text, user=None):
         return self._post_with_updated_by(
             f"/pending-services/{service_id}/reject",
             data={
-                "reasonCode": reason_code,
                 "reasonText": reason_text,
             },
             user=user,
