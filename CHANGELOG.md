@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.9.0
+
+Remove reason code from rejecting changes
+
 ## 37.8.0
 
 Add audit type of `approve_pending_service`

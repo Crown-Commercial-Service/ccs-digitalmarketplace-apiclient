@@ -217,12 +217,11 @@ class TestServiceMethods(object):
             status_code=200,
         )
 
-        result = data_client.reject_pending_service(123, "reason_code", "reason_text", "testuser@example.com")
+        result = data_client.reject_pending_service(123, "reason_text", "testuser@example.com")
 
         assert result == {"services": "result"}
         assert rmock.called
         assert rmock.last_request.json() == {
-            "reasonCode": "reason_code",
             "reasonText": "reason_text",
             "updated_by": "testuser@example.com"
         }
