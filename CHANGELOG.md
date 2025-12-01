@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.10.0
+
+Add framework contact information methods
+
 ## 37.9.0
 
 Remove reason code from rejecting changes

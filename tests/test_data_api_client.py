@@ -930,6 +930,21 @@ class TestSupplierMethods(object):
             'suppliers': {'foo': 'bar'}, 'updated_by': 'supplier'
         }
 
+    def test_set_initial_framework_contact_information(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/123/framework-contact-information/set-initial-contact",
+            json={"suppliers": "result"},
+            status_code=201,
+        )
+
+        result = data_client.set_initial_framework_contact_information(123, 'supplier')
+
+        assert result == {"suppliers": "result"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'supplier'
+        }
+
     def test_update_contact_information(self, data_client, rmock):
         rmock.post(
             "http://baseurl/suppliers/123/contact-information/2",
@@ -947,6 +962,23 @@ class TestSupplierMethods(object):
             'contactInformation': {'foo': 'bar'}, 'updated_by': 'supplier'
         }
 
+    def test_update_framework_contact_information(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/123/framework-contact-information/g-thing",
+            json={"suppliers": "result"},
+            status_code=201,
+        )
+
+        result = data_client.update_framework_contact_information(
+            123, 'g-thing', {"foo": "bar"}, 'supplier'
+        )
+
+        assert result == {"suppliers": "result"}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'frameworkContactInformation': {'foo': 'bar'}, 'updated_by': 'supplier'
+        }
+
     def test_remove_contact_information_personal_data(self, data_client, rmock):
         rmock.post(
             "http://baseurl/suppliers/123/contact-information/1/remove-personal-data",
@@ -956,6 +988,26 @@ class TestSupplierMethods(object):
         data_client.remove_contact_information_personal_data(123, 1, "test@example.com")
         assert rmock.called
         assert rmock.last_request.json() == {"updated_by": "test@example.com"}
+
+    def test_approve_pending_supplier_framework_description(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/123/framework-contact-information/g-thing/pending/approve",
+            json={},
+            status_code=200
+        )
+        data_client.approve_pending_supplier_framework_description(123, 'g-thing', "test@example.com")
+        assert rmock.called
+        assert rmock.last_request.json() == {"updated_by": "test@example.com"}
+
+    def test_reject_pending_supplier_framework_description(self, data_client, rmock):
+        rmock.post(
+            "http://baseurl/suppliers/123/framework-contact-information/g-thing/pending/reject",
+            json={},
+            status_code=200
+        )
+        data_client.reject_pending_supplier_framework_description(123, 'g-thing', 'The reason', "test@example.com")
+        assert rmock.called
+        assert rmock.last_request.json() == {"reasonText": "The reason", "updated_by": "test@example.com"}
 
     def test_create_central_digital_platform_connection(self, data_client, rmock):
         rmock.post(

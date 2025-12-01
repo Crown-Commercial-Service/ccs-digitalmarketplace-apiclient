@@ -158,6 +158,13 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def set_initial_framework_contact_information(self, supplier_id, user=None):
+        return self._post_with_updated_by(
+            f"/suppliers/{supplier_id}/framework-contact-information/set-initial-contact",
+            data={},
+            user=user,
+        )
+
     def update_contact_information(self, supplier_id, contact_id,
                                    contact, user=None):
         return self._post_with_updated_by(
@@ -169,10 +176,52 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def update_framework_contact_information(
+        self,
+        supplier_id,
+        framework_family,
+        contact,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            f"/suppliers/{supplier_id}/framework-contact-information/{framework_family}",
+            data={
+                "frameworkContactInformation": contact,
+            },
+            user=user,
+        )
+
     def remove_contact_information_personal_data(self, supplier_id, contact_id, user=None):
         return self._post_with_updated_by(
             "/suppliers/{}/contact-information/{}/remove-personal-data".format(supplier_id, contact_id),
             data={},
+            user=user,
+        )
+
+    def approve_pending_supplier_framework_description(
+        self,
+        supplier_id,
+        framework_family,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            f"/suppliers/{supplier_id}/framework-contact-information/{framework_family}/pending/approve",
+            data={},
+            user=user,
+        )
+
+    def reject_pending_supplier_framework_description(
+        self,
+        supplier_id,
+        framework_family,
+        reason_text,
+        user=None
+    ):
+        return self._post_with_updated_by(
+            f"/suppliers/{supplier_id}/framework-contact-information/{framework_family}/pending/reject",
+            data={
+                "reasonText": reason_text,
+            },
             user=user,
         )
 
