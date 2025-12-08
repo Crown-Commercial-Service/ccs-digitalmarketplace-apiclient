@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.11.0
+
+Add method for the delete index endpoint
+
 ## 37.10.0
 
 Add framework contact information methods

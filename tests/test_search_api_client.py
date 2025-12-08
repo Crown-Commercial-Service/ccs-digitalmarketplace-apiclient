@@ -54,6 +54,18 @@ class TestSearchApiClient(object):
             "mapping": "some-mapping",
         }
 
+    def test_delete_index(self, search_client, rmock):
+        rmock.delete(
+            "http://baseurl/old-index",
+            json={"status": "ok"},
+            status_code=200)
+
+        result = search_client.delete_index('old-index')
+
+        assert rmock.called
+        assert result['status'] == "ok"
+        assert rmock.last_request.json() == {}
+
     def test_set_alias(self, search_client, rmock):
         rmock.put(
             "http://baseurl/new-alias",
