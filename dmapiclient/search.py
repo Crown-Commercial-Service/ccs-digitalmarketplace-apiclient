@@ -91,6 +91,12 @@ class SearchAPIClient(BaseAPIClient):
             data={'type': 'index', 'mapping': mapping}
         )
 
+    def delete_index(self, index):
+        return self._delete(
+            '/{}'.format(index),
+            data={}
+        )
+
     def set_alias(self, alias_name, target_index):
         return self._put(
             '/{}'.format(alias_name),
