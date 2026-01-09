@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.12.0
+
+Add new routes to help with evaluation details
+
 ## 37.11.0
 
 Add method for the delete index endpoint

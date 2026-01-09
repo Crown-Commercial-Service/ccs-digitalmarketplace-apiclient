@@ -64,6 +64,8 @@ class AuditTypes(Enum):
     update_fvra_answers = "update_fvra_answers"
     set_evaluation_scores = 'set_evaluation_scores'
     update_evaluation_scores = 'update_evaluation_scores'
+    set_evaluation_details = 'set_evaluation_details'
+    update_evaluation_details = 'update_evaluation_details'
 
     # Framework agreements
     create_agreement = "create_agreement"
