@@ -1833,6 +1833,21 @@ class TestSupplierMethods(object):
             'updated_by': 'user',
         }
 
+    def test_find_supplier_framework_applications_by_route_with_supplier_name_prefix(self, data_client, rmock):
+        rmock.get(
+            "http://baseurl/frameworks/g-cloud-12/suppliers/applications?route=cloud-sourcing&supplier_name_prefix=A",
+            json={"supplierFrameworks": []},
+            status_code=200)
+
+        result = data_client.find_supplier_framework_applications_by_route(
+            "g-cloud-12",
+            "cloud-sourcing",
+            supplier_name_prefix="A"
+        )
+
+        assert result == {"supplierFrameworks": []}
+        assert rmock.called
+
 
 class TestAgreementMethods(object):
     def test_put_signed_agreement_on_hold(self, data_client, rmock):

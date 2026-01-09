@@ -645,7 +645,8 @@ class DataAPIClient(BaseAPIClient):
         evaluation_status=None,
         section_slug=None,
         evaluator_framework_lot_id=None,
-        page=None
+        supplier_name_prefix=None,
+        page=None,
     ):
         return self._get(
             f"/frameworks/{framework_slug}/suppliers/applications",
@@ -654,6 +655,7 @@ class DataAPIClient(BaseAPIClient):
                 'evaluation_status': evaluation_status,
                 'section_slug': section_slug,
                 'evaluator_framework_lot_id': evaluator_framework_lot_id,
+                'supplier_name_prefix': supplier_name_prefix,
                 'page': page
             }
         )
