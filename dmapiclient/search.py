@@ -16,14 +16,13 @@ class SearchAPIClient(BaseAPIClient):
         self._enabled = app.config['ES_ENABLED']
 
     def _url(self, index, path, doc_type='services'):
-        return u"/{}/{}/{}".format(index, doc_type, path)
+        return '/{}/{}/{}'.format(index, doc_type, path)
 
     def _url_reverse(self, url):
         url = urlparse(url)
         try:
             index, object_type, path = re.match(
-                r'^/(?P<index>[^/]+)/(?P<object_type>[^/]+)/(?P<path>[^/]+)$',
-                url.path
+                r'^/(?P<index>[^/]+)/(?P<object_type>[^/]+)/(?P<path>[^/]+)$', url.path
             ).groups()
         except AttributeError:
             return None, None, None
@@ -33,7 +32,7 @@ class SearchAPIClient(BaseAPIClient):
     def _add_filters_prefix_to_params(self, params, filters):
         """In-place transformation of filter keys and storage in params."""
         for filter_name, filter_values in filters.items():
-            params[u'filter_{}'.format(filter_name)] = filter_values
+            params['filter_{}'.format(filter_name)] = filter_values
 
     def _remove_filters_prefix_from_params(self, search_api_params):
         """
@@ -86,22 +85,13 @@ class SearchAPIClient(BaseAPIClient):
         return self.get_url(path='search', index=index, doc_type=doc_type, q=q, page=page, **filters)
 
     def create_index(self, index, mapping):
-        return self._put(
-            '/{}'.format(index),
-            data={'type': 'index', 'mapping': mapping}
-        )
+        return self._put('/{}'.format(index), data={'type': 'index', 'mapping': mapping})
 
     def delete_index(self, index):
-        return self._delete(
-            '/{}'.format(index),
-            data={}
-        )
+        return self._delete('/{}'.format(index), data={})
 
     def set_alias(self, alias_name, target_index):
-        return self._put(
-            '/{}'.format(alias_name),
-            data={'type': 'alias', 'target': target_index}
-        )
+        return self._put('/{}'.format(alias_name), data={'type': 'alias', 'target': target_index})
 
     def index(
         self,
@@ -134,7 +124,7 @@ class SearchAPIClient(BaseAPIClient):
     def search_services_from_url(self, search_api_url, id_only=False, page=None):
         warnings.warn(
             "The output of 'search_services_from_url' is paginated. Use 'search_services_from_url_iter' instead.",
-            DeprecationWarning
+            DeprecationWarning,
         )
 
         scheme, netloc, path, params, query, fragment = urlparse(search_api_url)
@@ -152,7 +142,7 @@ class SearchAPIClient(BaseAPIClient):
         return self._get(paged_search_api_url)
 
     search_services_from_url_iter = make_iter_method('search_services_from_url', 'documents', 'services')
-    search_services_from_url_iter.__name__ = str("search_services_from_url_iter")
+    search_services_from_url_iter.__name__ = str('search_services_from_url_iter')
 
     def aggregate(self, index, doc_type, q=None, aggregations=[], **filters):
         response = self._get(

@@ -24,6 +24,7 @@ def make_iter_method(method_name, *model_names):
     :param method_name: The name of the find method to decorate
     :param model_names: The names of the possible models as they appear in the JSON response. The first found is used.
     """
+
     def iter_method(self, *args, **kwargs):
         result = getattr(self, method_name)(*args, **kwargs)
         # Filter the list of model names for those that are a key in the response, then take the first.
@@ -107,7 +108,7 @@ class BaseAPIClient(object):
 
     @property
     def nowait_timeout(self):
-        read_timeout = 1.e-3
+        read_timeout = 1.0e-3
         try:
             return self.timeout[0], read_timeout
         except (TypeError, LookupError):
@@ -118,10 +119,13 @@ class BaseAPIClient(object):
         base_url=None,
         auth_token=None,
         enabled=True,
-        timeout=(15, 45,),
+        timeout=(
+            15,
+            45,
+        ),
         mode=APIClientMode.READ_WRITE,
         *,
-        user=None
+        user=None,
     ):
         self._base_url = base_url
         self._auth_token = auth_token
@@ -133,27 +137,16 @@ class BaseAPIClient(object):
     def _getuser(self, user=None):
         if user is None and self._user is None:
             raise ValueError(
-                "you must provide a user for updated_by, either in the API client constructor or in each method call"
+                'you must provide a user for updated_by, either in the API client constructor or in each method call'
             )
         elif user is None:
             return self._user
         else:
             return user
 
-    def _patch(
-        self,
-        url,
-        data,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
-    ):
+    def _patch(self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None):
         return self._request(
-            "PATCH",
-            url,
-            data=data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            'PATCH', url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
         )
 
     def _patch_with_updated_by(
@@ -163,31 +156,15 @@ class BaseAPIClient(object):
         *,
         user: Optional[str] = None,
         client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        response_type: ResponseType | None = None,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._patch(
-            url,
-            data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
-        )
+        return self._patch(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
 
-    def _put(
-        self,
-        url,
-        data,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
-    ):
+    def _put(self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None):
         return self._request(
-            "PUT",
-            url,
-            data=data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            'PUT', url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
         )
 
     def _put_with_updated_by(
@@ -197,47 +174,22 @@ class BaseAPIClient(object):
         *,
         user: Optional[str] = None,
         client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        response_type: ResponseType | None = None,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._put(
-            url,
-            data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
-        )
+        return self._put(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
 
     def _get(
-        self,
-        url,
-        params=None,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        self, url, params=None, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None
     ):
         return self._request(
-            "GET",
-            url,
-            params=params,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            'GET', url, params=params, client_wait_for_response=client_wait_for_response, response_type=response_type
         )
 
-    def _post(
-        self,
-        url,
-        data,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
-    ):
+    def _post(self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None):
         return self._request(
-            "POST",
-            url,
-            data=data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            'POST', url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
         )
 
     def _post_with_updated_by(
@@ -247,51 +199,35 @@ class BaseAPIClient(object):
         *,
         user: Optional[str] = None,
         client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        response_type: ResponseType | None = None,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._post(
-            url,
-            data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
-        )
+        return self._post(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
 
     def _delete(
-        self,
-        url,
-        data=None, *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        self, url, data=None, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None
     ):
         return self._request(
-            "DELETE",
-            url,
-            data=data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            'DELETE', url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
         )
 
     def _delete_with_updated_by(
         self,
         url,
-        data, *, user: Optional[str] = None,
+        data,
+        *,
+        user: Optional[str] = None,
         client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        response_type: ResponseType | None = None,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._delete(
-            url,
-            data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type
-        )
+        return self._delete(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
 
     def _build_url(self, url, params):
         if not self._base_url:
-            raise ImproperlyConfigured("{} has no URL configured".format(self.__class__.__name__))
+            raise ImproperlyConfigured('{} has no URL configured'.format(self.__class__.__name__))
 
         url = urlparse.urljoin(self._base_url, url)
 
@@ -328,13 +264,13 @@ class BaseAPIClient(object):
     def _iter_exceptions_by_cause(exc):
         yield exc
         while True:
-            if getattr(exc, "__cause__", None) is not None:
+            if getattr(exc, '__cause__', None) is not None:
                 exc = exc.__cause__
             # you might have hoped that PEP 3134 would have successfully standardized this and we could stop
             # here, but no - many exceptions thrown up by requests/urllib3 have nonstandard ways of chaining exceptions:
-            elif getattr(exc, "reason", None) is not None:
+            elif getattr(exc, 'reason', None) is not None:
                 exc = exc.reason
-            elif getattr(exc, "args", None) is not None and len(exc.args) and isinstance(exc.args[0], BaseException):
+            elif getattr(exc, 'args', None) is not None and len(exc.args) and isinstance(exc.args[0], BaseException):
                 exc = exc.args[0]
             else:
                 break
@@ -343,24 +279,24 @@ class BaseAPIClient(object):
 
     def _get_headers(self):
         headers = {
-            "Content-type": "application/json",
-            "Authorization": "Bearer {}".format(self._auth_token),
-            "User-agent": "DM-API-Client/{}".format(__version__),
+            'Content-type': 'application/json',
+            'Authorization': 'Bearer {}'.format(self._auth_token),
+            'User-agent': 'DM-API-Client/{}'.format(__version__),
         }
         if has_request_context():
             # Disable type checking for attributes added by RequestIdRequestMixin - mypy doesn't know about it.
-            if callable(getattr(request, "get_onwards_request_headers", None)):
+            if callable(getattr(request, 'get_onwards_request_headers', None)):
                 headers.update(request.get_onwards_request_headers())  # type: ignore
-            elif getattr(request, "request_id", None) and current_app.config.get("DM_REQUEST_ID_HEADER"):
+            elif getattr(request, 'request_id', None) and current_app.config.get('DM_REQUEST_ID_HEADER'):
                 # support old .request_id attr for compatibility
-                headers[current_app.config["DM_REQUEST_ID_HEADER"]] = request.request_id  # type: ignore
+                headers[current_app.config['DM_REQUEST_ID_HEADER']] = request.request_id  # type: ignore
 
         # not using CaseInsensitiveDict as our header dict initially as technically .update()'s behaviour is undefined
         # for it, but past a certain point we want to be able to know we've resolved what our final header value is
         # going to be for any certain header name
         return requests.structures.CaseInsensitiveDict(headers)
 
-    def _request( # noqa C901
+    def _request(  # noqa C901
         self,
         method,
         url,
@@ -368,7 +304,7 @@ class BaseAPIClient(object):
         params=None,
         *,
         client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        response_type: ResponseType | None = None,
     ):
         if not self._enabled:
             return None
@@ -378,46 +314,41 @@ class BaseAPIClient(object):
                 logger.log(
                     logging.WARNING,
                     "'{url}' is not a read-only endpoint of the '{class_name}'",
-                    extra={
-                        "url": url,
-                        "class_name": self.__class__.__name__
-                    }
+                    extra={'url': url, 'class_name': self.__class__.__name__},
                 )
                 return None
 
             if self.mode == APIClientMode.READ_WRITE_WITH_CONFIRMATION:
-                resp = input(
-                    "\n"
-                    "About to update data\n"
-                    "Proceed? [yes/no]: "
-                ).strip().lower()
+                resp = input('\nAbout to update data\nProceed? [yes/no]: ').strip().lower()
 
-                if resp != "yes":
-                    logger.log(
-                        logging.WARNING,
-                        "Execution cancelled by user"
-                    )
+                if resp != 'yes':
+                    logger.log(logging.WARNING, 'Execution cancelled by user')
                     return None
 
         url = self._build_url(url, params)
         ci_headers = self._get_headers()
 
         # determine our final outgoing span id - find the first of DM_SPAN_ID_HEADERS which is set to something truthy
-        child_span_id = next(
-            (
-                ci_headers[header_name] for header_name in (current_app.config.get("DM_SPAN_ID_HEADERS") or ())
-                if ci_headers.get(header_name)
-            ),
-            None,
-        ) if has_request_context() else None
+        child_span_id = (
+            next(
+                (
+                    ci_headers[header_name]
+                    for header_name in (current_app.config.get('DM_SPAN_ID_HEADERS') or ())
+                    if ci_headers.get(header_name)
+                ),
+                None,
+            )
+            if has_request_context()
+            else None
+        )
 
         common_log_extra = {
-            **({"childSpanId": child_span_id} if child_span_id is not None else {}),
+            **({'childSpanId': child_span_id} if child_span_id is not None else {}),
         }
 
         logger.log(
             logging.DEBUG,
-            "API request {method} {url}",
+            'API request {method} {url}',
             extra={
                 **common_log_extra,
                 'method': method,
@@ -445,7 +376,7 @@ class BaseAPIClient(object):
             ):
                 logger.log(
                     logging.INFO,
-                    "API {api_method} request on {api_url} dispatched but ignoring response",
+                    'API {api_method} request on {api_url} dispatched but ignoring response',
                     extra={
                         **common_log_extra,
                         'api_method': method,
@@ -474,7 +405,7 @@ class BaseAPIClient(object):
             elapsed_time = time.perf_counter() - start_time
             logger.log(
                 logging.INFO,
-                "API {api_method} request on {api_url} finished in {api_time}",
+                'API {api_method} request on {api_url} finished in {api_time}',
                 extra={
                     **common_log_extra,
                     'api_method': method,
@@ -488,27 +419,22 @@ class BaseAPIClient(object):
             try:
                 return response.json()
             except ValueError as e:
-
-                raise InvalidResponse(
-                    response,
-                    message="No JSON object could be decoded"
-                ) from e
+                raise InvalidResponse(response, message='No JSON object could be decoded') from e
         elif response_type == ResponseType.CONTENT:
             return response.content
         else:
             raise InvalidResponseType(
-                response,
-                message=f"Response type: '{response_type}' is not a valid response type"
+                response, message=f"Response type: '{response_type}' is not a valid response type"
             )
 
     def get_status(self):
         try:
-            return self._get("{}/_status".format(self._base_url))
+            return self._get('{}/_status'.format(self._base_url))
         except APIError as e:
             try:
                 return e.response.json()
             except (ValueError, AttributeError):
                 return {
-                    "status": "error",
-                    "message": "{}".format(e.message),
+                    'status': 'error',
+                    'message': '{}'.format(e.message),
                 }

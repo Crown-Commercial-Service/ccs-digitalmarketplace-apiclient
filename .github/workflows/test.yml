@@ -31,5 +31,5 @@ jobs:
       - name: Install dependencies
         run: invoke requirements-dev
 
-      - name: Run tests
-        run: invoke test
+      - name: Run python tests
+        run: invoke test-new

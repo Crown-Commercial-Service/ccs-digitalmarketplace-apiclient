@@ -18,9 +18,7 @@ class DataInsightsAPIErrorResponse:
         self.message = message.format(number=number)
 
     def json(self):
-        return {
-            'error': self.message
-        }
+        return {'error': self.message}
 
 
 class SpotlightDunsAPIErrorResponse(DataInsightsAPIErrorResponse):
@@ -42,8 +40,7 @@ class IasmeCyberEssentialsAPIErrorResponse(DataInsightsAPIErrorResponse):
 
     def __init__(self, cyber_essentials_certificate_number):
         super().__init__(
-            cyber_essentials_certificate_number,
-            'Could not find cyber essentials certificate with number {number}'
+            cyber_essentials_certificate_number, 'Could not find cyber essentials certificate with number {number}'
         )
 
 
@@ -52,8 +49,10 @@ class DataInsightsURL(Enum):
     POST_FVRA_WARM_UP = '/workflows/91fa768cca7348cab37695fcf34b1262/triggers/Trigger/paths/invoke'
     POST_SINGLE_FINANCIALS_CHECK = '/workflows/9f848cc1409f441ca6bae23793ba7960/triggers/Trigger/paths/invoke'
     POST_MULTIPLE_FINANCIALS_CHECK = '/workflows/6d3d793e151a4a2c86af189bcca435dd/triggers/Trigger/paths/invoke'
-    GET_CYBER_ESSENTIALS_CERT = '/workflows/d92a8b97421e4552845c9e6dc0aca5e2/triggers/manual/paths' \
-                                '/invoke/[att].[IASMECyberSecurityCertification]/'
+    GET_CYBER_ESSENTIALS_CERT = (
+        '/workflows/d92a8b97421e4552845c9e6dc0aca5e2/triggers/manual/paths'
+        '/invoke/[att].[IASMECyberSecurityCertification]/'
+    )
 
 
 class BaseDataInsightsAPIClient(BaseAPIClient):
@@ -65,13 +64,18 @@ class BaseDataInsightsAPIClient(BaseAPIClient):
     def sp(self):
         return self._sp
 
-    def __init__(self, sp, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
-        super().__init__(
-            base_url,
-            None,
-            enabled,
-            timeout
-        )
+    def __init__(
+        self,
+        sp,
+        base_url=None,
+        api_key=None,
+        enabled=True,
+        timeout=(
+            15,
+            45,
+        ),
+    ):
+        super().__init__(base_url, None, enabled, timeout)
         self._api_key = api_key
         self._sp = sp
 
@@ -80,10 +84,12 @@ class BaseDataInsightsAPIClient(BaseAPIClient):
         self._api_key = api_key
 
     def _get_headers(self):
-        return requests.structures.CaseInsensitiveDict({
-            "Content-type": "application/json",
-            "User-agent": "DM-API-Client/{}".format(__version__),
-        })
+        return requests.structures.CaseInsensitiveDict(
+            {
+                'Content-type': 'application/json',
+                'User-agent': 'DM-API-Client/{}'.format(__version__),
+            }
+        )
 
     def _get_params(self, params=None):
         return {
@@ -95,37 +101,26 @@ class BaseDataInsightsAPIClient(BaseAPIClient):
         }
 
     def _get(
-        self,
-        url,
-        params=None,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None
+        self, url, params=None, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None
     ):
         return self._request(
-            "GET",
+            'GET',
             url.value,
             params=self._get_params(params),
             client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            response_type=response_type,
         )
 
     def _post(
-        self,
-        url,
-        data,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None,
-        **kwargs
+        self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None, **kwargs
     ):
         return self._request(
-            "POST",
+            'POST',
             url.value.format(**kwargs),
             data=data,
             params=self._get_params(),
             client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            response_type=response_type,
         )
 
     def get_status(self):
@@ -133,26 +128,24 @@ class BaseDataInsightsAPIClient(BaseAPIClient):
 
 
 class _SpotlightDunsAPIClient(BaseDataInsightsAPIClient):
-    def __init__(self, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
-        super().__init__(
-            SP_DUNS,
-            base_url,
-            api_key,
-            enabled,
-            timeout
-        )
+    def __init__(
+        self,
+        base_url=None,
+        api_key=None,
+        enabled=True,
+        timeout=(
+            15,
+            45,
+        ),
+    ):
+        super().__init__(SP_DUNS, base_url, api_key, enabled, timeout)
 
     def find_organisation_from_duns_number(self, duns_number):
         try:
             return {
                 'organisations': self._post(
                     DataInsightsURL.POST_IDENTITY_SEARCH,
-                    data={
-                        "requestType": "SearchOrganisation",
-                        "parameters": {
-                            "dunsNumber": duns_number
-                        }
-                    }
+                    data={'requestType': 'SearchOrganisation', 'parameters': {'dunsNumber': duns_number}},
                 )['searchOrganisation'][0]
             }
         except InvalidResponse as e:
@@ -162,35 +155,36 @@ class _SpotlightDunsAPIClient(BaseDataInsightsAPIClient):
 
 
 class _SpotlightFvraWarmUpAPIClient(BaseDataInsightsAPIClient):
-    def __init__(self, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
-        super().__init__(
-            SP_FVRA,
-            base_url,
-            api_key,
-            enabled,
-            timeout
-        )
+    def __init__(
+        self,
+        base_url=None,
+        api_key=None,
+        enabled=True,
+        timeout=(
+            15,
+            45,
+        ),
+    ):
+        super().__init__(SP_FVRA, base_url, api_key, enabled, timeout)
 
     def inform_spotlight_of_duns_number_for_check(self, duns_number, organisation_name):
         response = self._post(
             DataInsightsURL.POST_FVRA_WARM_UP,
             data={
-                "Account": [
+                'Account': [
                     {
-                        "Name": organisation_name,
-                        "DunsNumber": duns_number,
-                        "OnDemandChecks": "true",
-                        "PartOfDailyChecks": "false"
+                        'Name': organisation_name,
+                        'DunsNumber': duns_number,
+                        'OnDemandChecks': 'true',
+                        'PartOfDailyChecks': 'false',
                     }
                 ]
             },
-            response_type=ResponseType.CONTENT
+            response_type=ResponseType.CONTENT,
         )
 
         if response == b"'Call received.'":
-            return {
-                "message": "done"
-            }
+            return {'message': 'done'}
 
         spotlight_api_error = SpotlightWarmUpAPIErrorResponse(duns_number)
 
@@ -198,85 +192,70 @@ class _SpotlightFvraWarmUpAPIClient(BaseDataInsightsAPIClient):
 
 
 class _SpotlightFvraSingleCheckAPIClient(BaseDataInsightsAPIClient):
-    def __init__(self, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
-        super().__init__(
-            SP_FVRA,
-            base_url,
-            api_key,
-            enabled,
-            timeout
-        )
+    def __init__(
+        self,
+        base_url=None,
+        api_key=None,
+        enabled=True,
+        timeout=(
+            15,
+            45,
+        ),
+    ):
+        super().__init__(SP_FVRA, base_url, api_key, enabled, timeout)
 
     def get_financials_from_duns_number(self, duns_number):
         organisation_metrics = self._post(
             DataInsightsURL.POST_SINGLE_FINANCIALS_CHECK,
-            data={
-                "Account": [
-                    {
-                        "DunsNumber": duns_number,
-                        "OnDemandChecks": "true",
-                        "PartOfDailyChecks": "false"
-                    }
-                ]
-            }
+            data={'Account': [{'DunsNumber': duns_number, 'OnDemandChecks': 'true', 'PartOfDailyChecks': 'false'}]},
         )['ResultSets'][0]
 
-        return {
-            'organisationMetrics': organisation_metrics
-        }
+        return {'organisationMetrics': organisation_metrics}
 
 
 class _SpotlightFvraMultipleCheckAPIClient(BaseDataInsightsAPIClient):
-    def __init__(self, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
-        super().__init__(
-            SP_FVRA,
-            base_url,
-            api_key,
-            enabled,
-            timeout
-        )
+    def __init__(
+        self,
+        base_url=None,
+        api_key=None,
+        enabled=True,
+        timeout=(
+            15,
+            45,
+        ),
+    ):
+        super().__init__(SP_FVRA, base_url, api_key, enabled, timeout)
 
     def get_financials_from_duns_numbers(self, duns_numbers):
         organisation_metrics = self._post(
             DataInsightsURL.POST_MULTIPLE_FINANCIALS_CHECK,
-            data={
-                "Account": [
-                    {
-                        "DunsNumber": duns_numbers,
-                        "OnDemandChecks": "true",
-                        "PartOfDailyChecks": "false"
-                    }
-                ]
-            }
+            data={'Account': [{'DunsNumber': duns_numbers, 'OnDemandChecks': 'true', 'PartOfDailyChecks': 'false'}]},
         )['ResultSets']['Table1']
 
-        return {
-            'organisationMetrics': organisation_metrics
-        }
+        return {'organisationMetrics': organisation_metrics}
 
 
 class _IasmeCyberEssentialsAPIClient(BaseDataInsightsAPIClient):
-    def __init__(self, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
-        super().__init__(
-            SP_IASME,
-            base_url,
-            api_key,
-            enabled,
-            timeout
-        )
+    def __init__(
+        self,
+        base_url=None,
+        api_key=None,
+        enabled=True,
+        timeout=(
+            15,
+            45,
+        ),
+    ):
+        super().__init__(SP_IASME, base_url, api_key, enabled, timeout)
 
     def get_cyber_essentials_certificate(self, cyber_essentials_certificate_number):
         try:
             cyber_essentials_certificate_details = self._get(
                 DataInsightsURL.GET_CYBER_ESSENTIALS_CERT,
-                params={
-                    "Filter": f"CertificateNumber eq '{cyber_essentials_certificate_number}'"
-                }
+                params={'Filter': f"CertificateNumber eq '{cyber_essentials_certificate_number}'"},
             )[0]
 
-            return {
-                'cyberEssentialsCertificateDetails': cyber_essentials_certificate_details
-            }
+            return {'cyberEssentialsCertificateDetails': cyber_essentials_certificate_details}
         except HTTPError as e:
             if e.status_code == 404:
                 iasme_api_error = IasmeCyberEssentialsAPIErrorResponse(cyber_essentials_certificate_number)
@@ -288,9 +267,7 @@ class _IasmeCyberEssentialsAPIClient(BaseDataInsightsAPIClient):
 
 class DataInsightsAPIClient:
     def __init__(self, **kwargs):
-        self._spotlight_duns_api_client = _SpotlightDunsAPIClient(
-            **kwargs.get('spotlight_duns_api_client_kwargs', {})
-        )
+        self._spotlight_duns_api_client = _SpotlightDunsAPIClient(**kwargs.get('spotlight_duns_api_client_kwargs', {}))
         self._spotlight_warm_up_api_client = _SpotlightFvraWarmUpAPIClient(
             **kwargs.get('spotlight_warm_up_api_client_kwargs', {})
         )
@@ -314,24 +291,24 @@ class DataInsightsAPIClient:
             for dm_spotlight_api_key in app.config['DM_DATA_INSIGHTS_API_KEYS'].split(',')
         )
         self._spotlight_duns_api_client.init_app(
-            spotlight_api_urls["DM_SPOTLIGHT_DUNS_API_URL"],
-            spotlight_api_keys["DM_SPOTLIGHT_DUNS_API_KEY"],
+            spotlight_api_urls['DM_SPOTLIGHT_DUNS_API_URL'],
+            spotlight_api_keys['DM_SPOTLIGHT_DUNS_API_KEY'],
         )
         self._spotlight_warm_up_api_client.init_app(
-            spotlight_api_urls["DM_SPOTLIGHT_FVRA_WARM_UP_API_URL"],
-            spotlight_api_keys["DM_SPOTLIGHT_FVRA_WARM_UP_API_KEY"],
+            spotlight_api_urls['DM_SPOTLIGHT_FVRA_WARM_UP_API_URL'],
+            spotlight_api_keys['DM_SPOTLIGHT_FVRA_WARM_UP_API_KEY'],
         )
         self._spotlight_fvra_single_check_api_client.init_app(
-            spotlight_api_urls["DM_SPOTLIGHT_FVRA_SINGLE_CHECK_API_URL"],
-            spotlight_api_keys["DM_SPOTLIGHT_FVRA_SINGLE_CHECK_API_KEY"],
+            spotlight_api_urls['DM_SPOTLIGHT_FVRA_SINGLE_CHECK_API_URL'],
+            spotlight_api_keys['DM_SPOTLIGHT_FVRA_SINGLE_CHECK_API_KEY'],
         )
         self._spotlight_fvra_multiple_check_api_client.init_app(
-            spotlight_api_urls["DM_SPOTLIGHT_FVRA_MULTIPLE_CHECK_API_URL"],
-            spotlight_api_keys["DM_SPOTLIGHT_FVRA_MULTIPLE_CHECK_API_KEY"],
+            spotlight_api_urls['DM_SPOTLIGHT_FVRA_MULTIPLE_CHECK_API_URL'],
+            spotlight_api_keys['DM_SPOTLIGHT_FVRA_MULTIPLE_CHECK_API_KEY'],
         )
         self._iasme_cyber_essentials_api_client.init_app(
-            spotlight_api_urls["DM_IASME_CYBER_ESSENTIALS_API_URL"],
-            spotlight_api_keys["DM_IASME_CYBER_ESSENTIALS_API_KEY"],
+            spotlight_api_urls['DM_IASME_CYBER_ESSENTIALS_API_URL'],
+            spotlight_api_keys['DM_IASME_CYBER_ESSENTIALS_API_KEY'],
         )
 
     def find_organisation_from_duns_number(self, duns_number):
@@ -339,8 +316,7 @@ class DataInsightsAPIClient:
 
     def inform_spotlight_of_duns_number_for_check(self, duns_number, organisation_name):
         return self._spotlight_warm_up_api_client.inform_spotlight_of_duns_number_for_check(
-            duns_number,
-            organisation_name
+            duns_number, organisation_name
         )
 
     def get_financials_from_duns_number(self, duns_number):

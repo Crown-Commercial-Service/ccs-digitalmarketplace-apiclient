@@ -1,7 +1,7 @@
 from typing import Union, cast
 
 REQUEST_ERROR_STATUS_CODE = 503
-REQUEST_ERROR_MESSAGE = "Unknown request failure in dmapiclient"
+REQUEST_ERROR_MESSAGE = 'Unknown request failure in dmapiclient'
 
 
 class APIError(Exception):
@@ -26,7 +26,7 @@ class APIError(Exception):
             return REQUEST_ERROR_STATUS_CODE
 
     def __str__(self):
-        return "{} (status: {})".format(self.message, self.status_code)
+        return '{} (status: {})'.format(self.message, self.status_code)
 
 
 class HTTPError(APIError):

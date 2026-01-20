@@ -24,13 +24,17 @@ class CentralDigitalPlatformAPIClient(BaseAPIClient):
     def api_key(self):
         return self._api_key
 
-    def __init__(self, base_url=None, api_key=None, enabled=True, timeout=(15, 45,)):
-        super().__init__(
-            base_url,
-            None,
-            enabled,
-            timeout
-        )
+    def __init__(
+        self,
+        base_url=None,
+        api_key=None,
+        enabled=True,
+        timeout=(
+            15,
+            45,
+        ),
+    ):
+        super().__init__(base_url, None, enabled, timeout)
         self._api_key = api_key
 
     def init_app(self, app):
@@ -38,11 +42,13 @@ class CentralDigitalPlatformAPIClient(BaseAPIClient):
         self._api_key = app.config['DM_CENTRAL_DIGITAL_PLATFORM_API_KEY']
 
     def _get_headers(self):
-        return requests.structures.CaseInsensitiveDict({
-            "Content-type": "application/json",
-            "CDP-Api-Key": self._api_key,
-            "User-agent": "DM-API-Client/{}".format(__version__),
-        })
+        return requests.structures.CaseInsensitiveDict(
+            {
+                'Content-type': 'application/json',
+                'CDP-Api-Key': self._api_key,
+                'User-agent': 'DM-API-Client/{}'.format(__version__),
+            }
+        )
 
     def _get(
         self,
@@ -51,41 +57,32 @@ class CentralDigitalPlatformAPIClient(BaseAPIClient):
         *,
         client_wait_for_response: bool = True,
         response_type: ResponseType | None = None,
-        **kwargs
+        **kwargs,
     ):
         return self._request(
-            "GET",
+            'GET',
             url.value.format(**kwargs),
             params=params,
             client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            response_type=response_type,
         )
 
     def _post(
-        self,
-        url,
-        data,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None,
-        **kwargs
+        self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None, **kwargs
     ):
         return self._request(
-            "POST",
+            'POST',
             url.value.format(**kwargs),
             data=data,
             client_wait_for_response=client_wait_for_response,
-            response_type=response_type
+            response_type=response_type,
         )
 
     def get_status(self):
         abort(404)
 
     def get_supplier_submitted_information(self, sharecode):
-        return self._get(
-            CentralDigitalPlatformURL.GET_DATA,
-            sharecode=sharecode
-        )
+        return self._get(CentralDigitalPlatformURL.GET_DATA, sharecode=sharecode)
 
     def get_document_within_supplier_submitted_information(self, sharecode, document_id):
         return self._get(
@@ -105,14 +102,8 @@ class CentralDigitalPlatformAPIClient(BaseAPIClient):
     def verify_shared_data_is_latest_version(self, sharecode, form_version_id):
         return self._post(
             CentralDigitalPlatformURL.POST_DATA_VERIFY,
-            data={
-                "shareCode": sharecode,
-                "formVersionId": form_version_id
-            },
+            data={'shareCode': sharecode, 'formVersionId': form_version_id},
         )
 
     def get_organisation_sharecodes(self, organisation_id):
-        return self._get(
-            CentralDigitalPlatformURL.GET_ORGANISATION_CODES,
-            organisation_id=organisation_id
-        )
+        return self._get(CentralDigitalPlatformURL.GET_ORGANISATION_CODES, organisation_id=organisation_id)
