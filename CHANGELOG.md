@@ -2,6 +2,14 @@
 
 Records breaking changes from major version bumps
 
+## 37.14.0
+
+Add route to reset the suppliers dos contact information
+
+## 37.13.0
+
+Add name prefix to find the supplier applications
+
 ## 37.12.0
 
 Add new routes to help with evaluation details

@@ -150,6 +150,13 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def reset_dos_framework_contact_information(self, supplier_id, user=None):
+        return self._post_with_updated_by(
+            f'/suppliers/{supplier_id}/framework-contact-information/reset-dos-contact',
+            data={},
+            user=user,
+        )
+
     def update_contact_information(self, supplier_id, contact_id, contact, user=None):
         return self._post_with_updated_by(
             '/suppliers/{}/contact-information/{}'.format(supplier_id, contact_id),

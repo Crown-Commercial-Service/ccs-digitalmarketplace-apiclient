@@ -10,6 +10,7 @@ class AuditTypes(Enum):
     user_auth_failed = 'user_auth_failed'
     contact_update = 'contact_update'
     set_initial_framework_contact_information = 'set_initial_framework_contact_information'
+    reset_dos_framework_contact_information = 'reset_dos_framework_contact_information'
     framework_contact_update = 'framework_contact_update'
     pending_supplier_framework_description_update = 'pending_supplier_framework_description_update'
     approve_pending_supplier_framework_description = 'approve_pending_supplier_framework_description'
