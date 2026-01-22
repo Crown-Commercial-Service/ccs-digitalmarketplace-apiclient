@@ -509,6 +509,8 @@ class DataAPIClient(BaseAPIClient):
         with_lot_questions_responses=None,
         with_lot_pricings=None,
         with_cdp_supplier_information=None,
+        on_framework=None,
+        page=None,
     ):
         """
         :param agreement_returned: A boolean value that allows filtering by suppliers who have or have not
@@ -528,7 +530,7 @@ class DataAPIClient(BaseAPIClient):
         :param with_cdp_supplier_information: whether to include CDP supplier information data
                                              in returned supplierFrameworks
         """
-        params = {}
+        params = {'page': page}
         if agreement_returned is not None:
             params['agreement_returned'] = bool(agreement_returned)
         if statuses is not None:
@@ -545,6 +547,9 @@ class DataAPIClient(BaseAPIClient):
             params['with_lot_pricings'] = bool(with_lot_pricings)
         if with_cdp_supplier_information is not None:
             params['with_cdp_supplier_information'] = bool(with_cdp_supplier_information)
+        if on_framework is not None:
+            params['on_framework'] = bool(on_framework)
+
         return self._get('/frameworks/{}/suppliers'.format(framework_slug), params=params)
 
     find_framework_suppliers_iter = make_iter_method('find_framework_suppliers', 'supplierFrameworks')
