@@ -1964,6 +1964,16 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def update_evaluator_framework_lot_section_supplier_prefixes(
+        self, evaluator_framework_lot_section_id, supplier_prefixes, user=None
+    ):
+        return self._post_with_updated_by(
+            f'/evaluations/evaluator-framework-lot-sections/'
+            f'{evaluator_framework_lot_section_id}/supplier-prefixes',
+            data={'supplierPrefixes': supplier_prefixes},
+            user=user,
+        )
+
     def find_evaluator_framework_lot_section_evaluations(
         self,
         framework,
