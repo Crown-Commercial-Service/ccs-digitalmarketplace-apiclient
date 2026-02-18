@@ -2,6 +2,10 @@
 
 Records breaking changes from major version bumps
 
+## 37.15.0
+
+Add supplier prefixes client method and audit type
+
 ## 37.14.0
 
 Add `on_framework` and `page` param for finding framework suppliers
