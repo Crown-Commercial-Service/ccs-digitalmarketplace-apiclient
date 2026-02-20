@@ -135,6 +135,9 @@ class AuditTypes(Enum):
     update_evaluator_framework_lot_section_assignment_status = (
         'update_evaluator_framework_lot_section_assignment_status'
     )
+    update_evaluator_framework_lot_section_supplier_prefixes = (
+        'update_evaluator_framework_lot_section_supplier_prefixes'
+    )
 
     create_evaluator_framework_lot_section_evaluation = 'create_evaluator_framework_lot_section_evaluation'
     update_evaluator_framework_lot_section_evaluation = 'update_evaluator_framework_lot_section_evaluation'

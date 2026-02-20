@@ -4781,6 +4781,22 @@ class TestEvaluatorFrameworkLotMethods(object):
             'updated_by': 'user',
         }
 
+    def test_update_evaluator_framework_lot_section_supplier_prefixes(self, data_client, rmock):
+        rmock.post(
+            'http://baseurl/evaluations/evaluator-framework-lot-sections/1234/supplier-prefixes',
+            json={'message': 'done'},
+            status_code=200,
+        )
+
+        result = data_client.update_evaluator_framework_lot_section_supplier_prefixes(1234, ['A', 'B', 'C'], 'user')
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'supplierPrefixes': ['A', 'B', 'C'],
+        }
+
     def test_get_evaluator_framework_lot_section(self, data_client, rmock):
         rmock.get(
             'http://baseurl/evaluations/evaluator-framework-lot-sections/1234?with_evaluations=True',
