@@ -144,9 +144,16 @@ class BaseAPIClient(object):
         else:
             return user
 
-    def _patch(self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None):
+    def _patch(
+        self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None, **kwargs
+    ):
         return self._request(
-            'PATCH', url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
+            'PATCH',
+            url,
+            data=data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type,
+            **kwargs,
         )
 
     def _patch_with_updated_by(
@@ -157,14 +164,24 @@ class BaseAPIClient(object):
         user: Optional[str] = None,
         client_wait_for_response: bool = True,
         response_type: ResponseType | None = None,
+        **kwargs,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._patch(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
+        return self._patch(
+            url, data, client_wait_for_response=client_wait_for_response, response_type=response_type, **kwargs
+        )
 
-    def _put(self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None):
+    def _put(
+        self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None, **kwargs
+    ):
         return self._request(
-            'PUT', url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
+            'PUT',
+            url,
+            data=data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type,
+            **kwargs,
         )
 
     def _put_with_updated_by(
@@ -175,21 +192,42 @@ class BaseAPIClient(object):
         user: Optional[str] = None,
         client_wait_for_response: bool = True,
         response_type: ResponseType | None = None,
+        **kwargs,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._put(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
-
-    def _get(
-        self, url, params=None, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None
-    ):
-        return self._request(
-            'GET', url, params=params, client_wait_for_response=client_wait_for_response, response_type=response_type
+        return self._put(
+            url, data, client_wait_for_response=client_wait_for_response, response_type=response_type, **kwargs
         )
 
-    def _post(self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None):
+    def _get(
+        self,
+        url,
+        params=None,
+        *,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None,
+        **kwargs,
+    ):
         return self._request(
-            'POST', url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
+            'GET',
+            url,
+            params=params,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type,
+            **kwargs,
+        )
+
+    def _post(
+        self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None, **kwargs
+    ):
+        return self._request(
+            'POST',
+            url,
+            data=data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type,
+            **kwargs,
         )
 
     def _post_with_updated_by(
@@ -200,16 +238,30 @@ class BaseAPIClient(object):
         user: Optional[str] = None,
         client_wait_for_response: bool = True,
         response_type: ResponseType | None = None,
+        **kwargs,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._post(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
+        return self._post(
+            url, data, client_wait_for_response=client_wait_for_response, response_type=response_type, **kwargs
+        )
 
     def _delete(
-        self, url, data=None, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None
+        self,
+        url,
+        data=None,
+        *,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None,
+        **kwargs,
     ):
         return self._request(
-            'DELETE', url, data=data, client_wait_for_response=client_wait_for_response, response_type=response_type
+            'DELETE',
+            url,
+            data=data,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type,
+            **kwargs,
         )
 
     def _delete_with_updated_by(
@@ -220,10 +272,13 @@ class BaseAPIClient(object):
         user: Optional[str] = None,
         client_wait_for_response: bool = True,
         response_type: ResponseType | None = None,
+        **kwargs,
     ):
         user = self._getuser(user)
         data = dict(data, updated_by=user)
-        return self._delete(url, data, client_wait_for_response=client_wait_for_response, response_type=response_type)
+        return self._delete(
+            url, data, client_wait_for_response=client_wait_for_response, response_type=response_type, **kwargs
+        )
 
     def _build_url(self, url, params):
         if not self._base_url:
@@ -305,6 +360,7 @@ class BaseAPIClient(object):
         *,
         client_wait_for_response: bool = True,
         response_type: ResponseType | None = None,
+        **kwargs,
     ):
         if not self._enabled:
             return None
@@ -324,6 +380,9 @@ class BaseAPIClient(object):
                 if resp != 'yes':
                     logger.log(logging.WARNING, 'Execution cancelled by user')
                     return None
+
+        if isinstance(url, Enum):
+            url = url.value.format(**kwargs)
 
         url = self._build_url(url, params)
         ci_headers = self._get_headers()
