@@ -96,7 +96,14 @@ class DataAPIClient(BaseAPIClient):
     # Suppliers
 
     def find_suppliers(
-        self, prefix=None, page=None, framework=None, duns_number=None, company_registration_number=None, name=None
+        self,
+        prefix=None,
+        page=None,
+        framework=None,
+        duns_number=None,
+        company_registration_number=None,
+        share_code=None,
+        name=None,
     ):
         warnings.warn(
             "The output of 'find_suppliers' is paginated. Use 'find_suppliers_iter' instead.", DeprecationWarning
@@ -115,6 +122,8 @@ class DataAPIClient(BaseAPIClient):
             params['duns_number'] = duns_number
         if company_registration_number is not None:
             params['company_registration_number'] = company_registration_number
+        if share_code is not None:
+            params['share_code'] = share_code
 
         return self._get('/suppliers', params=params)
 
