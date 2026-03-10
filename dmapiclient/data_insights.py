@@ -101,14 +101,21 @@ class BaseDataInsightsAPIClient(BaseAPIClient):
         }
 
     def _get(
-        self, url, params=None, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None
+        self,
+        url,
+        params=None,
+        *,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None,
+        **kwargs,
     ):
         return self._request(
             'GET',
-            url.value,
+            url,
             params=self._get_params(params),
             client_wait_for_response=client_wait_for_response,
             response_type=response_type,
+            **kwargs,
         )
 
     def _post(
@@ -116,11 +123,12 @@ class BaseDataInsightsAPIClient(BaseAPIClient):
     ):
         return self._request(
             'POST',
-            url.value.format(**kwargs),
+            url,
             data=data,
             params=self._get_params(),
             client_wait_for_response=client_wait_for_response,
             response_type=response_type,
+            **kwargs,
         )
 
     def get_status(self):

@@ -2,6 +2,12 @@
 
 Records breaking changes from major version bumps
 
+## Unreleased
+
+## 38.0.0
+
+Add Agreements Service API Client with ability to send get requests
+
 ## 37.15.0
 
 Add supplier prefixes client method and audit type

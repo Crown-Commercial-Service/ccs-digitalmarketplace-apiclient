@@ -50,34 +50,6 @@ class CentralDigitalPlatformAPIClient(BaseAPIClient):
             }
         )
 
-    def _get(
-        self,
-        url,
-        params=None,
-        *,
-        client_wait_for_response: bool = True,
-        response_type: ResponseType | None = None,
-        **kwargs,
-    ):
-        return self._request(
-            'GET',
-            url.value.format(**kwargs),
-            params=params,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type,
-        )
-
-    def _post(
-        self, url, data, *, client_wait_for_response: bool = True, response_type: ResponseType | None = None, **kwargs
-    ):
-        return self._request(
-            'POST',
-            url.value.format(**kwargs),
-            data=data,
-            client_wait_for_response=client_wait_for_response,
-            response_type=response_type,
-        )
-
     def get_status(self):
         abort(404)
 
