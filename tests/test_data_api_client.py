@@ -633,6 +633,18 @@ class TestSupplierMethods(object):
         assert result == {'suppliers': 'result'}
         assert rmock.called
 
+    def test_find_suppliers_with_share_code(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/suppliers?share_code=12345678',
+            json={'suppliers': 'result'},
+            status_code=200,
+        )
+
+        result = data_client.find_suppliers(share_code='12345678')
+
+        assert result == {'suppliers': 'result'}
+        assert rmock.called
+
     def test_find_supplier_adds_page_parameter(self, data_client, rmock):
         rmock.get('http://baseurl/suppliers?page=2', json={'suppliers': 'result'}, status_code=200)
 

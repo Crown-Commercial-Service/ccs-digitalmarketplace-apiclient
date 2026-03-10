@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.1.0
+
+Add `share_code` as searchable parameter for suppliers
+
 ## 38.0.0
 
 Add Agreements Service API Client with ability to send get requests
