@@ -1,5 +1,4 @@
 import pytest
-from unittest import mock
 from werkzeug.exceptions import NotFound
 from io import BytesIO
 
@@ -9,11 +8,24 @@ from dmapiclient import AgreementsServiceAPIClient
 
 @pytest.fixture
 def agreements_service_client():
-    return AgreementsServiceAPIClient('http://agreements-service-baseurl', 'api-key', True)
+    return AgreementsServiceAPIClient(
+        'http://agreements-service-baseurl', 'api-key', 'http://access-token-url', 'client-id', 'client-secret', True
+    )
 
 
-class TestAgreementsServiceAPIClient(object):
+class BaseTestAgreementsServiceAPIClient(object):
+    @staticmethod
+    def mock_refresh_auth_token(rmock, expires_in=3600):
+        rmock.post(
+            'http://access-token-url',
+            json={'access_token': 'ACCESS_TOKEN', 'expires_in': expires_in},
+            status_code=200,
+        )
+
+
+class TestAgreementsServiceAPIClient(BaseTestAgreementsServiceAPIClient):
     def test_base_headers_are_set(self, agreements_service_client, rmock):
+        self.mock_refresh_auth_token(rmock)
         rmock.request('GET', 'http://agreements-service-baseurl/', json={}, status_code=200)
 
         agreements_service_client._request('GET', '/')
@@ -23,23 +35,88 @@ class TestAgreementsServiceAPIClient(object):
         assert rmock.last_request.headers.get('Authorization') is None
         assert rmock.last_request.headers.get('User-Agent').startswith('DM-API-Client/')
 
-    def test_init_app_sets_attributes(self, agreements_service_client):
-        app = mock.Mock()
-        app.config = {
-            'DM_AGREEMENTS_SERVICE_API_URL': 'http://example',
-            'DM_AGREEMENTS_SERVICE_API_KEY': 'example-api-key',
-        }
-        agreements_service_client.init_app(app)
+    def test_base_headers_are_set_for_post(self, agreements_service_client, rmock):
+        self.mock_refresh_auth_token(rmock)
+        rmock.request('POST', 'http://agreements-service-baseurl/', json={}, status_code=200)
 
-        assert agreements_service_client.base_url == 'http://example'
-        assert agreements_service_client.api_key == 'example-api-key'
+        agreements_service_client._request('POST', '/')
+
+        assert rmock.last_request.headers.get('Content-type') == 'application/json'
+        assert rmock.last_request.headers.get('x-api-key') == 'api-key'
+        assert rmock.last_request.headers.get('Authorization') == 'Bearer ACCESS_TOKEN'
+        assert rmock.last_request.headers.get('User-Agent').startswith('DM-API-Client/')
+
+    def test_auth_token_not_fetched_when_get(self, agreements_service_client, rmock):
+        self.mock_refresh_auth_token(rmock)
+        rmock.request('GET', 'http://agreements-service-baseurl/', json={}, status_code=200)
+
+        agreements_service_client._request('GET', '/')
+
+        assert len(rmock.request_history) == 1
+
+        assert [{'method': request.method, 'url': request.url} for request in rmock.request_history] == [
+            {'method': 'GET', 'url': 'http://agreements-service-baseurl/'}
+        ]
+
+    @pytest.mark.parametrize(
+        'http_method',
+        (
+            'POST',
+            'PATCH',
+            'PUT',
+            'DELETE',
+        ),
+    )
+    def test_auth_token_fetched_when_not_get(self, agreements_service_client, rmock, http_method):
+        self.mock_refresh_auth_token(rmock)
+        rmock.request(http_method, 'http://agreements-service-baseurl/', json={}, status_code=200)
+
+        agreements_service_client._request(http_method, '/')
+
+        assert len(rmock.request_history) == 2
+
+        assert [{'method': request.method, 'url': request.url} for request in rmock.request_history] == [
+            {'method': 'POST', 'url': 'http://access-token-url/'},
+            {'method': http_method, 'url': 'http://agreements-service-baseurl/'},
+        ]
+
+    def test_auth_token_fetched_only_once_and_not_on_repeat_requests(self, agreements_service_client, rmock):
+        self.mock_refresh_auth_token(rmock)
+        rmock.request('POST', 'http://agreements-service-baseurl/', json={}, status_code=200)
+
+        agreements_service_client._request('POST', '/')
+        agreements_service_client._request('POST', '/')
+
+        assert len(rmock.request_history) == 3
+
+        assert [{'method': request.method, 'url': request.url} for request in rmock.request_history] == [
+            {'method': 'POST', 'url': 'http://access-token-url/'},
+            {'method': 'POST', 'url': 'http://agreements-service-baseurl/'},
+            {'method': 'POST', 'url': 'http://agreements-service-baseurl/'},
+        ]
+
+    def test_auth_token_fetched_again_of_expired(self, agreements_service_client, rmock):
+        self.mock_refresh_auth_token(rmock, expires_in=-100)
+        rmock.request('POST', 'http://agreements-service-baseurl/', json={}, status_code=200)
+
+        agreements_service_client._request('POST', '/')
+        agreements_service_client._request('POST', '/')
+
+        assert len(rmock.request_history) == 4
+
+        assert [{'method': request.method, 'url': request.url} for request in rmock.request_history] == [
+            {'method': 'POST', 'url': 'http://access-token-url/'},
+            {'method': 'POST', 'url': 'http://agreements-service-baseurl/'},
+            {'method': 'POST', 'url': 'http://access-token-url/'},
+            {'method': 'POST', 'url': 'http://agreements-service-baseurl/'},
+        ]
 
     def test_get_status(self, agreements_service_client):
         with pytest.raises(NotFound, match='404 Not Found'):
             agreements_service_client.get_status()
 
 
-class TestAgreements(object):
+class TestAgreements(BaseTestAgreementsServiceAPIClient):
     @staticmethod
     def _get_response_mock(rmock, path, json=None):
         rmock.get(
@@ -89,7 +166,7 @@ class TestAgreements(object):
         assert rmock.called
 
 
-class TestAgreementLots(object):
+class TestAgreementLots(BaseTestAgreementsServiceAPIClient):
     base_path = 'http://agreements-service-baseurl/agreements-service/agreements/RM6232/lots/1a{path}'
 
     @staticmethod
@@ -102,6 +179,7 @@ class TestAgreementLots(object):
 
     @staticmethod
     def _post_response_mock(rmock, path):
+        TestAgreementLots.mock_refresh_auth_token(rmock)
         rmock.post(
             TestAgreementLots.base_path.format(path=path),
             json={'message': 'done'},
@@ -110,9 +188,19 @@ class TestAgreementLots(object):
 
     @staticmethod
     def _patch_response_mock(rmock, path):
+        TestAgreementLots.mock_refresh_auth_token(rmock)
         rmock.patch(
             TestAgreementLots.base_path.format(path=path),
             body=BytesIO(b''),
+            status_code=200,
+        )
+
+    @staticmethod
+    def _put_response_mock(rmock, path):
+        TestAgreementLots.mock_refresh_auth_token(rmock)
+        rmock.put(
+            TestAgreementLots.base_path.format(path=path),
+            json={'message': 'done'},
             status_code=200,
         )
 
@@ -165,7 +253,58 @@ class TestAgreementLots(object):
 
         assert result == {'message': 'done'}
         assert rmock.called
-        assert rmock.request_history[0].json() == {}
+        assert rmock.request_history[1].json() == {}
+
+    def test_update_agreement_lot_supplier_details(self, agreements_service_client, rmock):
+        self._put_response_mock(rmock, '/suppliers')
+
+        result = agreements_service_client.update_agreement_lot_supplier_details(
+            'RM6232',
+            '1a',
+            'Plus Ultra Inc.',
+            '123456789',
+            'detroit@smash.com',
+            'Toshinori Yagi',
+            '01234567890',
+            '1 UA High Street',
+            'Musutafu',
+            'M1 1AA',
+            'NP',
+            'Japan',
+            '2025-12-25',
+        )
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[1].json() == [
+            {
+                'organization': {
+                    'identifier': {'legalName': 'Plus Ultra Inc.', 'scheme': 'US-DUNS', 'id': '123456789', 'uri': None},
+                    'details': {
+                        'creationDate': '2025-12-25',
+                        'countryCode': 'NP',
+                        'isSme': None,
+                        'isVcse': None,
+                        'isActive': True,
+                    },
+                    'address': {
+                        'streetAddress': '1 UA High Street',
+                        'locality': 'Musutafu',
+                        'region': None,
+                        'postalCode': 'M1 1AA',
+                        'countryName': 'Japan',
+                        'countryCode': 'NP',
+                    },
+                    'contactPoint': {
+                        'name': 'Toshinori Yagi',
+                        'email': 'detroit@smash.com',
+                        'telephone': '01234567890',
+                    },
+                },
+                'supplierStatus': 'ACTIVE',
+                'lastUpdatedBy': 'DMP ETL Job',
+            }
+        ]
 
     def test_update_agreement_lot_supplier_status_unsuspend(self, agreements_service_client, rmock):
         self._patch_response_mock(rmock, '/suppliers/duns/123456789/status')
@@ -174,7 +313,7 @@ class TestAgreementLots(object):
 
         assert result == b''
         assert rmock.called
-        assert rmock.request_history[0].json() == {'operation': 'unsuspend'}
+        assert rmock.request_history[1].json() == {'operation': 'unsuspend'}
 
     def test_update_agreement_lot_supplier_status_suspend(self, agreements_service_client, rmock):
         self._patch_response_mock(rmock, '/suppliers/duns/123456789/status')
@@ -183,10 +322,10 @@ class TestAgreementLots(object):
 
         assert result == b''
         assert rmock.called
-        assert rmock.request_history[0].json() == {'operation': 'suspend'}
+        assert rmock.request_history[1].json() == {'operation': 'suspend'}
 
 
-class TestOrganisations(object):
+class TestOrganisations(BaseTestAgreementsServiceAPIClient):
     base_path = 'http://agreements-service-baseurl/agreements-service/organisation{path}'
 
     @staticmethod
@@ -199,6 +338,7 @@ class TestOrganisations(object):
 
     @staticmethod
     def _post_response_mock(rmock, path):
+        TestOrganisations.mock_refresh_auth_token(rmock)
         rmock.post(
             TestOrganisations.base_path.format(path=path),
             json={'message': 'done'},
@@ -207,6 +347,7 @@ class TestOrganisations(object):
 
     @staticmethod
     def _patch_response_mock(rmock, path):
+        TestOrganisations.mock_refresh_auth_token(rmock)
         rmock.patch(
             TestOrganisations.base_path.format(path=path),
             body=BytesIO(b''),
@@ -220,7 +361,7 @@ class TestOrganisations(object):
 
         assert result == {'message': 'done'}
         assert rmock.called
-        assert rmock.request_history[0].json() == {
+        assert rmock.request_history[1].json() == {
             'legalName': 'Plus Ultra Inc.',
             'registryCode': 'US-DUNS',
             'entityId': '123456789',
@@ -258,7 +399,7 @@ class TestOrganisations(object):
 
         assert result == b''
         assert rmock.called
-        assert rmock.request_history[0].json() == {
+        assert rmock.request_history[1].json() == {
             'supplierName': 'Plus Ultra Inc.',
         }
 
@@ -269,7 +410,7 @@ class TestOrganisations(object):
 
         assert result == b''
         assert rmock.called
-        assert rmock.request_history[0].json() == {
+        assert rmock.request_history[1].json() == {
             'emailAddress': 'email@email.com',
         }
 
@@ -280,7 +421,7 @@ class TestOrganisations(object):
 
         assert result == b''
         assert rmock.called
-        assert rmock.request_history[0].json() == {
+        assert rmock.request_history[1].json() == {
             'contactPointName': 'Toshinori Yagi',
         }
 
@@ -291,7 +432,7 @@ class TestOrganisations(object):
 
         assert result == b''
         assert rmock.called
-        assert rmock.request_history[0].json() == {
+        assert rmock.request_history[1].json() == {
             'telephoneNumber': '01234567890',
         }
 
@@ -302,7 +443,7 @@ class TestOrganisations(object):
 
         assert result == b''
         assert rmock.called
-        assert rmock.request_history[0].json() == {
+        assert rmock.request_history[1].json() == {
             'streetAddress': '1 UA High Street',
         }
 
@@ -313,7 +454,7 @@ class TestOrganisations(object):
 
         assert result == b''
         assert rmock.called
-        assert rmock.request_history[0].json() == {
+        assert rmock.request_history[1].json() == {
             'locality': 'Musutafu',
         }
 
@@ -324,7 +465,7 @@ class TestOrganisations(object):
 
         assert result == b''
         assert rmock.called
-        assert rmock.request_history[0].json() == {
+        assert rmock.request_history[1].json() == {
             'postalCode': 'M1 1AA',
         }
 
@@ -344,7 +485,7 @@ class TestOrganisations(object):
 
         assert result == b''
         assert rmock.called
-        assert rmock.request_history[0].json() == {
+        assert rmock.request_history[1].json() == {
             'supplierName': 'Plus Ultra Inc.',
             'emailAddress': 'detroit@smash.com',
             'contactPointName': 'Toshinori Yagi',

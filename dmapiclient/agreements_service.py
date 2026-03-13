@@ -1,9 +1,15 @@
+import logging
+from datetime import datetime, timezone, timedelta
+
 from enum import Enum
 import requests
 from flask import abort
 
 from . import __version__
 from .base import BaseAPIClient, ResponseType
+from .errors import HTTPError
+
+logger = logging.getLogger(__name__)
 
 
 class AgreementsServiceURL(Enum):
@@ -27,6 +33,7 @@ class AgreementsServiceURL(Enum):
     CREATE_AGREEMENT_LOT_SUPPLIER = (
         '/agreements-service/agreements/{agreement_id}/lots/{lot_id}/suppliers/duns/{duns_number}'
     )
+    UPDATE_AGREEMENT_LOT_SUPPLIER_DETAILS = '/agreements-service/agreements/{agreement_id}/lots/{lot_id}/suppliers'
     UPDATE_AGREEMENT_LOT_SUPPLIER_STATUS = (
         '/agreements-service/agreements/{agreement_id}/lots/{lot_id}/suppliers/duns/{duns_number}/status'
     )
@@ -47,6 +54,9 @@ class AgreementsServiceAPIClient(BaseAPIClient):
         self,
         base_url=None,
         api_key=None,
+        access_token_url=None,
+        access_token_client_id=None,
+        access_token_client_secret=None,
         enabled=True,
         timeout=(
             15,
@@ -55,18 +65,77 @@ class AgreementsServiceAPIClient(BaseAPIClient):
     ):
         super().__init__(base_url, None, enabled, timeout)
         self._api_key = api_key
-
-    def init_app(self, app):
-        self._base_url = app.config['DM_AGREEMENTS_SERVICE_API_URL']
-        self._api_key = app.config['DM_AGREEMENTS_SERVICE_API_KEY']
+        self._access_token_url = access_token_url
+        self._access_token_client_id = access_token_client_id
+        self._access_token_client_secret = access_token_client_secret
+        self._auth_token_expires_at = None
 
     def _get_headers(self):
-        return requests.structures.CaseInsensitiveDict(
-            {
-                'Content-type': 'application/json',
-                'x-api-key': self._api_key,
-                'User-agent': 'DM-API-Client/{}'.format(__version__),
-            }
+        base_headers = {
+            'Content-type': 'application/json',
+            'x-api-key': self._api_key,
+            'User-agent': 'DM-API-Client/{}'.format(__version__),
+        }
+        if self._auth_token is not None:
+            base_headers['Authorization'] = 'Bearer {}'.format(self._auth_token)
+
+        return requests.structures.CaseInsensitiveDict(base_headers)
+
+    def _refresh_auth_token(self):
+        current_time = datetime.now(timezone.utc)
+
+        try:
+            response = self._requests_retry_session(retry_read_timeouts=True).request(
+                'POST',
+                self._access_token_url,
+                auth=(self._access_token_client_id, self._access_token_client_secret),
+                data={'grant_type': 'client_credentials'},
+                timeout=self.timeout,
+            )
+            response.raise_for_status()
+        except requests.RequestException as e:
+            api_error = HTTPError.create(e)
+            logger.log(
+                logging.WARNING,
+                "API {api_method} request on {api_url} failed with {api_status} '{api_error}'",
+                extra={
+                    'api_method': 'POST',
+                    'api_url': self._access_token_url,
+                    'api_status': api_error.status_code,
+                    'api_error': '{} raised {}'.format(api_error.message, str(e)),
+                },
+            )
+            raise api_error from e
+
+        token_data = response.json()
+        self._auth_token = token_data.get('access_token')
+        self._auth_token_expires_at = current_time + timedelta(seconds=token_data.get('expires_in'))
+
+    def _request(  # noqa C901
+        self,
+        method,
+        url,
+        data=None,
+        params=None,
+        *,
+        client_wait_for_response: bool = True,
+        response_type: ResponseType | None = None,
+        **kwargs,
+    ):
+        if method.upper() != 'GET' and (
+            self._auth_token_expires_at is None
+            or (self._auth_token_expires_at is not None and datetime.now(timezone.utc) > self._auth_token_expires_at)
+        ):
+            self._refresh_auth_token()
+
+        return super()._request(
+            method,
+            url,
+            data=data,
+            params=params,
+            client_wait_for_response=client_wait_for_response,
+            response_type=response_type,
+            **kwargs,
         )
 
     def get_status(self):
@@ -121,6 +190,57 @@ class AgreementsServiceAPIClient(BaseAPIClient):
             agreement_id=agreement_id,
             lot_id=lot_id,
             duns_number=duns_number,
+        )
+
+    def update_agreement_lot_supplier_details(
+        self,
+        agreement_id,
+        lot_id,
+        supplier_name,
+        duns_number,
+        email_address,
+        contact_name,
+        telephone_number,
+        address_line_1,
+        town_or_city,
+        postcode,
+        country_code,
+        country_name,
+        created_at,
+    ):
+        return self._put(
+            AgreementsServiceURL.UPDATE_AGREEMENT_LOT_SUPPLIER_DETAILS,
+            [
+                {
+                    'organization': {
+                        'identifier': {'legalName': supplier_name, 'scheme': 'US-DUNS', 'id': duns_number, 'uri': None},
+                        'details': {
+                            'creationDate': created_at,
+                            'countryCode': country_code,
+                            'isSme': None,
+                            'isVcse': None,
+                            'isActive': True,
+                        },
+                        'address': {
+                            'streetAddress': address_line_1,
+                            'locality': town_or_city,
+                            'region': None,
+                            'postalCode': postcode,
+                            'countryName': country_name,
+                            'countryCode': country_code,
+                        },
+                        'contactPoint': {
+                            'name': contact_name,
+                            'email': email_address,
+                            'telephone': telephone_number,
+                        },
+                    },
+                    'supplierStatus': 'ACTIVE',
+                    'lastUpdatedBy': 'DMP ETL Job',
+                }
+            ],
+            agreement_id=agreement_id,
+            lot_id=lot_id,
         )
 
     def update_agreement_lot_supplier_status(self, agreement_id, lot_id, duns_number, on_lot):
