@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.2.0
+
+Update the endpoints for the Agreements Service API Client
+
 ## 38.1.0
 
 Add `share_code` as searchable parameter for suppliers
