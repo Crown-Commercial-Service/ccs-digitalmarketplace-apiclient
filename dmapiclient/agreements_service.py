@@ -6,7 +6,7 @@ import requests
 from flask import abort
 
 from . import __version__
-from .base import BaseAPIClient, ResponseType
+from .base import BaseAPIClient, ResponseType, APIClientMode
 from .errors import HTTPError
 
 logger = logging.getLogger(__name__)
@@ -62,8 +62,9 @@ class AgreementsServiceAPIClient(BaseAPIClient):
             15,
             45,
         ),
+        mode=APIClientMode.READ_WRITE,
     ):
-        super().__init__(base_url, None, enabled, timeout)
+        super().__init__(base_url, None, enabled, timeout, mode)
         self._api_key = api_key
         self._access_token_url = access_token_url
         self._access_token_client_id = access_token_client_id

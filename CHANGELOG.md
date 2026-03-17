@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.2.1
+
+Add mode to the Agreements Service API Client as it has the ability to write
+
 ## 38.2.0
 
 Update the endpoints for the Agreements Service API Client
