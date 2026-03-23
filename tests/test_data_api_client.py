@@ -2715,6 +2715,42 @@ class TestBriefResponseMethods(object):
 
 
 class TestFrameworkAgreementMethods(object):
+    def test_find_supplier_framework_agreements(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/agreements?framework=g-cloud-6',
+            json={'lotQuestionsResponses': 'result'},
+            status_code=200,
+        )
+
+        result = data_client.find_supplier_framework_agreements('g-cloud-6')
+
+        assert result == {'lotQuestionsResponses': 'result'}
+        assert rmock.called
+
+    def test_find_supplier_framework_agreements_adds_countersigned_date_parameter(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/agreements?framework=g-cloud-6&countersigned_date=2026-12-25',
+            json={'lotQuestionsResponses': 'result'},
+            status_code=200,
+        )
+
+        result = data_client.find_supplier_framework_agreements('g-cloud-6', countersigned_date='2026-12-25')
+
+        assert result == {'lotQuestionsResponses': 'result'}
+        assert rmock.called
+
+    def test_find_supplier_framework_agreements_adds_page_parameter(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/agreements?framework=g-cloud-6&page=2',
+            json={'lotQuestionsResponses': 'result'},
+            status_code=200,
+        )
+
+        result = data_client.find_supplier_framework_agreements('g-cloud-6', page=2)
+
+        assert result == {'lotQuestionsResponses': 'result'}
+        assert rmock.called
+
     def test_get_framework_agreement(self, data_client, rmock):
         rmock.get('http://baseurl/agreements/12345', json={'agreement': {'details': 'here'}}, status_code=200)
 
@@ -3461,6 +3497,16 @@ class TestDataAPIClientIterMethods(object):
             model_name='lotPricings',
             url_path='lot-pricings?framework=g-cloud-6&route=the-route',
             iter_kwargs={'framework_slug': 'g-cloud-6', 'route': 'the-route'},
+        )
+
+    def test_find_supplier_framework_agreement_iter(self, data_client, rmock):
+        self._test_find_iter(
+            data_client,
+            rmock,
+            method_name='find_supplier_framework_agreements_iter',
+            model_name='agreements',
+            url_path='agreements?framework=g-cloud-6',
+            iter_kwargs={'framework_slug': 'g-cloud-6'},
         )
 
 
