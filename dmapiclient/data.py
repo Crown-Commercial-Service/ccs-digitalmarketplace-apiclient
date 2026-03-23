@@ -1311,6 +1311,18 @@ class DataAPIClient(BaseAPIClient):
 
     # Agreements
 
+    def find_supplier_framework_agreements(self, framework_slug, countersigned_date=None, page=None):
+        params = {
+            'framework': framework_slug,
+            'countersigned_date': countersigned_date,
+            'page': page,
+        }
+
+        return self._get('/agreements', params=params)
+
+    find_supplier_framework_agreements_iter = make_iter_method('find_supplier_framework_agreements', 'agreements')
+    find_supplier_framework_agreements_iter.__name__ = str('find_supplier_framework_agreements_iter')
+
     def get_framework_agreement(self, framework_agreement_id):
         return self._get('/agreements/{}'.format(framework_agreement_id))
 

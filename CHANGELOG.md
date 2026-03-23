@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.3.0
+
+Add endpoint to find framework agreements
+
 ## 38.2.1
 
 Add mode to the Agreements Service API Client as it has the ability to write
