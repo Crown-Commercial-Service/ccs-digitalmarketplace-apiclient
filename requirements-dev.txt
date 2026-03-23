@@ -65,7 +65,7 @@ pytest==9.0.2
     # via
     #   ccs-digitalmarketplace-apiclient (pyproject.toml)
     #   pytest-cov
-pytest-cov==7.0.0
+pytest-cov==7.1.0
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 pyyaml==6.0.3
     # via pre-commit
