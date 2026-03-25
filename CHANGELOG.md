@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.3.1
+
+Add audit event for supplier status changes
+
 ## 38.3.0
 
 Add endpoint to find framework agreements
