@@ -16,6 +16,7 @@ class AuditTypes(Enum):
     reject_pending_supplier_framework_description = 'reject_pending_supplier_framework_description'
     create_supplier = 'create_supplier'
     supplier_update = 'supplier_update'
+    update_supplier_service_status = 'update_supplier_service_status'
 
     # Draft service lifecycle event
     create_draft_service = 'create_draft_service'
