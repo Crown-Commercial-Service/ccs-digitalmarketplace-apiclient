@@ -110,7 +110,7 @@ class AgreementsServiceAPIClient(BaseAPIClient):
 
         token_data = response.json()
         self._auth_token = token_data.get('access_token')
-        self._auth_token_expires_at = current_time + timedelta(seconds=token_data.get('expires_in'))
+        self._auth_token_expires_at = current_time + timedelta(seconds=int(token_data.get('expires_in')) - 30)
 
     def _request(  # noqa C901
         self,
