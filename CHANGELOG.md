@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.3.2
+
+Reduce the auth token expiry to make sure we refesh it before it expires
+
 ## 38.3.1
 
 Add audit event for supplier status changes
