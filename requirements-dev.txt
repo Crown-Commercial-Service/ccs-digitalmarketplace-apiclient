@@ -87,5 +87,5 @@ urllib3==2.6.3
     #   types-requests
 virtualenv==21.2.0
     # via pre-commit
-werkzeug==3.1.6
+werkzeug==3.1.7
     # via flask
