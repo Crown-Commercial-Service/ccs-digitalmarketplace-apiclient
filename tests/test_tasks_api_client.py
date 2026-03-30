@@ -109,3 +109,95 @@ class TestNotificationsMethods(object):
             'notificationTemplateName': notification_template_name,
             'notificationTemplateId': notification_template_id,
         }
+
+
+class TestComplianceCommunicationsMethods(object):
+    def test_create_broadcast_compliance_communication_returns_result(self, tasks_client, rmock):
+        rmock.post(
+            'http://baseurl/frameworks/g-cloud-7/compliance-communications/broadcast',
+            json={'request_id': '999'},
+            status_code=200,
+        )
+
+        result = tasks_client.create_broadcast_compliance_communication(
+            'g-cloud-7',
+            category='security',
+            subject='Important update',
+            message='Please review the attached documents.',
+            attachments=['file1.pdf', 'file2.pdf'],
+            broadcast_message_id='msg-123',
+            supplier_ids=[1, 2, 3],
+            user='user',
+        )
+
+        assert result == {'request_id': '999'}
+        assert rmock.called
+
+    def test_create_broadcast_compliance_communication_sends_correct_payload(self, tasks_client, rmock):
+        rmock.post(
+            'http://baseurl/frameworks/g-cloud-7/compliance-communications/broadcast',
+            json={'request_id': '999'},
+            status_code=200,
+        )
+
+        tasks_client.create_broadcast_compliance_communication(
+            'g-cloud-7',
+            category='security',
+            subject='Important update',
+            message='Please review the attached documents.',
+            attachments=['file1.pdf', 'file2.pdf'],
+            broadcast_message_id='msg-123',
+            supplier_ids=[1, 2, 3],
+            user='user',
+        )
+
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'category': 'security',
+            'subject': 'Important update',
+            'message': 'Please review the attached documents.',
+            'attachments': ['file1.pdf', 'file2.pdf'],
+            'broadcastMessageId': 'msg-123',
+            'supplierIds': [1, 2, 3],
+        }
+
+    def test_create_broadcast_compliance_communication_raises_value_error_if_no_user(self, tasks_client, rmock):
+        rmock.post(
+            'http://baseurl/frameworks/g-cloud-7/compliance-communications/broadcast',
+            json={'request_id': '999'},
+            status_code=200,
+        )
+
+        with pytest.raises(ValueError):
+            tasks_client.create_broadcast_compliance_communication(
+                'g-cloud-7',
+                category='security',
+                subject='Important update',
+                message='Please review the attached documents.',
+                attachments=['file1.pdf', 'file2.pdf'],
+                broadcast_message_id='msg-123',
+                supplier_ids=[1, 2, 3],
+            )
+
+    def test_create_broadcast_compliance_communication_with_user_passed_per_call(self, rmock):
+        tasks_client = TasksAPIClient('http://baseurl', 'auth-token', enabled=True)
+
+        rmock.post(
+            'http://baseurl/frameworks/g-cloud-7/compliance-communications/broadcast',
+            json={'request_id': '999'},
+            status_code=200,
+        )
+
+        result = tasks_client.create_broadcast_compliance_communication(
+            'g-cloud-7',
+            category='security',
+            subject='Important update',
+            message='Please review the attached documents.',
+            attachments=['file1.pdf', 'file2.pdf'],
+            broadcast_message_id='msg-123',
+            supplier_ids=[1, 2, 3],
+            user='per-call-user@example.com',
+        )
+
+        assert result == {'request_id': '999'}
+        assert rmock.request_history[0].json()['updated_by'] == 'per-call-user@example.com'

@@ -35,3 +35,27 @@ class TasksAPIClient(BaseAPIClient):
             },
             user=user,
         )
+
+    def create_broadcast_compliance_communication(
+        self,
+        framework_slug,
+        category,
+        subject,
+        message,
+        attachments,
+        broadcast_message_id,
+        supplier_ids,
+        user=None,
+    ):
+        return self._post_with_updated_by(
+            '/frameworks/{}/compliance-communications/broadcast'.format(framework_slug),
+            data={
+                'category': category,
+                'subject': subject,
+                'message': message,
+                'attachments': attachments,
+                'broadcastMessageId': broadcast_message_id,
+                'supplierIds': supplier_ids,
+            },
+            user=user,
+        )
