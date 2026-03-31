@@ -45,7 +45,6 @@ class TasksAPIClient(BaseAPIClient):
         attachments,
         broadcast_message_id,
         supplier_ids,
-        sender_user_id=None,
         user=None,
     ):
         return self._post_with_updated_by(
@@ -57,7 +56,6 @@ class TasksAPIClient(BaseAPIClient):
                 'attachments': attachments,
                 'broadcastMessageId': broadcast_message_id,
                 'supplierIds': supplier_ids,
-                'senderUserId': sender_user_id,
             },
             user=user,
         )
