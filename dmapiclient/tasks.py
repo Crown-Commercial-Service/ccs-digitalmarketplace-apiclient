@@ -48,16 +48,18 @@ class TasksAPIClient(BaseAPIClient):
         send_to_all=False,
         user=None,
     ):
+        data = {
+            'category': category,
+            'subject': subject,
+            'message': message,
+            'attachments': attachments,
+            'broadcastMessageId': broadcast_message_id,
+            'supplierIds': supplier_ids,
+        }
+        if send_to_all:
+            data['sendToAll'] = send_to_all
         return self._post_with_updated_by(
             '/frameworks/{}/compliance-communications/broadcast'.format(framework_slug),
-            data={
-                'category': category,
-                'subject': subject,
-                'message': message,
-                'attachments': attachments,
-                'broadcastMessageId': broadcast_message_id,
-                'supplierIds': supplier_ids,
-                'sendToAll': send_to_all,
-            },
+            data=data,
             user=user,
         )
