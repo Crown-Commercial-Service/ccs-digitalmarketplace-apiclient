@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.4.0
+
+Add `create_broadcast_compliance_communication` to `TasksAPIClient`
+
 ## 38.3.2
 
 Reduce the auth token expiry to make sure we refesh it before it expires
