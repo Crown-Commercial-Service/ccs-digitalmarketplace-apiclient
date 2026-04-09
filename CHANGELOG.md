@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.5.0
+
+Add `framework_slug` and `lot_slug` to `find_suppliers` method
+
 ## 38.4.0
 
 Add `create_broadcast_compliance_communication` to `TasksAPIClient`
