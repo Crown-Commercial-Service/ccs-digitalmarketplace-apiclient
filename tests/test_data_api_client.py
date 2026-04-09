@@ -613,6 +613,26 @@ class TestSupplierMethods(object):
         assert result == {'services': 'result'}
         assert rmock.called
 
+    def test_find_suppliers_with_framework_slug(self, data_client, rmock):
+        rmock.get('http://baseurl/suppliers?framework_slug=g-cloud-15', json={'services': 'result'}, status_code=200)
+
+        result = data_client.find_suppliers(framework_slug='g-cloud-15')
+
+        assert result == {'services': 'result'}
+        assert rmock.called
+
+    def test_find_suppliers_with_framework_slug_and_lot_slug(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/suppliers?framework_slug=g-cloud-15&lot_slug=saas',
+            json={'services': 'result'},
+            status_code=200,
+        )
+
+        result = data_client.find_suppliers(framework_slug='g-cloud-15', lot_slug='saas')
+
+        assert result == {'services': 'result'}
+        assert rmock.called
+
     def test_find_suppliers_with_duns_number(self, data_client, rmock):
         rmock.get('http://baseurl/suppliers?duns_number=1234', json={'services': 'result'}, status_code=200)
 
