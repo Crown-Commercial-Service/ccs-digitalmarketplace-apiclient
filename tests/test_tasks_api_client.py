@@ -110,6 +110,28 @@ class TestNotificationsMethods(object):
             'notificationTemplateId': notification_template_id,
         }
 
+    def test_send_compliance_communication_notifications(self, tasks_client, rmock):
+        rmock.post(
+            'http://baseurl/notifications/compliance-communications',
+            json={'request_id': '999'},
+            status_code=200,
+        )
+
+        result = tasks_client.send_compliance_communication_notifications(
+            'the-template', 1234, 4321, 'the-category', 'the-subject', user='user'
+        )
+
+        assert result == {'request_id': '999'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'template': 'the-template',
+            'communication_id': 1234,
+            'supplier_id': 4321,
+            'category': 'the-category',
+            'subject': 'the-subject',
+        }
+
 
 class TestComplianceCommunicationsMethods(object):
     def test_create_broadcast_compliance_communication_returns_result(self, tasks_client, rmock):
