@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.6.0
+
+Add task api client to send compliance communications notifications
+
 ## 38.5.0
 
 Add `framework_slug` and `lot_slug` to `find_suppliers` method

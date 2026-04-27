@@ -36,6 +36,23 @@ class TasksAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def send_compliance_communication_notifications(
+        self, template, communication_id, supplier_id, category, subject, user=None
+    ):
+        return self._post_with_updated_by(
+            '/notifications/compliance-communications',
+            data={
+                'template': template,
+                'communication_id': communication_id,
+                'supplier_id': supplier_id,
+                'category': category,
+                'subject': subject,
+            },
+            user=user,
+        )
+
+    # Broadcasts
+
     def create_broadcast_compliance_communication(
         self,
         framework_slug,
@@ -45,21 +62,17 @@ class TasksAPIClient(BaseAPIClient):
         attachments,
         broadcast_message_id,
         supplier_ids,
-        send_to_all=False,
         user=None,
     ):
-        data = {
-            'category': category,
-            'subject': subject,
-            'message': message,
-            'attachments': attachments,
-            'broadcastMessageId': broadcast_message_id,
-            'supplierIds': supplier_ids,
-        }
-        if send_to_all:
-            data['sendToAll'] = send_to_all
         return self._post_with_updated_by(
-            '/frameworks/{}/compliance-communications/broadcast'.format(framework_slug),
-            data=data,
+            f'/frameworks/{framework_slug}/compliance-communications/broadcast',
+            data={
+                'category': category,
+                'subject': subject,
+                'message': message,
+                'attachments': attachments,
+                'broadcastMessageId': broadcast_message_id,
+                'supplierIds': supplier_ids,
+            },
             user=user,
         )
