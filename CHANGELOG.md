@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.7.0
+
+Add `decide_pending_service` method for per-field approve/reject of supplier service edits
+
 ## 38.6.0
 
 Add task api client to send compliance communications notifications
