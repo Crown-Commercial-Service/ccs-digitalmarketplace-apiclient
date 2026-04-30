@@ -1010,6 +1010,15 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def decide_pending_service(self, service_id, decisions, user=None):
+        return self._post_with_updated_by(
+            f'/pending-services/{service_id}/decisions',
+            data={
+                'decisions': decisions,
+            },
+            user=user,
+        )
+
     def update_service_status(self, service_id, status, user=None, *, wait_for_index: bool = True):
         return self._post_with_updated_by(
             '/services/{}/status/{}{}'.format(

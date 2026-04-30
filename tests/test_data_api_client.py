@@ -194,6 +194,26 @@ class TestServiceMethods(object):
         assert rmock.called
         assert rmock.last_request.json() == {'reasonText': 'reason_text', 'updated_by': 'testuser@example.com'}
 
+    def test_decide_pending_service(self, data_client, rmock):
+        rmock.post(
+            'http://baseurl/pending-services/123/decisions',
+            json={'message': 'done'},
+            status_code=200,
+        )
+
+        decisions = [
+            {'field': 'serviceName', 'action': 'approve'},
+            {'field': 'serviceSummary', 'action': 'reject', 'reasonText': 'unclear'},
+        ]
+        result = data_client.decide_pending_service(123, decisions, 'testuser@example.com')
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.last_request.json() == {
+            'decisions': decisions,
+            'updated_by': 'testuser@example.com',
+        }
+
     @pytest.mark.parametrize(
         'wait_for_index_call_arg,wait_for_index_req_arg',
         (
