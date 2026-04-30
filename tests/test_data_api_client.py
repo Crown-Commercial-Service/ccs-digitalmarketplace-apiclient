@@ -5153,6 +5153,24 @@ class TestTechnicalAbilityCertificatesMethods(object):
             'technicalAbilityCertificates': {'question': 'answer'},
         }
 
+    def test_update_technical_ability_certificate_with_is_admin_update(self, data_client, rmock):
+        rmock.patch(
+            'http://baseurl/technical-ability-certificates/1234?is_admin_update=True',
+            json={'technicalAbilityCertificates': {'question': 'answer'}},
+            status_code=200,
+        )
+
+        result = data_client.update_technical_ability_certificate(
+            1234, {'question': 'answer'}, 'user', is_admin_update=True
+        )
+
+        assert result == {'technicalAbilityCertificates': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'technicalAbilityCertificates': {'question': 'answer'},
+        }
+
     def test_update_technical_ability_certificate_with_page_questions(self, data_client, rmock):
         rmock.patch(
             'http://baseurl/technical-ability-certificates/1234',
@@ -5185,6 +5203,21 @@ class TestTechnicalAbilityCertificatesMethods(object):
             'updated_by': 'user',
         }
 
+    def test_resend_technical_ability_certificate(self, data_client, rmock):
+        rmock.post(
+            'http://baseurl/technical-ability-certificates/1234/resend',
+            json={'message': 'done', 'authenticationId': 'random-value', 'passcode': '123456'},
+            status_code=200,
+        )
+
+        result = data_client.resend_technical_ability_certificate(1234, 'user')
+
+        assert result == {'message': 'done', 'authenticationId': 'random-value', 'passcode': '123456'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+        }
+
     def test_revert_technical_ability_certificate_to_in_progress(self, data_client, rmock):
         rmock.post(
             'http://baseurl/technical-ability-certificates/1234/revert-to-in-progress',
@@ -5206,6 +5239,19 @@ class TestTechnicalAbilityCertificatesMethods(object):
         )
 
         result = data_client.approve_technical_ability_certificate(1234, 'Elma', 'user')
+
+        assert result == {'message': 'done'}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {'updated_by': 'user', 'electronicSignature': 'Elma'}
+
+    def test_approve_technical_ability_certificate_with_is_admin_update(self, data_client, rmock):
+        rmock.post(
+            'http://baseurl/technical-ability-certificates/1234/approve?is_admin_update=True',
+            json={'message': 'done'},
+            status_code=200,
+        )
+
+        result = data_client.approve_technical_ability_certificate(1234, 'Elma', 'user', is_admin_update=True)
 
         assert result == {'message': 'done'}
         assert rmock.called

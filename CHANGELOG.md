@@ -4,9 +4,13 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
-## 38.7.0
+## 38.8.0
 
 Add `decide_pending_service` method for per-field approve/reject of supplier service edits
+
+## 38.7.0
+
+Add methods for admin updates to the TAC
 
 ## 38.6.0
 

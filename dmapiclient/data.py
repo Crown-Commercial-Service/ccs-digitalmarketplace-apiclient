@@ -2140,7 +2140,12 @@ class DataAPIClient(BaseAPIClient):
         )
 
     def update_technical_ability_certificate(
-        self, technical_ability_certificate_id, technical_ability_certificate, user=None, page_questions=None
+        self,
+        technical_ability_certificate_id,
+        technical_ability_certificate,
+        user=None,
+        page_questions=None,
+        is_admin_update=None,
     ):
         data = {
             'technicalAbilityCertificates': technical_ability_certificate,
@@ -2151,6 +2156,7 @@ class DataAPIClient(BaseAPIClient):
 
         return self._patch_with_updated_by(
             f'/technical-ability-certificates/{technical_ability_certificate_id}',
+            params={'is_admin_update': is_admin_update},
             data=data,
             user=user,
         )
@@ -2162,6 +2168,17 @@ class DataAPIClient(BaseAPIClient):
     ):
         return self._post_with_updated_by(
             f'/technical-ability-certificates/{technical_ability_certificate_id}/send',
+            data={},
+            user=user,
+        )
+
+    def resend_technical_ability_certificate(
+        self,
+        technical_ability_certificate_id,
+        user=None,
+    ):
+        return self._post_with_updated_by(
+            f'/technical-ability-certificates/{technical_ability_certificate_id}/resend',
             data={},
             user=user,
         )
@@ -2182,10 +2199,12 @@ class DataAPIClient(BaseAPIClient):
         technical_ability_certificate_id,
         electronic_signature,
         user=None,
+        is_admin_update=None,
     ):
         return self._post_with_updated_by(
             f'/technical-ability-certificates/{technical_ability_certificate_id}/approve',
             data={'electronicSignature': electronic_signature},
+            params={'is_admin_update': is_admin_update},
             user=user,
         )
 
