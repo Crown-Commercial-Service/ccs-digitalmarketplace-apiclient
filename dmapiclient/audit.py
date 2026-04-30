@@ -149,9 +149,12 @@ class AuditTypes(Enum):
     # Technical award certificate
     create_technical_ability_certificate = 'create_technical_ability_certificate'
     update_technical_ability_certificate_answers = 'update_technical_ability_certificate_answers'
+    admin_update_technical_ability_certificate_answers = 'admin_update_technical_ability_certificate_answers'
     send_technical_ability_certificate = 'send_technical_ability_certificate'
+    resend_technical_ability_certificate = 'resend_technical_ability_certificate'
     revert_technical_ability_certificate_to_in_progress = 'revert_technical_ability_certificate_to_in_progress'
     approve_technical_ability_certificate = 'approve_technical_ability_certificate'
+    admin_approve_technical_ability_certificate = 'admin_approve_technical_ability_certificate'
     technical_ability_certificate_auth_failed = 'technical_ability_certificate_auth_failed'
 
     # Lot questions responses
