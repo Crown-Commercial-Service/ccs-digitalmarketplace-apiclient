@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.7.0
+
+Add methods for admin updates to the TAC
+
 ## 38.6.0
 
 Add task api client to send compliance communications notifications
