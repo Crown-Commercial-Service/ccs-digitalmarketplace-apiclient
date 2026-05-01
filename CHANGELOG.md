@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.7.1
+
+Remove `lot_slug` to `find_suppliers` method as it was not created correctly and so not useable
+
 ## 38.7.0
 
 Add methods for admin updates to the TAC

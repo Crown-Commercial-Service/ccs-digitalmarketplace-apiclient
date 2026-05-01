@@ -101,7 +101,6 @@ class DataAPIClient(BaseAPIClient):
         page=None,
         framework=None,
         framework_slug=None,
-        lot_slug=None,
         duns_number=None,
         company_registration_number=None,
         share_code=None,
@@ -122,8 +121,6 @@ class DataAPIClient(BaseAPIClient):
             params['framework'] = framework
         if framework_slug is not None:
             params['framework_slug'] = framework_slug
-        if lot_slug is not None:
-            params['lot_slug'] = lot_slug
         if duns_number is not None:
             params['duns_number'] = duns_number
         if company_registration_number is not None:
