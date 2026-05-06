@@ -292,6 +292,8 @@ class AgreementsServiceAPIClient(BaseAPIClient):
         address_line_1=None,
         town_or_city=None,
         postcode=None,
+        country_code=None,
+        country_name=None,
     ):
         data = {}
 
@@ -309,6 +311,10 @@ class AgreementsServiceAPIClient(BaseAPIClient):
             data['locality'] = town_or_city
         if postcode is not None:
             data['postalCode'] = postcode
+        if country_code is not None:
+            data['countryCode'] = country_code
+        if country_name is not None:
+            data['countryName'] = country_name
 
         return self._patch(
             AgreementsServiceURL.UPDATE_ORGANISATION_BY_DUNS,

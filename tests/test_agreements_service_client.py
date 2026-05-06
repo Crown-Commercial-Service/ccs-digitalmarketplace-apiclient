@@ -469,6 +469,28 @@ class TestOrganisations(BaseTestAgreementsServiceAPIClient):
             'postalCode': 'M1 1AA',
         }
 
+    def test_update_organisation_by_duns_country_code(self, agreements_service_client, rmock):
+        self._patch_response_mock(rmock, '/duns/123456789')
+
+        result = agreements_service_client.update_organisation_by_duns('123456789', country_code='NP')
+
+        assert result == b''
+        assert rmock.called
+        assert rmock.request_history[1].json() == {
+            'countryCode': 'NP',
+        }
+
+    def test_update_organisation_by_duns_country_name(self, agreements_service_client, rmock):
+        self._patch_response_mock(rmock, '/duns/123456789')
+
+        result = agreements_service_client.update_organisation_by_duns('123456789', country_name='Japan')
+
+        assert result == b''
+        assert rmock.called
+        assert rmock.request_history[1].json() == {
+            'countryName': 'Japan',
+        }
+
     def test_update_organisation_by_duns_all_attributes(self, agreements_service_client, rmock):
         self._patch_response_mock(rmock, '/duns/123456789')
 
@@ -481,6 +503,8 @@ class TestOrganisations(BaseTestAgreementsServiceAPIClient):
             address_line_1='1 UA High Street',
             town_or_city='Musutafu',
             postcode='M1 1AA',
+            country_code='NP',
+            country_name='Japan',
         )
 
         assert result == b''
@@ -493,4 +517,6 @@ class TestOrganisations(BaseTestAgreementsServiceAPIClient):
             'streetAddress': '1 UA High Street',
             'locality': 'Musutafu',
             'postalCode': 'M1 1AA',
+            'countryCode': 'NP',
+            'countryName': 'Japan',
         }
