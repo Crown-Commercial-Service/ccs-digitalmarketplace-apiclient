@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.8.0
+
+Include country name and code in the `update_organisation_by_duns` in the Agreements Service API Client
+
 ## 38.7.1
 
 Remove `lot_slug` to `find_suppliers` method as it was not created correctly and so not useable
