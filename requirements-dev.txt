@@ -75,7 +75,7 @@ requests==2.34.2
     #   requests-mock
 requests-mock==1.12.1
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
-ruff==0.15.15
+ruff==0.15.16
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 types-requests==2.33.0.20260518
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
