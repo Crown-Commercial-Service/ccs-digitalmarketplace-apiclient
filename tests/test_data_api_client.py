@@ -2264,6 +2264,14 @@ class TestFrameworkMethods(object):
         assert result == {'frameworks': ['g6', 'g7']}
         assert rmock.called
 
+    def test_find_frameworks_with_status(self, data_client, rmock):
+        rmock.get('http://baseurl/frameworks?status=live', json={'frameworks': ['g7']}, status_code=200)
+
+        result = data_client.find_frameworks(status='live')
+
+        assert result == {'frameworks': ['g7']}
+        assert rmock.called
+
     def test_get_framework(self, data_client, rmock):
         rmock.get('http://baseurl/frameworks/g-cloud-11', json={'frameworks': {'g-cloud-11': 'yes'}}, status_code=200)
 

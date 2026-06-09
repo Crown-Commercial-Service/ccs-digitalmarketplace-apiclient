@@ -1025,8 +1025,13 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def find_frameworks(self):
-        return self._get('/frameworks')
+    def find_frameworks(self, status=None):
+        params = {}
+
+        if status is not None:
+            params['status'] = status
+
+        return self._get('/frameworks', params=params)
 
     def get_framework(self, slug):
         return self._get('/frameworks/{}'.format(slug))

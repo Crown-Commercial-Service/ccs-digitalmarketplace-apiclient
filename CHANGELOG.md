@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.9.0
+
+Add `status` param to the `find_frameworks` method
+
 ## 38.8.0
 
 Include country name and code in the `update_organisation_by_duns` in the Agreements Service API Client
