@@ -61,7 +61,7 @@ pre-commit==4.6.0
     # via ccs-digitalmarketplace-apiclient (pyproject.toml)
 pygments==2.20.0
     # via pytest
-pytest==9.1.0
+pytest==9.1.1
     # via
     #   ccs-digitalmarketplace-apiclient (pyproject.toml)
     #   pytest-cov
