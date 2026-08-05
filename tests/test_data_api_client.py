@@ -2802,25 +2802,31 @@ class TestFrameworkAgreementMethods(object):
             'updated_by': 'user@example.com',
         }
 
-    def test_update_framework_agreement_undo_countersign(self, data_client, rmock):
-        rmock.post('http://baseurl/agreements/12345/undo-countersign', json={}, status_code=200)
+    @pytest.mark.parametrize(
+        'method_name, endpoint',
+        (
+            ('update_framework_agreement_undo_countersign', 'undo-countersign'),
+            ('update_framework_agreement_undo_sign', 'undo-sign'),
+        ),
+    )
+    def test_update_framework_agreement_undo_actions(self, data_client, rmock, method_name, endpoint):
+        rmock.post('http://baseurl/agreements/12345/{}'.format(endpoint), json={}, status_code=200)
 
-        result = data_client.update_framework_agreement_undo_countersign(12345, 'user@example.com')
-
-        assert result == {}
-        assert rmock.last_request.json() == {
-            'updated_by': 'user@example.com',
-        }
-
-    def test_update_framework_agreement_undo_sign(self, data_client, rmock):
-        rmock.post('http://baseurl/agreements/12345/undo-sign', json={}, status_code=200)
-
-        result = data_client.update_framework_agreement_undo_sign(12345, 'user@example.com')
+        result = getattr(data_client, method_name)(12345, 'user@example.com')
 
         assert result == {}
-        assert rmock.last_request.json() == {
-            'updated_by': 'user@example.com',
-        }
+        assert rmock.last_request.json() == {'updated_by': 'user@example.com'}
+
+    @pytest.mark.parametrize(
+        'method_name, endpoint',
+        (
+            ('update_framework_agreement_undo_countersign', 'undo-countersign'),
+            ('update_framework_agreement_undo_sign', 'undo-sign'),
+        ),
+    )
+    def test_update_framework_agreement_undo_actions_raises_if_no_user(self, data_client, rmock, method_name, endpoint):
+        with pytest.raises(ValueError):
+            getattr(data_client, method_name)(12345)
 
     def test_sign_framework_agreement_with_no_signed_agreement_details(self, data_client, rmock):
         rmock.post('http://baseurl/agreements/12345/sign', json={'agreement': {'response': 'here'}}, status_code=200)
