@@ -1366,6 +1366,13 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
+    def update_framework_agreement_undo_sign(self, framework_agreement_id, user=None):
+        return self._post_with_updated_by(
+            '/agreements/{}/undo-sign'.format(framework_agreement_id),
+            data={},
+            user=user,
+        )
+
     def sign_framework_agreement(self, framework_agreement_id, user, signed_agreement_details=None):
         data = {'agreement': {'signedAgreementDetails': signed_agreement_details}} if signed_agreement_details else {}
         return self._post_with_updated_by(

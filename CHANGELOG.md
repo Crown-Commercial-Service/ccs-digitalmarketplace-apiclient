@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.10.0
+
+Add `update_framework_agreement_undo_sign` method
+
 ## 38.9.0
 
 Add `status` param to the `find_frameworks` method
