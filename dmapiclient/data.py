@@ -2260,7 +2260,7 @@ class DataAPIClient(BaseAPIClient):
     def get_lot_pricing(self, lot_pricing_id):
         return self._get(f'/lot-pricings/{lot_pricing_id}')
 
-    def update_lot_pricing(self, lot_pricing_id, lot_pricing, user=None, page_questions=None):
+    def update_lot_pricing(self, lot_pricing_id, lot_pricing, user=None, page_questions=None, is_admin_update=None):
         data = {
             'lotPricings': lot_pricing,
         }
@@ -2270,6 +2270,7 @@ class DataAPIClient(BaseAPIClient):
 
         return self._patch_with_updated_by(
             f'/lot-pricings/{lot_pricing_id}',
+            params={'is_admin_update': is_admin_update},
             data=data,
             user=user,
         )

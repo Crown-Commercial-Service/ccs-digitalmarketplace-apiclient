@@ -5338,6 +5338,19 @@ class TestLotPricingsMethods(object):
         assert rmock.called
         assert rmock.request_history[0].json() == {'updated_by': 'user', 'lotPricings': {'question': 'answer'}}
 
+    def test_update_lot_pricing_with_is_admin_update(self, data_client, rmock):
+        rmock.patch(
+            'http://baseurl/lot-pricings/1234?is_admin_update=True',
+            json={'lotPricings': {'question': 'answer'}},
+            status_code=200,
+        )
+
+        result = data_client.update_lot_pricing(1234, {'question': 'answer'}, 'user', is_admin_update=True)
+
+        assert result == {'lotPricings': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {'updated_by': 'user', 'lotPricings': {'question': 'answer'}}
+
     def test_update_lot_pricing_with_page_questions(self, data_client, rmock):
         rmock.patch('http://baseurl/lot-pricings/1234', json={'lotPricings': {'question': 'answer'}}, status_code=200)
 
