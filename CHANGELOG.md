@@ -4,6 +4,11 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.11.0
+
+Add `is_admin_update` param to the `update_lot_pricing` method and the
+`admin_update_lot_pricing_answers` audit type
+
 ## 38.10.0
 
 Add `update_framework_agreement_undo_sign` method

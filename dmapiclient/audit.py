@@ -160,6 +160,7 @@ class AuditTypes(Enum):
     # Lot questions responses
     create_lot_pricing = 'create_lot_pricing'
     update_lot_pricing_answers = 'update_lot_pricing_answers'
+    admin_update_lot_pricing_answers = 'admin_update_lot_pricing_answers'
     complete_lot_pricing = 'complete_lot_pricing'
 
     # Tasks
