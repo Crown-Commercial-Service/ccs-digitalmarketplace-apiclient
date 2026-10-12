@@ -4,6 +4,12 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.12.0
+
+Add pending edits for lot pricings and lot questions responses: the `update_pending_*`, `approve_pending_*` and
+`reject_pending_*` methods, a `with_pending_data` param on `get_lot_pricing` and `get_lot_questions_response`, and
+the matching audit types
+
 ## 38.11.0
 
 Add `is_admin_update` param to the `update_lot_pricing` method and the

@@ -1786,9 +1786,10 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def get_lot_questions_response(self, lot_questions_response_id, with_evaluations=None):
+    def get_lot_questions_response(self, lot_questions_response_id, with_evaluations=None, with_pending_data=None):
         return self._get(
-            f'/lot-questions-responses/{lot_questions_response_id}', params={'with_evaluations': with_evaluations}
+            f'/lot-questions-responses/{lot_questions_response_id}',
+            params={'with_evaluations': with_evaluations, 'with_pending_data': with_pending_data},
         )
 
     def get_lot_questions_response_by_framework_route_suppler(self, framework_slug, route, supplier_id):
@@ -1807,6 +1808,38 @@ class DataAPIClient(BaseAPIClient):
         return self._patch_with_updated_by(
             f'/lot-questions-responses/{lot_questions_response_id}',
             data=data,
+            user=user,
+        )
+
+    def update_pending_lot_questions_response(
+        self, lot_questions_response_id, lot_questions_response, user=None, page_questions=None
+    ):
+        data = {
+            'lotQuestionsResponses': lot_questions_response,
+        }
+
+        if page_questions is not None:
+            data['page_questions'] = page_questions
+
+        return self._post_with_updated_by(
+            f'/pending-lot-questions-responses/{lot_questions_response_id}',
+            data=data,
+            user=user,
+        )
+
+    def approve_pending_lot_questions_response(self, lot_questions_response_id, user=None):
+        return self._post_with_updated_by(
+            f'/pending-lot-questions-responses/{lot_questions_response_id}/approve',
+            data={},
+            user=user,
+        )
+
+    def reject_pending_lot_questions_response(self, lot_questions_response_id, reason_text, user=None):
+        return self._post_with_updated_by(
+            f'/pending-lot-questions-responses/{lot_questions_response_id}/reject',
+            data={
+                'reasonText': reason_text,
+            },
             user=user,
         )
 
@@ -2257,8 +2290,8 @@ class DataAPIClient(BaseAPIClient):
             user=user,
         )
 
-    def get_lot_pricing(self, lot_pricing_id):
-        return self._get(f'/lot-pricings/{lot_pricing_id}')
+    def get_lot_pricing(self, lot_pricing_id, with_pending_data=None):
+        return self._get(f'/lot-pricings/{lot_pricing_id}', params={'with_pending_data': with_pending_data})
 
     def update_lot_pricing(self, lot_pricing_id, lot_pricing, user=None, page_questions=None, is_admin_update=None):
         data = {
@@ -2272,6 +2305,36 @@ class DataAPIClient(BaseAPIClient):
             f'/lot-pricings/{lot_pricing_id}',
             params={'is_admin_update': is_admin_update},
             data=data,
+            user=user,
+        )
+
+    def update_pending_lot_pricing(self, lot_pricing_id, lot_pricing, user=None, page_questions=None):
+        data = {
+            'lotPricings': lot_pricing,
+        }
+
+        if page_questions is not None:
+            data['page_questions'] = page_questions
+
+        return self._post_with_updated_by(
+            f'/pending-lot-pricings/{lot_pricing_id}',
+            data=data,
+            user=user,
+        )
+
+    def approve_pending_lot_pricing(self, lot_pricing_id, user=None):
+        return self._post_with_updated_by(
+            f'/pending-lot-pricings/{lot_pricing_id}/approve',
+            data={},
+            user=user,
+        )
+
+    def reject_pending_lot_pricing(self, lot_pricing_id, reason_text, user=None):
+        return self._post_with_updated_by(
+            f'/pending-lot-pricings/{lot_pricing_id}/reject',
+            data={
+                'reasonText': reason_text,
+            },
             user=user,
         )
 
