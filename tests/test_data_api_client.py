@@ -4421,6 +4421,18 @@ class TestLotQuestionsResponsesMethods(object):
         assert result == {'lotQuestionsResponses': 'result'}
         assert rmock.called
 
+    def test_get_lot_questions_response_with_pending_data(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/lot-questions-responses/1234?with_pending_data=True',
+            json={'lotQuestionsResponses': 'result'},
+            status_code=200,
+        )
+
+        result = data_client.get_lot_questions_response(1234, with_pending_data=True)
+
+        assert result == {'lotQuestionsResponses': 'result'}
+        assert rmock.last_request.qs == {'with_pending_data': ['true']}
+
     def test_get_lot_questions_response_by_framework_route_suppler(self, data_client, rmock):
         rmock.get(
             'http://baseurl/lot-questions-responses/frameworks/g-cloud-6/routes/g-things/suppliers/1234',
@@ -4476,6 +4488,46 @@ class TestLotQuestionsResponsesMethods(object):
             'lotQuestionsResponses': {'question': 'answer'},
             'page_questions': ['question'],
         }
+
+    def test_update_pending_lot_questions_response(self, data_client, rmock):
+        rmock.post(
+            'http://baseurl/pending-lot-questions-responses/1234',
+            json={'lotQuestionsResponses': 'result'},
+            status_code=200,
+        )
+
+        result = data_client.update_pending_lot_questions_response(1234, {'question': 'answer'}, 'user', ['question'])
+
+        assert result == {'lotQuestionsResponses': 'result'}
+        assert rmock.last_request.json() == {
+            'updated_by': 'user',
+            'lotQuestionsResponses': {'question': 'answer'},
+            'page_questions': ['question'],
+        }
+
+    def test_approve_pending_lot_questions_response(self, data_client, rmock):
+        rmock.post(
+            'http://baseurl/pending-lot-questions-responses/1234/approve',
+            json={'message': 'done'},
+            status_code=200,
+        )
+
+        result = data_client.approve_pending_lot_questions_response(1234, 'user')
+
+        assert result == {'message': 'done'}
+        assert rmock.last_request.json() == {'updated_by': 'user'}
+
+    def test_reject_pending_lot_questions_response(self, data_client, rmock):
+        rmock.post(
+            'http://baseurl/pending-lot-questions-responses/1234/reject',
+            json={'message': 'done'},
+            status_code=200,
+        )
+
+        result = data_client.reject_pending_lot_questions_response(1234, 'reason_text', 'user')
+
+        assert result == {'message': 'done'}
+        assert rmock.last_request.json() == {'reasonText': 'reason_text', 'updated_by': 'user'}
 
     def test_validate_lot_questions_response(self, data_client, rmock):
         rmock.post(
@@ -5321,6 +5373,16 @@ class TestLotPricingsMethods(object):
         assert result == {'lotPricings': 'result'}
         assert rmock.called
 
+    def test_get_lot_pricing_with_pending_data(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/lot-pricings/1234?with_pending_data=True', json={'lotPricings': 'result'}, status_code=200
+        )
+
+        result = data_client.get_lot_pricing(1234, with_pending_data=True)
+
+        assert result == {'lotPricings': 'result'}
+        assert rmock.last_request.qs == {'with_pending_data': ['true']}
+
     def test_get_lot_pricing_should_return_404(self, data_client, rmock):
         rmock.get('http://baseurl/lot-pricings/1234', status_code=404)
 
@@ -5363,6 +5425,41 @@ class TestLotPricingsMethods(object):
             'lotPricings': {'question': 'answer'},
             'page_questions': ['question'],
         }
+
+    def test_update_pending_lot_pricing(self, data_client, rmock):
+        rmock.post('http://baseurl/pending-lot-pricings/1234', json={'lotPricings': 'result'}, status_code=200)
+
+        result = data_client.update_pending_lot_pricing(1234, {'question': 'answer'}, 'user', ['question'])
+
+        assert result == {'lotPricings': 'result'}
+        assert rmock.last_request.json() == {
+            'updated_by': 'user',
+            'lotPricings': {'question': 'answer'},
+            'page_questions': ['question'],
+        }
+
+    def test_update_pending_lot_pricing_without_page_questions(self, data_client, rmock):
+        rmock.post('http://baseurl/pending-lot-pricings/1234', json={'lotPricings': 'result'}, status_code=200)
+
+        data_client.update_pending_lot_pricing(1234, {'question': 'answer'}, 'user')
+
+        assert rmock.last_request.json() == {'updated_by': 'user', 'lotPricings': {'question': 'answer'}}
+
+    def test_approve_pending_lot_pricing(self, data_client, rmock):
+        rmock.post('http://baseurl/pending-lot-pricings/1234/approve', json={'message': 'done'}, status_code=200)
+
+        result = data_client.approve_pending_lot_pricing(1234, 'user')
+
+        assert result == {'message': 'done'}
+        assert rmock.last_request.json() == {'updated_by': 'user'}
+
+    def test_reject_pending_lot_pricing(self, data_client, rmock):
+        rmock.post('http://baseurl/pending-lot-pricings/1234/reject', json={'message': 'done'}, status_code=200)
+
+        result = data_client.reject_pending_lot_pricing(1234, 'reason_text', 'user')
+
+        assert result == {'message': 'done'}
+        assert rmock.last_request.json() == {'reasonText': 'reason_text', 'updated_by': 'user'}
 
     def test_complete_lot_pricing(self, data_client, rmock):
         rmock.post('http://baseurl/lot-pricings/1234/complete', json={'message': 'done'}, status_code=200)

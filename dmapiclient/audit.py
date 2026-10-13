@@ -123,6 +123,9 @@ class AuditTypes(Enum):
     create_lot_questions_response = 'create_lot_questions_response'
     update_lot_questions_response_answers = 'update_lot_questions_response_answers'
     complete_lot_questions_response = 'complete_lot_questions_response'
+    update_pending_lot_questions_response = 'update_pending_lot_questions_response'
+    approve_pending_lot_questions_response = 'approve_pending_lot_questions_response'
+    reject_pending_lot_questions_response = 'reject_pending_lot_questions_response'
 
     create_lot_questions_response_section_evaluation = 'create_lot_questions_response_section_evaluation'
     update_lot_questions_response_section_evaluation = 'update_lot_questions_response_section_evaluation'
@@ -162,6 +165,9 @@ class AuditTypes(Enum):
     update_lot_pricing_answers = 'update_lot_pricing_answers'
     admin_update_lot_pricing_answers = 'admin_update_lot_pricing_answers'
     complete_lot_pricing = 'complete_lot_pricing'
+    update_pending_lot_pricing = 'update_pending_lot_pricing'
+    approve_pending_lot_pricing = 'approve_pending_lot_pricing'
+    reject_pending_lot_pricing = 'reject_pending_lot_pricing'
 
     # Tasks
     register_task_creation = 'register_task_creation'
