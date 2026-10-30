@@ -1,4 +1,6 @@
 from enum import Enum
+import re
+import time
 import requests
 from flask import abort
 
@@ -11,6 +13,9 @@ SP_DUNS = '/triggers/manual/run'
 SP_FVRA = '/triggers/Trigger/run'
 SP_IASME = '/triggers/manual/run'
 SV = '1.0'
+IASME_CERTIFICATE_NUMBER_PATTERN = re.compile(r'[0-9a-f]{8}(-[0-9a-f]{4}){3}-[0-9a-f]{12}', re.IGNORECASE)
+IASME_NO_MATCH_MESSAGE = 'The parameter set you have provided is invalid'
+ACCESS_TOKEN_REFRESH_MARGIN_SECONDS = 300
 
 
 class DataInsightsAPIErrorResponse:
@@ -53,6 +58,7 @@ class DataInsightsURL(Enum):
         '/workflows/d92a8b97421e4552845c9e6dc0aca5e2/triggers/manual/paths'
         '/invoke/[att].[IASMECyberSecurityCertification]/'
     )
+    GET_CYBER_ESSENTIALS_CERT_APIM = '/website-data/manual/paths/invoke/[att].[IASMECyberSecurityCertification]/'
 
 
 class BaseDataInsightsAPIClient(BaseAPIClient):
@@ -253,24 +259,102 @@ class _IasmeCyberEssentialsAPIClient(BaseDataInsightsAPIClient):
             15,
             45,
         ),
+        token_url=None,
+        client_id=None,
+        client_secret=None,
+        scope=None,
     ):
         super().__init__(SP_IASME, base_url, api_key, enabled, timeout)
+        self._set_access_token_settings(token_url, client_id, client_secret, scope)
+
+    def init_app(self, base_url, api_key, token_url=None, client_id=None, client_secret=None, scope=None):
+        super().init_app(base_url, api_key)
+        self._set_access_token_settings(token_url, client_id, client_secret, scope)
+
+    def _set_access_token_settings(self, token_url, client_id, client_secret, scope):
+        self._token_url = token_url
+        self._client_id = client_id
+        self._client_secret = client_secret
+        self._scope = scope
+        self._access_token = None
+        self._access_token_refresh_time = 0.0
+
+    @property
+    def uses_access_token(self):
+        return bool(self._client_id)
+
+    def _get_access_token(self):
+        if self._access_token is None or time.monotonic() >= self._access_token_refresh_time:
+            requested_time = time.monotonic()
+
+            try:
+                response = self._requests_retry_session().post(
+                    self._token_url,
+                    data={
+                        'grant_type': 'client_credentials',
+                        'client_id': self._client_id,
+                        'client_secret': self._client_secret,
+                        'scope': self._scope,
+                    },
+                    timeout=self.timeout,
+                )
+                response.raise_for_status()
+            except requests.RequestException as e:
+                raise HTTPError.create(e) from e
+
+            access_token = response.json()
+            self._access_token = access_token['access_token']
+            self._access_token_refresh_time = (
+                requested_time + access_token['expires_in'] - ACCESS_TOKEN_REFRESH_MARGIN_SECONDS
+            )
+
+        return self._access_token
+
+    def _get_headers(self):
+        headers = super()._get_headers()
+
+        if self.uses_access_token:
+            headers['Authorization'] = f'Bearer {self._get_access_token()}'
+
+        return headers
+
+    def _get_params(self, params=None):
+        params = super()._get_params(params)
+
+        if self.uses_access_token:
+            del params['sig']
+
+        return params
+
+    @staticmethod
+    def _is_no_match(e):
+        return e.status_code == 400 and IASME_NO_MATCH_MESSAGE in getattr(e.response, 'text', '')
 
     def get_cyber_essentials_certificate(self, cyber_essentials_certificate_number):
+        iasme_api_error = IasmeCyberEssentialsAPIErrorResponse(cyber_essentials_certificate_number)
+
+        if not IASME_CERTIFICATE_NUMBER_PATTERN.fullmatch(cyber_essentials_certificate_number):
+            raise HTTPError(iasme_api_error, iasme_api_error.message)
+
         try:
-            cyber_essentials_certificate_details = self._get(
-                DataInsightsURL.GET_CYBER_ESSENTIALS_CERT,
+            cyber_essentials_certificates = self._get(
+                (
+                    DataInsightsURL.GET_CYBER_ESSENTIALS_CERT_APIM
+                    if self.uses_access_token
+                    else DataInsightsURL.GET_CYBER_ESSENTIALS_CERT
+                ),
                 params={'Filter': f"CertificateNumber eq '{cyber_essentials_certificate_number}'"},
-            )[0]
-
-            return {'cyberEssentialsCertificateDetails': cyber_essentials_certificate_details}
+            )
         except HTTPError as e:
-            if e.status_code == 404:
-                iasme_api_error = IasmeCyberEssentialsAPIErrorResponse(cyber_essentials_certificate_number)
-
+            if e.status_code == 404 or self._is_no_match(e):
                 raise HTTPError(iasme_api_error, iasme_api_error.message) from e
 
             raise e
+
+        if not cyber_essentials_certificates:
+            raise HTTPError(iasme_api_error, iasme_api_error.message)
+
+        return {'cyberEssentialsCertificateDetails': cyber_essentials_certificates[0]}
 
 
 class DataInsightsAPIClient:
@@ -317,6 +401,10 @@ class DataInsightsAPIClient:
         self._iasme_cyber_essentials_api_client.init_app(
             spotlight_api_urls['DM_IASME_CYBER_ESSENTIALS_API_URL'],
             spotlight_api_keys['DM_IASME_CYBER_ESSENTIALS_API_KEY'],
+            token_url=spotlight_api_urls.get('DM_IASME_CYBER_ESSENTIALS_TOKEN_URL'),
+            client_id=spotlight_api_keys.get('DM_IASME_CYBER_ESSENTIALS_CLIENT_ID'),
+            client_secret=spotlight_api_keys.get('DM_IASME_CYBER_ESSENTIALS_CLIENT_SECRET'),
+            scope=spotlight_api_urls.get('DM_IASME_CYBER_ESSENTIALS_TOKEN_SCOPE'),
         )
 
     def find_organisation_from_duns_number(self, duns_number):
