@@ -6,14 +6,15 @@ Records breaking changes from major version bumps
 
 ## 38.13.0
 
-The IASME Cyber Essentials client can now use the GCA API gateway with an access token. To switch it on, set:
+The IASME Cyber Essentials client can now use the GCA API gateway with an access token. To switch it on, set all four:
 
 - in `DM_DATA_INSIGHTS_API_URLS`: `DM_IASME_CYBER_ESSENTIALS_TOKEN_URL` and `DM_IASME_CYBER_ESSENTIALS_TOKEN_SCOPE`
 - in `DM_DATA_INSIGHTS_API_KEYS`: `DM_IASME_CYBER_ESSENTIALS_CLIENT_ID` and `DM_IASME_CYBER_ESSENTIALS_CLIENT_SECRET`
 
-If they are not set, the client works as before.
+If none is set, the client works as before. If only some are set, it raises `ImproperlyConfigured`. A value can contain
+`=` but not `,`.
 
-A certificate number that is not a UUID is now "not found" (404), without a request.
+A certificate number that contains an apostrophe is now "not found" (404), without a request.
 
 ## 38.12.0
 
