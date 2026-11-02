@@ -27,7 +27,7 @@ CERTIFICATE_URL = certificate_url(CERTIFICATE_NUMBER)
 TOKEN_URL = 'http://login-baseurl/tenant-id/oauth2/v2.0/token'
 APIM_CERTIFICATE_URL = (
     'http://apim-baseurl/website-data/manual/paths/invoke/%5Batt%5D.%5BIASMECyberSecurityCertification%5D/'
-    f'?api-version=2016-10-01&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&Filter=CertificateNumber+eq+%27{CERTIFICATE_NUMBER}%27'
+    f'?Filter=CertificateNumber+eq+%27{CERTIFICATE_NUMBER}%27'
 )
 NO_MATCH_RESPONSE_TEXT = (
     '"The parameter set you have provided is invalid, please provide a valid parameter set in order to return results."'

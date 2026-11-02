@@ -358,7 +358,7 @@ class _IasmeCyberEssentialsAPIClient(BaseDataInsightsAPIClient):
 
     def _get_params(self, params=None):
         if self.uses_access_token:
-            return {'api-version': API_VERSION, 'sp': self.sp, 'sv': SV, **(params or {})}
+            return dict(params or {})
 
         return super()._get_params(params)
 
