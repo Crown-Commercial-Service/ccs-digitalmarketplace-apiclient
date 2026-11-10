@@ -11,3 +11,4 @@ from .data import DataAPIClient  # noqa
 from .search import SearchAPIClient  # noqa
 from .data_insights import DataInsightsAPIClient  # noqa
 from .tasks import TasksAPIClient  # noqa
+from .compliance import ComplianceAPIClient  # noqa
