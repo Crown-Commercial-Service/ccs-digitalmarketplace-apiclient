@@ -4,6 +4,11 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.14.0
+
+`update_lot_questions_response` takes `ignored_fields`: fields the API should not report validation errors for. An admin
+edit of a supplier's quality award questions offers no document uploads, so it sends the upload fields here.
+
 ## 38.13.0
 
 The IASME Cyber Essentials client can now use the GCA API gateway with an access token. To switch it on, set all four:
