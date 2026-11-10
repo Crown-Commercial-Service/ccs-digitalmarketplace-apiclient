@@ -105,7 +105,7 @@ class TestComplianceAPIClient:
 
         mock_records = [
             {
-                'DmpId': 581398,
+                'DmpId': 12345,
                 'FrameworkNumber': 'RM1557.15',
                 'LotNumber': '3',
                 'CertificationName': 'Cyber Essentials',
@@ -119,14 +119,14 @@ class TestComplianceAPIClient:
             status_code=200,
         )
 
-        response = compliance_client.get_supplier_compliance(dmp_id=581398, framework_number='RM1557.15')
+        response = compliance_client.get_supplier_compliance(dmp_id=12345, framework_number='RM1557.15')
 
         assert response == {'complianceRecords': mock_records}
         assert rmock.last_request.headers['Authorization'] == 'Bearer MOCK_TOKEN'
         assert rmock.last_request.qs['api-version'] == ['2016-10-01']
         assert rmock.last_request.qs['sp'] == ['/triggers/manual/run']
         assert rmock.last_request.qs['sv'] == ['1.0']
-        assert "dmpid eq '581398'" in rmock.last_request.qs['filter'][0].lower()
+        assert "dmpid eq '12345'" in rmock.last_request.qs['filter'][0].lower()
 
     def test_get_supplier_compliance_handles_azure_404_not_found(self, compliance_client, rmock):
         compliance_client._auth_token = 'MOCK_TOKEN'
@@ -168,7 +168,7 @@ class TestComplianceAPIClient:
         )
 
         with pytest.raises(HTTPError) as exc_info:
-            compliance_client.get_supplier_compliance(dmp_id=581398, framework_number='RM1557.15')
+            compliance_client.get_supplier_compliance(dmp_id=12345, framework_number='RM1557.15')
         assert exc_info.value.status_code == 500
 
     def test_get_supplier_compliance_raises_value_error_on_invalid_dmp_id(self, compliance_client):

@@ -10,9 +10,7 @@ logger = logging.getLogger(__name__)
 
 
 class ComplianceURL(Enum):
-    GET_SUPPLIER_COMPLIANCE = (
-        '/website-data/manual/paths/invoke/[att].[SupplierCertificationChecksDMP]/'
-    )
+    GET_SUPPLIER_COMPLIANCE = '/website-data/manual/paths/invoke/[att].[SupplierCertificationChecksDMP]/'
 
 
 class ComplianceAPIClient(BaseAPIClient):
@@ -116,7 +114,7 @@ class ComplianceAPIClient(BaseAPIClient):
 
         # Sanitize inputs to prevent OData filter injection
         dmp_id = int(dmp_id)
-        framework_number = str(framework_number).strip().replace("'", "")
+        framework_number = str(framework_number).strip().replace("'", '')
 
         params = {
             'api-version': self.API_VERSION,
@@ -131,6 +129,6 @@ class ComplianceAPIClient(BaseAPIClient):
         except HTTPError as e:
             response_text = e.response.text.lower() if getattr(e, 'response', None) is not None else ''
             if e.status_code == 404 or (e.status_code == 400 and 'invalid' in response_text):
-                logger.info(f"No compliance records found for DMP ID {dmp_id}")
+                logger.info(f'No compliance records found for DMP ID {dmp_id}')
                 return {'complianceRecords': []}
             raise e
