@@ -3,7 +3,7 @@ from datetime import datetime, timezone, timedelta
 from unittest import mock
 
 from dmapiclient import ComplianceAPIClient
-from dmapiclient.errors import HTTPError
+from dmapiclient.errors import HTTPError, InvalidResponse
 
 
 @pytest.fixture
@@ -74,6 +74,27 @@ class TestComplianceAPIClient:
             compliance_client._refresh_auth_token()
 
         assert exc_info.value.status_code == 401
+
+    @pytest.mark.parametrize(
+        'token_response',
+        (
+            {'json': {'expires_in': 3600}},
+            {'json': {'access_token': 'FAKE_TOKEN'}},
+            {'json': ['FAKE_TOKEN']},
+            {'text': 'not json'},
+        ),
+    )
+    def test_refresh_auth_token_raises_invalid_response_on_bad_data(self, compliance_client, rmock, token_response):
+        rmock.post(
+            compliance_client._token_url,
+            status_code=200,
+            **token_response,
+        )
+
+        with pytest.raises(InvalidResponse) as exc_info:
+            compliance_client._refresh_auth_token()
+
+        assert exc_info.value.message == 'Could not read the access token response'
 
     def test_ensure_valid_token_reuses_unexpired_token(self, compliance_client, rmock):
         compliance_client._auth_token = 'EXISTING_TOKEN'

@@ -4,7 +4,7 @@ from enum import Enum
 import requests
 
 from .base import BaseAPIClient
-from .errors import HTTPError
+from .errors import HTTPError, InvalidResponse
 
 logger = logging.getLogger(__name__)
 
@@ -99,9 +99,14 @@ class ComplianceAPIClient(BaseAPIClient):
             )
             raise api_error from e
 
-        token_data = response.json()
-        self._auth_token = token_data.get('access_token')
-        self._auth_token_expires_at = current_time + timedelta(seconds=int(token_data.get('expires_in', 3600)))
+        try:
+            token_data = response.json()
+            self._auth_token = token_data['access_token']
+            expires_in = int(token_data['expires_in'])
+        except (ValueError, KeyError, TypeError) as e:
+            raise InvalidResponse(response, message='Could not read the access token response') from e
+
+        self._auth_token_expires_at = current_time + timedelta(seconds=expires_in)
 
     def _ensure_valid_token(self):
         """
