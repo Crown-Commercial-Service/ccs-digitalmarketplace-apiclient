@@ -4489,6 +4489,26 @@ class TestLotQuestionsResponsesMethods(object):
             'page_questions': ['question'],
         }
 
+    def test_update_lot_questions_response_with_ignored_fields(self, data_client, rmock):
+        rmock.patch(
+            'http://baseurl/lot-questions-responses/1234',
+            json={'lotQuestionsResponses': {'question': 'answer'}},
+            status_code=200,
+        )
+
+        result = data_client.update_lot_questions_response(
+            1234, {'question': 'answer'}, 'user', ['question'], ignored_fields=['upload']
+        )
+
+        assert result == {'lotQuestionsResponses': {'question': 'answer'}}
+        assert rmock.called
+        assert rmock.request_history[0].json() == {
+            'updated_by': 'user',
+            'lotQuestionsResponses': {'question': 'answer'},
+            'page_questions': ['question'],
+            'ignored_fields': ['upload'],
+        }
+
     def test_update_pending_lot_questions_response(self, data_client, rmock):
         rmock.post(
             'http://baseurl/pending-lot-questions-responses/1234',

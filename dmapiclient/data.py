@@ -1796,7 +1796,7 @@ class DataAPIClient(BaseAPIClient):
         return self._get(f'/lot-questions-responses/frameworks/{framework_slug}/routes/{route}/suppliers/{supplier_id}')
 
     def update_lot_questions_response(
-        self, lot_questions_response_id, lot_questions_response, user=None, page_questions=None
+        self, lot_questions_response_id, lot_questions_response, user=None, page_questions=None, ignored_fields=None
     ):
         data = {
             'lotQuestionsResponses': lot_questions_response,
@@ -1804,6 +1804,9 @@ class DataAPIClient(BaseAPIClient):
 
         if page_questions is not None:
             data['page_questions'] = page_questions
+
+        if ignored_fields is not None:
+            data['ignored_fields'] = ignored_fields
 
         return self._patch_with_updated_by(
             f'/lot-questions-responses/{lot_questions_response_id}',
