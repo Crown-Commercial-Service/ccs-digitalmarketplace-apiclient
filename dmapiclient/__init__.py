@@ -1,4 +1,4 @@
-__version__ = '38.15.0'
+__version__ = '38.16.0'
 
 from .errors import APIError, HTTPError, InvalidResponse, InvalidResponseType  # noqa
 from .errors import REQUEST_ERROR_STATUS_CODE, REQUEST_ERROR_MESSAGE  # noqa
@@ -11,3 +11,4 @@ from .data import DataAPIClient  # noqa
 from .search import SearchAPIClient  # noqa
 from .data_insights import DataInsightsAPIClient  # noqa
 from .tasks import TasksAPIClient  # noqa
+from .compliance import ComplianceAPIClient  # noqa
