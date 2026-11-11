@@ -4,6 +4,12 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.15.0
+
+`get_supplier_certificates(supplier_id)` gets a supplier's certificate records from `GET /suppliers/<id>/certificates`:
+`{"certificates": {...}}` with one key for each certificate type, or `{"certificates": null}` when the supplier has none.
+It raises `HTTPError` (404) when the supplier does not exist.
+
 ## 38.14.0
 
 `update_lot_questions_response` takes `ignored_fields`: fields the API should not report validation errors for. An admin
