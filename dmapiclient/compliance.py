@@ -17,12 +17,17 @@ class ComplianceAPIClient(BaseAPIClient):
     """
     API client for harvesting supplier compliance and assurance records
     from Azure APIM / Data Warehouse (CM+ Integration).
+
+    TODO TECH DEBT: This client implements an OAuth2 client credentials grant flow for Azure APIM.
+    A similar flow exists in _IasmeCyberEssentialsAPIClient on main.
+    both clients should be refactored to share a common AzureAPIMClient base class.
     """
 
     API_VERSION = '2016-10-01'
     SP = '/triggers/manual/run'
     SV = '1.0'
     TOKEN_EXPIRY_MARGIN_SECONDS = 300  # 5-minute proactive buffer before token expiry
+    NO_MATCH_MESSAGE = 'the parameter set you have provided is invalid'
 
     def __init__(
         self,
@@ -52,6 +57,15 @@ class ComplianceAPIClient(BaseAPIClient):
         self._client_secret = app.config.get('DM_COMPLIANCE_CLIENT_SECRET', self._client_secret)
         self._scope = app.config.get('DM_COMPLIANCE_TOKEN_SCOPE', self._scope)
         self._enabled = app.config.get('DM_COMPLIANCE_ENABLED', self._enabled)
+
+    def _get_headers(self):
+        """
+        Ensure token is valid when headers are built.
+        If the client is disabled (enabled=False), BaseAPIClient._request returns None
+        before calling _get_headers, preventing unnecessary token requests in local/test environments.
+        """
+        self._ensure_valid_token()
+        return super()._get_headers()
 
     def _refresh_auth_token(self):
         """
@@ -110,8 +124,6 @@ class ComplianceAPIClient(BaseAPIClient):
         :param framework_number: Framework agreement code (e.g. 'RM1557.15')
         :return: dict with 'complianceRecords': list of records
         """
-        self._ensure_valid_token()
-
         # Sanitize inputs to prevent OData filter injection
         dmp_id = int(dmp_id)
         framework_number = str(framework_number).strip().replace("'", '')
@@ -128,7 +140,7 @@ class ComplianceAPIClient(BaseAPIClient):
             return {'complianceRecords': response or []}
         except HTTPError as e:
             response_text = e.response.text.lower() if getattr(e, 'response', None) is not None else ''
-            if e.status_code == 404 or (e.status_code == 400 and 'invalid' in response_text):
+            if e.status_code == 404 or (e.status_code == 400 and self.NO_MATCH_MESSAGE in response_text):
                 logger.info(f'No compliance records found for DMP ID {dmp_id}')
                 return {'complianceRecords': []}
             raise e

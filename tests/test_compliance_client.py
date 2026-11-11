@@ -99,6 +99,26 @@ class TestComplianceAPIClient:
         assert rmock.called is True
         assert compliance_client._auth_token == 'NEW_TOKEN'
 
+    def test_get_headers_ensures_token_is_valid(self, compliance_client, rmock):
+        rmock.post(
+            compliance_client._token_url,
+            json={'access_token': 'DYNAMIC_TOKEN', 'expires_in': 3600},
+            status_code=200,
+        )
+
+        headers = compliance_client._get_headers()
+
+        assert headers['Authorization'] == 'Bearer DYNAMIC_TOKEN'
+        assert compliance_client._auth_token == 'DYNAMIC_TOKEN'
+
+    def test_get_supplier_compliance_when_disabled(self, compliance_client, rmock):
+        compliance_client._enabled = False
+
+        response = compliance_client.get_supplier_compliance(dmp_id=12345, framework_number='RM1557.15')
+
+        assert response == {'complianceRecords': []}
+        assert rmock.called is False
+
     def test_get_supplier_compliance_success(self, compliance_client, rmock):
         compliance_client._auth_token = 'MOCK_TOKEN'
         compliance_client._auth_token_expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
@@ -155,6 +175,21 @@ class TestComplianceAPIClient:
 
         response = compliance_client.get_supplier_compliance(dmp_id=999999, framework_number='RM1557.15')
         assert response == {'complianceRecords': []}
+
+    def test_get_supplier_compliance_raises_on_unrelated_400(self, compliance_client, rmock):
+        compliance_client._auth_token = 'MOCK_TOKEN'
+        compliance_client._auth_token_expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+
+        rmock.get(
+            'https://apim.example.com/website-data/manual/paths/invoke/%5Batt%5D.%5BSupplierCertificationChecksDMP%5D/',
+            complete_qs=False,
+            text='Malformed OData expression syntax error',
+            status_code=400,
+        )
+
+        with pytest.raises(HTTPError) as exc_info:
+            compliance_client.get_supplier_compliance(dmp_id=12345, framework_number='RM1557.15')
+        assert exc_info.value.status_code == 400
 
     def test_get_supplier_compliance_raises_on_500(self, compliance_client, rmock):
         compliance_client._auth_token = 'MOCK_TOKEN'
