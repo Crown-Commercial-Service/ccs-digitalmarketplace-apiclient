@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.15.0
+
+Add `ComplianceAPIClient` to query the Azure APIM gateway endpoint `[att].[SupplierCertificationChecksDMP]` for supplier compliance and assurance records using OAuth2 client credentials authentication.
+
 ## 38.14.0
 
 `update_lot_questions_response` takes `ignored_fields`: fields the API should not report validation errors for. An admin
