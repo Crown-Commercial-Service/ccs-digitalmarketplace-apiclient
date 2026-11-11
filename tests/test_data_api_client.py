@@ -706,7 +706,9 @@ class TestSupplierMethods(object):
         assert rmock.called
 
     def test_get_supplier_certificates_raises_when_the_supplier_does_not_exist(self, data_client, rmock):
-        rmock.get('http://baseurl/suppliers/123/certificates', json={'error': "supplier '123' not found"}, status_code=404)
+        rmock.get(
+            'http://baseurl/suppliers/123/certificates', json={'error': "supplier '123' not found"}, status_code=404
+        )
 
         with pytest.raises(HTTPError) as error:
             data_client.get_supplier_certificates(123)
