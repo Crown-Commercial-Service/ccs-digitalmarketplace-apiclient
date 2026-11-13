@@ -140,6 +140,9 @@ class DataAPIClient(BaseAPIClient):
 
         return self._get('/suppliers/{}'.format(supplier_id), params=params)
 
+    def get_supplier_certificates(self, supplier_id):
+        return self._get(f'/suppliers/{supplier_id}/certificates')
+
     def create_supplier(self, supplier):
         return self._post(
             '/suppliers',

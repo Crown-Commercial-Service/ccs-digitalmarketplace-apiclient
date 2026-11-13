@@ -697,6 +697,24 @@ class TestSupplierMethods(object):
         assert result == {'services': 'result'}
         assert rmock.called
 
+    def test_get_supplier_certificates(self, data_client, rmock):
+        rmock.get('http://baseurl/suppliers/123/certificates', json={'certificates': None}, status_code=200)
+
+        result = data_client.get_supplier_certificates(123)
+
+        assert result == {'certificates': None}
+        assert rmock.called
+
+    def test_get_supplier_certificates_raises_when_the_supplier_does_not_exist(self, data_client, rmock):
+        rmock.get(
+            'http://baseurl/suppliers/123/certificates', json={'error': "supplier '123' not found"}, status_code=404
+        )
+
+        with pytest.raises(HTTPError) as error:
+            data_client.get_supplier_certificates(123)
+
+        assert error.value.status_code == 404
+
     def test_create_supplier(self, data_client, rmock):
         rmock.post(
             'http://baseurl/suppliers',

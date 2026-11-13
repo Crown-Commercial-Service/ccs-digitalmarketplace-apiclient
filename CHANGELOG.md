@@ -4,6 +4,12 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.16.0
+
+`get_supplier_certificates(supplier_id)` gets a supplier's certificate records from `GET /suppliers/<id>/certificates`:
+`{"certificates": {...}}` with one key for each certificate or insurance type, or `{"certificates": null}` when the
+supplier has none. It raises `HTTPError` (404) when the supplier does not exist.
+
 ## 38.15.0
 
 Add `ComplianceAPIClient` to query the Azure APIM gateway endpoint `[att].[SupplierCertificationChecksDMP]` for supplier compliance and assurance records using OAuth2 client credentials authentication.
