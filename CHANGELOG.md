@@ -4,6 +4,10 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.17.0
+
+Make `ComplianceAPIClient` APIM endpoint path configurable via `endpoint_path` argument or `DM_COMPLIANCE_ENDPOINT_PATH`, and automatically extract path if a full URL is passed to `base_url` (supporting both Preprod `[test]` and Prod `[att]` endpoints).
+
 ## 38.16.0
 
 `get_supplier_certificates(supplier_id)` gets a supplier's certificate records from `GET /suppliers/<id>/certificates`:
