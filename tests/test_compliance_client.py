@@ -248,14 +248,18 @@ class TestComplianceAPIClient:
             endpoint_path='/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/',
         )
         assert client.base_url == 'https://apim.example.com'
-        assert client.endpoint_path == '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        assert (
+            client.endpoint_path == '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        )
 
     def test_init_with_full_url_auto_extracts_path(self):
         client = ComplianceAPIClient(
             base_url='https://apim.example.com/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/?filter=test',
         )
         assert client.base_url == 'https://apim.example.com'
-        assert client.endpoint_path == '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        assert (
+            client.endpoint_path == '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        )
 
     def test_init_app_with_custom_endpoint_path(self, compliance_client):
         app = mock.Mock()
@@ -275,7 +279,9 @@ class TestComplianceAPIClient:
         assert compliance_client.endpoint_path == '/custom/path/[test].[SupplierCertificationChecksDMP]/'
 
     def test_get_supplier_compliance_uses_custom_endpoint_path(self, compliance_client, rmock):
-        compliance_client._endpoint_path = '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        compliance_client._endpoint_path = (
+            '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        )
         compliance_client._auth_token = 'MOCK_TOKEN'
         compliance_client._auth_token_expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
 

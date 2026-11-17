@@ -33,7 +33,7 @@ class ComplianceAPIClient(BaseAPIClient):
             return None, None
         parsed = urllib.parse.urlparse(url_str)
         if parsed.scheme and parsed.netloc:
-            base = f"{parsed.scheme}://{parsed.netloc}"
+            base = f'{parsed.scheme}://{parsed.netloc}'
             path = parsed.path if parsed.path and parsed.path != '/' else None
             return base, path
         return url_str, None
