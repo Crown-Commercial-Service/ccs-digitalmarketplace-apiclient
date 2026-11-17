@@ -1,4 +1,5 @@
 import logging
+import urllib.parse
 from datetime import datetime, timezone, timedelta
 from enum import Enum
 import requests
@@ -11,16 +12,13 @@ logger = logging.getLogger(__name__)
 
 class ComplianceURL(Enum):
     GET_SUPPLIER_COMPLIANCE = '/website-data/manual/paths/invoke/[att].[SupplierCertificationChecksDMP]/'
+    GET_SUPPLIER_COMPLIANCE_TEST = '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
 
 
 class ComplianceAPIClient(BaseAPIClient):
     """
     API client for harvesting supplier compliance and assurance records
     from Azure APIM / Data Warehouse (CM+ Integration).
-
-    TODO TECH DEBT: This client implements an OAuth2 client credentials grant flow for Azure APIM.
-    A similar flow exists in _IasmeCyberEssentialsAPIClient on main.
-    both clients should be refactored to share a common AzureAPIMClient base class.
     """
 
     API_VERSION = '2016-10-01'
@@ -29,6 +27,17 @@ class ComplianceAPIClient(BaseAPIClient):
     TOKEN_EXPIRY_MARGIN_SECONDS = 300  # 5-minute proactive buffer before token expiry
     NO_MATCH_MESSAGE = 'the parameter set you have provided is invalid'
 
+    @staticmethod
+    def _parse_base_url_and_path(url_str):
+        if not url_str:
+            return None, None
+        parsed = urllib.parse.urlparse(url_str)
+        if parsed.scheme and parsed.netloc:
+            base = f'{parsed.scheme}://{parsed.netloc}'
+            path = parsed.path if parsed.path and parsed.path != '/' else None
+            return base, path
+        return url_str, None
+
     def __init__(
         self,
         base_url=None,
@@ -36,22 +45,32 @@ class ComplianceAPIClient(BaseAPIClient):
         client_id=None,
         client_secret=None,
         scope=None,
+        endpoint_path=None,
         enabled=True,
         timeout=(15, 45),
     ):
+        base_url, auto_endpoint_path = self._parse_base_url_and_path(base_url)
         super().__init__(base_url, None, enabled, timeout)
         self._token_url = token_url
         self._client_id = client_id
         self._client_secret = client_secret
         self._scope = scope
+        self._endpoint_path = endpoint_path or auto_endpoint_path
         self._auth_token = None
         self._auth_token_expires_at = None
+
+    @property
+    def endpoint_path(self):
+        return self._endpoint_path or ComplianceURL.GET_SUPPLIER_COMPLIANCE.value
 
     def init_app(self, app):
         """
         Configure client from Flask application config.
         """
-        self._base_url = app.config.get('DM_COMPLIANCE_API_URL', self._base_url)
+        configured_url = app.config.get('DM_COMPLIANCE_API_URL') or self._base_url
+        base_url, auto_endpoint_path = self._parse_base_url_and_path(configured_url)
+        self._base_url = base_url
+        self._endpoint_path = app.config.get('DM_COMPLIANCE_ENDPOINT_PATH') or auto_endpoint_path or self._endpoint_path
         self._token_url = app.config.get('DM_COMPLIANCE_TOKEN_URL', self._token_url)
         self._client_id = app.config.get('DM_COMPLIANCE_CLIENT_ID', self._client_id)
         self._client_secret = app.config.get('DM_COMPLIANCE_CLIENT_SECRET', self._client_secret)
@@ -141,7 +160,7 @@ class ComplianceAPIClient(BaseAPIClient):
         }
 
         try:
-            response = self._get(ComplianceURL.GET_SUPPLIER_COMPLIANCE.value, params=params)
+            response = self._get(self.endpoint_path, params=params)
             return {'complianceRecords': response or []}
         except HTTPError as e:
             response_text = e.response.text.lower() if getattr(e, 'response', None) is not None else ''

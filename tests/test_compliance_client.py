@@ -233,3 +233,97 @@ class TestComplianceAPIClient:
 
         with pytest.raises(ValueError):
             compliance_client.get_supplier_compliance(dmp_id="invalid' or 1=1 --", framework_number='RM1557.15')
+
+    def test_init_with_none_or_relative_url(self):
+        client = ComplianceAPIClient()
+        assert client.base_url is None
+        assert client.endpoint_path == '/website-data/manual/paths/invoke/[att].[SupplierCertificationChecksDMP]/'
+
+        client2 = ComplianceAPIClient(base_url='just-a-string')
+        assert client2.base_url == 'just-a-string'
+
+    def test_init_with_custom_endpoint_path(self):
+        client = ComplianceAPIClient(
+            base_url='https://apim.example.com',
+            endpoint_path='/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/',
+        )
+        assert client.base_url == 'https://apim.example.com'
+        assert (
+            client.endpoint_path == '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        )
+
+    def test_init_with_full_url_auto_extracts_path(self):
+        client = ComplianceAPIClient(
+            base_url='https://apim.example.com/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/?filter=test',
+        )
+        assert client.base_url == 'https://apim.example.com'
+        assert (
+            client.endpoint_path == '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        )
+
+    def test_init_app_with_custom_endpoint_path(self, compliance_client):
+        app = mock.Mock()
+        app.config = {
+            'DM_COMPLIANCE_API_URL': 'https://configured-apim.example.com',
+            'DM_COMPLIANCE_ENDPOINT_PATH': '/custom/path/[test].[SupplierCertificationChecksDMP]/',
+            'DM_COMPLIANCE_TOKEN_URL': 'https://configured-token.example.com',
+            'DM_COMPLIANCE_CLIENT_ID': 'configured-client-id',
+            'DM_COMPLIANCE_CLIENT_SECRET': 'configured-client-secret',
+            'DM_COMPLIANCE_TOKEN_SCOPE': 'api://configured/.default',
+            'DM_COMPLIANCE_ENABLED': True,
+        }
+
+        compliance_client.init_app(app)
+
+        assert compliance_client.base_url == 'https://configured-apim.example.com'
+        assert compliance_client.endpoint_path == '/custom/path/[test].[SupplierCertificationChecksDMP]/'
+
+    def test_init_app_with_none_endpoint_path_uses_url_path(self, compliance_client):
+        app = mock.Mock()
+        app.config = {
+            'DM_COMPLIANCE_API_URL': 'https://configured-apim.example.com/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/',
+            'DM_COMPLIANCE_ENDPOINT_PATH': None,
+        }
+
+        compliance_client.init_app(app)
+
+        assert compliance_client.base_url == 'https://configured-apim.example.com'
+        assert (
+            compliance_client.endpoint_path
+            == '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        )
+
+    def test_init_app_auto_endpoint_path_overrides_constructor_path(self):
+        client = ComplianceAPIClient(
+            base_url='https://old-apim.example.com',
+            endpoint_path='/old/constructor/path/',
+        )
+        app = mock.Mock()
+        app.config = {
+            'DM_COMPLIANCE_API_URL': 'https://configured-apim.example.com/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/',
+        }
+
+        client.init_app(app)
+
+        assert client.base_url == 'https://configured-apim.example.com'
+        assert (
+            client.endpoint_path == '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        )
+
+    def test_get_supplier_compliance_uses_custom_endpoint_path(self, compliance_client, rmock):
+        compliance_client._endpoint_path = (
+            '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        )
+        compliance_client._auth_token = 'MOCK_TOKEN'
+        compliance_client._auth_token_expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+
+        mock_records = [{'DmpId': 12345, 'CertificationName': 'Cyber Essentials'}]
+        rmock.get(
+            'https://apim.example.com/website-frameworks/manual/paths/invoke/%5Btest%5D.%5BSupplierCertificationChecksDMP%5D/',
+            complete_qs=False,
+            json=mock_records,
+            status_code=200,
+        )
+
+        response = compliance_client.get_supplier_compliance(dmp_id=12345, framework_number='RM1557.15')
+        assert response == {'complianceRecords': mock_records}
