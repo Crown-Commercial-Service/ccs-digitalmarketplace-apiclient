@@ -278,6 +278,38 @@ class TestComplianceAPIClient:
         assert compliance_client.base_url == 'https://configured-apim.example.com'
         assert compliance_client.endpoint_path == '/custom/path/[test].[SupplierCertificationChecksDMP]/'
 
+    def test_init_app_with_none_endpoint_path_uses_url_path(self, compliance_client):
+        app = mock.Mock()
+        app.config = {
+            'DM_COMPLIANCE_API_URL': 'https://configured-apim.example.com/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/',
+            'DM_COMPLIANCE_ENDPOINT_PATH': None,
+        }
+
+        compliance_client.init_app(app)
+
+        assert compliance_client.base_url == 'https://configured-apim.example.com'
+        assert (
+            compliance_client.endpoint_path
+            == '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        )
+
+    def test_init_app_auto_endpoint_path_overrides_constructor_path(self):
+        client = ComplianceAPIClient(
+            base_url='https://old-apim.example.com',
+            endpoint_path='/old/constructor/path/',
+        )
+        app = mock.Mock()
+        app.config = {
+            'DM_COMPLIANCE_API_URL': 'https://configured-apim.example.com/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/',
+        }
+
+        client.init_app(app)
+
+        assert client.base_url == 'https://configured-apim.example.com'
+        assert (
+            client.endpoint_path == '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'
+        )
+
     def test_get_supplier_compliance_uses_custom_endpoint_path(self, compliance_client, rmock):
         compliance_client._endpoint_path = (
             '/website-frameworks/manual/paths/invoke/[test].[SupplierCertificationChecksDMP]/'

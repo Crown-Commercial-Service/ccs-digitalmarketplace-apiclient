@@ -67,10 +67,10 @@ class ComplianceAPIClient(BaseAPIClient):
         """
         Configure client from Flask application config.
         """
-        configured_url = app.config.get('DM_COMPLIANCE_API_URL', self._base_url)
+        configured_url = app.config.get('DM_COMPLIANCE_API_URL') or self._base_url
         base_url, auto_endpoint_path = self._parse_base_url_and_path(configured_url)
         self._base_url = base_url
-        self._endpoint_path = app.config.get('DM_COMPLIANCE_ENDPOINT_PATH', self._endpoint_path or auto_endpoint_path)
+        self._endpoint_path = app.config.get('DM_COMPLIANCE_ENDPOINT_PATH') or auto_endpoint_path or self._endpoint_path
         self._token_url = app.config.get('DM_COMPLIANCE_TOKEN_URL', self._token_url)
         self._client_id = app.config.get('DM_COMPLIANCE_CLIENT_ID', self._client_id)
         self._client_secret = app.config.get('DM_COMPLIANCE_CLIENT_SECRET', self._client_secret)
