@@ -4,6 +4,13 @@ Records breaking changes from major version bumps
 
 ## Unreleased
 
+## 38.18.0
+
+Add `update_supplier_certificates(supplier_id, certificates, user=None)` (`PUT /suppliers/<id>/certificates`) and
+`delete_supplier_certificates(supplier_id, user=None)` (`DELETE /suppliers/<id>/certificates`) to `DataAPIClient`.
+`update_supplier_certificates` replaces the supplier's full certificate record (any omitted certificate type is cleared,
+and an empty or `None` payload deletes the record).
+
 ## 38.17.0
 
 Make `ComplianceAPIClient` APIM endpoint path configurable via `endpoint_path` argument or `DM_COMPLIANCE_ENDPOINT_PATH`, and automatically extract path if a full URL is passed to `base_url` (supporting both Preprod `[test]` and Prod `[att]` endpoints).
