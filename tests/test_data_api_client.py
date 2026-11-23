@@ -723,11 +723,11 @@ class TestSupplierMethods(object):
             status_code=200,
         )
 
-        result = data_client.update_supplier_certificates(123, payload)
+        result = data_client.update_supplier_certificates(123, payload, user='sync-compliance-data')
 
         assert result == {'certificates': payload}
         assert rmock.called
-        assert rmock.last_request.json() == {'certificates': payload}
+        assert rmock.last_request.json() == {'certificates': payload, 'updated_by': 'sync-compliance-data'}
 
     def test_delete_supplier_certificates(self, data_client, rmock):
         rmock.delete(
@@ -736,10 +736,11 @@ class TestSupplierMethods(object):
             status_code=200,
         )
 
-        result = data_client.delete_supplier_certificates(123)
+        result = data_client.delete_supplier_certificates(123, user='sync-compliance-data')
 
         assert result == {'certificates': None}
         assert rmock.called
+        assert rmock.last_request.json() == {'updated_by': 'sync-compliance-data'}
 
     def test_create_supplier(self, data_client, rmock):
         rmock.post(
