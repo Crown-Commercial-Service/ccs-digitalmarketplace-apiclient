@@ -715,6 +715,32 @@ class TestSupplierMethods(object):
 
         assert error.value.status_code == 404
 
+    def test_update_supplier_certificates(self, data_client, rmock):
+        payload = {'ce': [{'framework_number': 'RM1557.15'}]}
+        rmock.put(
+            'http://baseurl/suppliers/123/certificates',
+            json={'certificates': payload},
+            status_code=200,
+        )
+
+        result = data_client.update_supplier_certificates(123, payload)
+
+        assert result == {'certificates': payload}
+        assert rmock.called
+        assert rmock.last_request.json() == {'certificates': payload}
+
+    def test_delete_supplier_certificates(self, data_client, rmock):
+        rmock.delete(
+            'http://baseurl/suppliers/123/certificates',
+            json={'certificates': None},
+            status_code=200,
+        )
+
+        result = data_client.delete_supplier_certificates(123)
+
+        assert result == {'certificates': None}
+        assert rmock.called
+
     def test_create_supplier(self, data_client, rmock):
         rmock.post(
             'http://baseurl/suppliers',

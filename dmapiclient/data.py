@@ -143,6 +143,15 @@ class DataAPIClient(BaseAPIClient):
     def get_supplier_certificates(self, supplier_id):
         return self._get(f'/suppliers/{supplier_id}/certificates')
 
+    def update_supplier_certificates(self, supplier_id, certificates):
+        return self._put(
+            f'/suppliers/{supplier_id}/certificates',
+            data={'certificates': certificates},
+        )
+
+    def delete_supplier_certificates(self, supplier_id):
+        return self._delete(f'/suppliers/{supplier_id}/certificates')
+
     def create_supplier(self, supplier):
         return self._post(
             '/suppliers',
