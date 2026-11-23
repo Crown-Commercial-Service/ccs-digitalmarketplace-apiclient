@@ -144,6 +144,11 @@ class DataAPIClient(BaseAPIClient):
         return self._get(f'/suppliers/{supplier_id}/certificates')
 
     def update_supplier_certificates(self, supplier_id, certificates, user=None):
+        """Replace a supplier's full certificate record via PUT.
+
+        Any certificate type omitted from ``certificates`` is cleared, and an empty
+        dict or ``None`` payload deletes the supplier's certificate record.
+        """
         return self._put_with_updated_by(
             f'/suppliers/{supplier_id}/certificates',
             data={'certificates': certificates},

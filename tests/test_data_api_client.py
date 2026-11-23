@@ -729,6 +729,30 @@ class TestSupplierMethods(object):
         assert rmock.called
         assert rmock.last_request.json() == {'certificates': payload, 'updated_by': 'sync-compliance-data'}
 
+    def test_update_supplier_certificates_raises_when_the_supplier_does_not_exist(self, data_client, rmock):
+        rmock.put(
+            'http://baseurl/suppliers/123/certificates',
+            json={'error': "supplier '123' not found"},
+            status_code=404,
+        )
+
+        with pytest.raises(HTTPError) as error:
+            data_client.update_supplier_certificates(123, {'ce': []}, user='sync-compliance-data')
+
+        assert error.value.status_code == 404
+
+    def test_update_supplier_certificates_raises_on_invalid_payload(self, data_client, rmock):
+        rmock.put(
+            'http://baseurl/suppliers/123/certificates',
+            json={'error': 'Invalid certificate fields: unknownField'},
+            status_code=400,
+        )
+
+        with pytest.raises(HTTPError) as error:
+            data_client.update_supplier_certificates(123, {'unknownField': []}, user='sync-compliance-data')
+
+        assert error.value.status_code == 400
+
     def test_delete_supplier_certificates(self, data_client, rmock):
         rmock.delete(
             'http://baseurl/suppliers/123/certificates',
@@ -741,6 +765,18 @@ class TestSupplierMethods(object):
         assert result == {'certificates': None}
         assert rmock.called
         assert rmock.last_request.json() == {'updated_by': 'sync-compliance-data'}
+
+    def test_delete_supplier_certificates_raises_when_the_supplier_does_not_exist(self, data_client, rmock):
+        rmock.delete(
+            'http://baseurl/suppliers/123/certificates',
+            json={'error': "supplier '123' not found"},
+            status_code=404,
+        )
+
+        with pytest.raises(HTTPError) as error:
+            data_client.delete_supplier_certificates(123, user='sync-compliance-data')
+
+        assert error.value.status_code == 404
 
     def test_create_supplier(self, data_client, rmock):
         rmock.post(
